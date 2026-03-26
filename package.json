@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.32",
     "router": "^2.2.0",
     "sweetalert2": "^11.26.18",
     "vue": "^3.5.27",

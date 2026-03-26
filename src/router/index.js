@@ -8,12 +8,17 @@ import Olvide from "../views/olvide.vue";
 // Main
 import Inicio from "../views/Inicio.vue";
 
-// Extras (placeholders por ahora)
+// Extras
 import Quiz from "../views/Quiz.vue";
 import Coleccion from "../views/Coleccion.vue";
 import Tienda from "../views/Tienda.vue";
+import ProductoDetalle from "../views/ProductoDetalle.vue";
 import Perfil from "../views/Perfil.vue";
 import Carrito from "../views/Carrito.vue";
+
+// New views
+import Diagnostics from "../views/Diagnostics.vue";
+import AppointmentConfirmation from "../views/AppointmentConfirmation.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -26,17 +31,26 @@ const routes = [
   // Inicio
   { path: "/inicio", name: "Inicio", component: Inicio },
 
-  // Flujo nuevo (banner + quiz)
+  // Flujo nuevo
   { path: "/quiz", name: "Quiz", component: Quiz },
   { path: "/coleccion", name: "Coleccion", component: Coleccion },
+  { path: "/diagnostics", name: "Diagnostics", component: Diagnostics },
+  {
+    path: "/appointment-confirmation",
+    name: "AppointmentConfirmation",
+    component: AppointmentConfirmation,
+  },
 
-  // Navegación inferior / header
+  // Shop
   { path: "/tienda", name: "Tienda", component: Tienda },
+  { path: "/producto/:slug", name: "ProductoDetalle", component: ProductoDetalle },
   { path: "/perfil", name: "Perfil", component: Perfil },
   { path: "/carrito", name: "Carrito", component: Carrito },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+export default router;
