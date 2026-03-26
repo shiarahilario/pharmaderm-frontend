@@ -1,63 +1,76 @@
 <template>
   <div class="diagnostics-page" @click="closeMenus">
-    <header class="shop-header">
-      <div class="top-promos">
-        <div>FREE SHIPPING ON ORDERS OVER RD$3,000 • PHARMADERM SKINCARE EXPERIENCE</div>
-      </div>
+    <header class="sticky top-0 z-50 pd-surface pd-border-b">
+  <div class="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3 cursor-pointer" @click="$router.push('/inicio')">
+      <img
+        :src="logoSrc"
+        class="h-9 w-9 rounded-lg shadow-sm object-cover"
+        alt="PharmaDerm Logo"
+      />
+      <h1 class="text-lg font-bold tracking-tight pd-brand">
+        PharmaDerm<span class="pd-accent">RD</span>
+      </h1>
+    </div>
 
-      <div class="header-main container">
-        <div class="brand" @click="$router.push('/inicio')">
-          <img :src="logoSrc" alt="PharmaDerm" class="logo" />
-          <span class="brand-text">
-            PharmaDerm<span class="brand-accent">RD</span>
-          </span>
-        </div>
+    <div class="flex items-center gap-4 relative">
+      <button
+        class="p-2 rounded-full pd-hover relative"
+        type="button"
+        aria-label="Search"
+        @click.stop="searchOpen = !searchOpen"
+      >
+        <span class="material-symbols-outlined pd-icon">search</span>
+      </button>
 
-        <nav class="desktop-nav">
-          <button class="nav-link" @click="$router.push('/inicio')">HOME</button>
-          <button class="nav-link" @click="$router.push('/tienda')">SHOP</button>
-          <button class="nav-link active" @click="$router.push('/diagnostics')">DIAGNOSTICS</button>
-          <button class="nav-link" @click="$router.push('/quiz')">SKIN QUIZ</button>
-          <button class="nav-link" @click="$router.push('/perfil')">PROFILE</button>
-        </nav>
+      <button
+        class="p-2 rounded-full pd-hover relative"
+        type="button"
+        aria-label="Profile"
+        @click.stop="profileOpen = !profileOpen"
+      >
+        <span class="material-symbols-outlined pd-icon">person</span>
+      </button>
 
-        <div class="header-actions">
-          <button class="icon-btn" @click.stop="searchOpen = !searchOpen">
+      <button
+        class="p-2 rounded-full pd-hover relative"
+        type="button"
+        aria-label="Cart"
+        @click="$router.push('/carrito')"
+      >
+        <span class="material-symbols-outlined pd-icon">shopping_bag</span>
+      </button>
+
+      <transition name="fade">
+        <div v-if="searchOpen" class="search-popover" @click.stop>
+          <div class="search-box">
             <span class="material-symbols-outlined">search</span>
-          </button>
-
-          <button class="icon-btn" @click.stop="profileOpen = !profileOpen">
-            <span class="material-symbols-outlined">person</span>
-          </button>
-
-          <button class="icon-btn" @click="$router.push('/carrito')">
-            <span class="material-symbols-outlined">shopping_bag</span>
-          </button>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search products, skin concerns, routines..."
+            />
+          </div>
         </div>
+      </transition>
 
-        <transition name="fade">
-          <div v-if="searchOpen" class="search-popover" @click.stop>
-            <div class="search-box">
-              <span class="material-symbols-outlined">search</span>
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Search products, skin concerns, routines..."
-              />
-            </div>
-          </div>
-        </transition>
+      <transition name="fade">
+        <div v-if="profileOpen" class="profile-popover" @click.stop>
+          <h4>Your PharmaDerm space</h4>
+          <p>Review your skin case, appointments and personalized routine.</p>
+          <button class="ghost-btn" @click="$router.push('/perfil')">View Profile</button>
+          <button class="primary-btn small" @click="$router.push('/quiz')">Go to Skin Quiz</button>
+        </div>
+      </transition>
+    </div>
+  </div>
 
-        <transition name="fade">
-          <div v-if="profileOpen" class="profile-popover" @click.stop>
-            <h4>Your PharmaDerm space</h4>
-            <p>Review your skin case, appointments and personalized routine.</p>
-            <button class="ghost-btn" @click="$router.push('/login')">Sign In</button>
-            <button class="primary-btn small" @click="$router.push('/perfil')">View Profile</button>
-          </div>
-        </transition>
-      </div>
-    </header>
+  <div class="pd-banner">
+    <p class="text-center text-white text-[11px] font-semibold uppercase tracking-widest py-2">
+      FREE SHIPPING ON ORDERS OVER RD$3,000 • PHARMADERM SKINCARE EXPERIENCE
+    </p>
+  </div>
+</header>
 
     <section class="diagnostics-hero">
       <div class="container diagnostics-hero-grid">
@@ -116,14 +129,14 @@
     <section class="section-light">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow">YOUR PROGRESS</p>
+          <p class="eyebrow section-eyebrow">YOUR PROGRESS</p>
           <h2>From quiz to dermatologist support</h2>
           <p>Your experience is organized step by step so it feels guided and premium.</p>
         </div>
 
         <div class="timeline-grid">
-          <div class="timeline-step completed">
-            <div class="timeline-icon">✓</div>
+          <div class="timeline-step" :class="{ completed: quizCompleted }">
+            <div class="timeline-icon">{{ quizCompleted ? '✓' : '1' }}</div>
             <h4>Quiz completed</h4>
             <p>Your initial skin profile was generated from the quiz.</p>
           </div>
@@ -152,7 +165,7 @@
     <section class="section-white">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow">QUIZ OVERVIEW</p>
+          <p class="eyebrow section-eyebrow">QUIZ OVERVIEW</p>
           <h2>Your initial skin profile</h2>
           <p>These values were brought in from your quiz and are now the base for diagnostics.</p>
         </div>
@@ -191,7 +204,7 @@
             <div v-if="quizMetrics.length" class="metric-list">
               <div
                 v-for="metric in quizMetrics"
-                :key="metric.key"
+                :key="metric.key || metric.label"
                 class="metric-item"
               >
                 <div class="metric-head">
@@ -218,7 +231,7 @@
     <section class="section-light" ref="detailsSection">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">STEP 1</p>
+          <p class="eyebrow section-eyebrow">STEP 1</p>
           <h2>Tell us more about your skin today</h2>
           <p>Add details the quiz did not fully capture so your case feels more complete.</p>
         </div>
@@ -356,7 +369,7 @@
     <section class="section-white">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">STEP 2</p>
+          <p class="eyebrow section-eyebrow">STEP 2</p>
           <h2>Add more reference photos</h2>
           <p>These images help provide more visual context before the appointment.</p>
         </div>
@@ -381,7 +394,7 @@
     <section class="section-light">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow">TEMPORARY CARE DIRECTION</p>
+          <p class="eyebrow section-eyebrow">TEMPORARY CARE DIRECTION</p>
           <h2>Your pre-consultation routine focus</h2>
           <p>This is a transitional recommendation based on the quiz and your current diagnostic details.</p>
         </div>
@@ -429,7 +442,7 @@
     <section class="section-white">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">STEP 3</p>
+          <p class="eyebrow section-eyebrow">STEP 3</p>
           <h2>Choose your dermatologist</h2>
           <p>Select the dermatologist that best fits your concerns and preferred consultation type.</p>
         </div>
@@ -471,7 +484,7 @@
       <div class="container booking-layout">
         <div class="booking-card">
           <div class="section-heading">
-            <p class="eyebrow">STEP 4</p>
+            <p class="eyebrow section-eyebrow">STEP 4</p>
             <h2>Book your appointment</h2>
             <p>Finalize your case and save the consultation details.</p>
           </div>
@@ -609,6 +622,7 @@ export default {
       selectedDoctor: null,
       casePhoto: "",
       quizSummary: {
+        completed: false,
         age: null,
         skinType: "",
         sensitivity: "",
@@ -620,7 +634,8 @@ export default {
         fullMetrics: [],
         photoMeta: {},
         hasSelfie: false,
-        selfie: ""
+        selfie: "",
+        routineSteps: []
       },
       form: {
         description: "",
@@ -709,6 +724,10 @@ export default {
   },
 
   computed: {
+    quizCompleted() {
+      return !!this.quizSummary.completed;
+    },
+
     formattedSkinType() {
       const map = {
         seca: "Dry skin",
@@ -716,7 +735,7 @@ export default {
         mixta: "Combination skin",
         grasa: "Oily skin"
       };
-      return map[this.quizSummary.skinType] || this.quizSummary.skinType || "Combination skin";
+      return map[this.quizSummary.skinType] || this.quizSummary.skinType || "Not available";
     },
 
     formattedSensitivity() {
@@ -727,7 +746,7 @@ export default {
         "sensibilidad media": "Medium sensitivity",
         "sensibilidad alta": "High sensitivity"
       };
-      return map[raw] || this.quizSummary.sensitivity || "Medium sensitivity";
+      return map[raw] || this.quizSummary.sensitivity || "Not available";
     },
 
     quizMetrics() {
@@ -739,7 +758,7 @@ export default {
     mainConcern() {
       if (this.quizSummary.concerns && this.quizSummary.concerns.length) return this.quizSummary.concerns[0];
       if (this.form.priorities.length) return this.form.priorities[0];
-      return "Luminosity";
+      return this.quizSummary.primaryConcern || "Not specified";
     },
 
     detailsCompleted() {
@@ -762,7 +781,7 @@ export default {
     },
 
     completionProgress() {
-      let progress = 25;
+      let progress = this.quizCompleted ? 25 : 0;
       if (this.detailsCompleted) progress += 30;
       if (this.imagePreviews.length) progress += 15;
       if (this.selectedDoctor) progress += 15;
@@ -774,6 +793,7 @@ export default {
       if (this.bookingReady) return "Appointment ready";
       if (this.selectedDoctor) return "Doctor selected";
       if (this.detailsCompleted) return "Under review";
+      if (this.quizCompleted) return "Quiz imported";
       return "New case";
     },
 
@@ -794,7 +814,7 @@ export default {
       if (urgent) {
         return {
           title: "Priority skin evaluation recommended",
-          text: `Your answers suggest that ${concern.toLowerCase()} may need prompt professional evaluation, especially if symptoms are persistent or worsening.`,
+          text: `Your answers suggest that ${String(concern).toLowerCase()} may need prompt professional evaluation, especially if symptoms are persistent or worsening.`,
           nextStep: "Book an in-person dermatologist visit",
           priority: "High"
         };
@@ -996,15 +1016,18 @@ export default {
 
     saveDiagnosticCase() {
       const payload = {
+        title: "Diagnóstico dermatológico guardado",
+        summary: this.generatedInsight.text,
         quizSummary: this.quizSummary,
         form: this.form,
         imagePreviews: this.imagePreviews,
         selectedDoctor: this.selectedDoctor,
         casePhoto: this.casePhoto,
+        insight: this.generatedInsight,
         savedAt: new Date().toISOString()
       };
 
-      localStorage.setItem("pharmadermDiagnosticCase", JSON.stringify(payload));
+      localStorage.setItem("pharmaderm_diagnostic_result", JSON.stringify(payload));
       alert("Your diagnostic case has been saved.");
     },
 
@@ -1020,39 +1043,45 @@ export default {
       }
 
       const appointmentPayload = {
-        doctor: this.selectedDoctor,
-        quizSummary: this.quizSummary,
-        diagnostics: this.form,
-        uploadedImages: this.imagePreviews,
-        casePhoto: this.casePhoto,
+        doctor: this.selectedDoctor.name,
+        service: this.suggestedAppointmentType,
+        mode: this.form.appointmentType,
+        dateTime: `${this.form.date} • ${this.form.time}`,
+        reason: this.form.reason,
+        notes: this.form.notes,
         status: "Confirmed",
         confirmationCode: "PH-" + Math.random().toString(36).substring(2, 8).toUpperCase(),
         createdAt: new Date().toISOString()
       };
 
-      localStorage.setItem("pharmadermAppointment", JSON.stringify(appointmentPayload));
-      localStorage.setItem(
-        "pharmadermDiagnosticCase",
-        JSON.stringify({
-          quizSummary: this.quizSummary,
-          form: this.form,
-          imagePreviews: this.imagePreviews,
-          selectedDoctor: this.selectedDoctor,
-          casePhoto: this.casePhoto,
-          savedAt: new Date().toISOString(),
-          status: "Appointment booked"
-        })
-      );
+      const diagnosticPayload = {
+        title: "Diagnóstico dermatológico completado",
+        summary: this.generatedInsight.text,
+        quizSummary: this.quizSummary,
+        form: this.form,
+        imagePreviews: this.imagePreviews,
+        selectedDoctor: this.selectedDoctor,
+        casePhoto: this.casePhoto,
+        insight: this.generatedInsight,
+        status: "Appointment booked",
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("pharmaderm_appointment", JSON.stringify(appointmentPayload));
+      localStorage.setItem("pharmaderm_diagnostic_result", JSON.stringify(diagnosticPayload));
 
       this.$router.push("/appointment-confirmation");
     },
 
     loadQuizSummary() {
-      const savedQuiz = localStorage.getItem("pharmadermQuizResults");
+      const savedQuiz = localStorage.getItem("pharmaderm_quiz_result");
 
       if (savedQuiz) {
         try {
-          this.quizSummary = JSON.parse(savedQuiz);
+          this.quizSummary = {
+            ...this.quizSummary,
+            ...JSON.parse(savedQuiz)
+          };
           this.casePhoto = this.quizSummary.selfie || "";
         } catch (error) {
           console.error("Error loading quiz results:", error);
@@ -1075,7 +1104,7 @@ export default {
     },
 
     loadSavedDiagnosticCase() {
-      const savedCase = localStorage.getItem("pharmadermDiagnosticCase");
+      const savedCase = localStorage.getItem("pharmaderm_diagnostic_result");
       if (!savedCase) return;
 
       try {
@@ -1083,6 +1112,7 @@ export default {
         if (parsed.form) this.form = { ...this.form, ...parsed.form };
         if (parsed.imagePreviews) this.imagePreviews = parsed.imagePreviews;
         if (parsed.selectedDoctor) this.selectedDoctor = parsed.selectedDoctor;
+        if (parsed.casePhoto) this.casePhoto = parsed.casePhoto;
       } catch (error) {
         console.error("Error loading saved diagnostic case:", error);
       }
@@ -1093,10 +1123,26 @@ export default {
 
 <style scoped>
 .diagnostics-page {
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --surface: rgba(255, 255, 255, 0.92);
+  --card: #ffffff;
+  --soft: #f1f5f9;
+  --border: #e2e8f0;
+  --brand: #004e92;
+  --link: #5dbcd2;
+  --accent: #76b82a;
+  --banner: #5dbcd2;
+  --price: #004e92;
+  --primary: #004e92;
+  --primary-dark: #183a6b;
+  --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.06);
   min-height: 100vh;
-  background: #f7f8fb;
-  color: #133b63;
-  font-family: "Inter", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .container {
@@ -1104,109 +1150,47 @@ export default {
   margin: 0 auto;
 }
 
-.shop-header {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(19, 59, 99, 0.08);
+/* HEADER COMO INICIO / PERFIL */
+.pd-surface {
+  background: var(--surface);
+  backdrop-filter: blur(10px);
 }
 
-.top-promos {
-  background: #133b63;
-  color: #fff;
-  text-align: center;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  padding: 0.75rem 1rem;
+.pd-border-b {
+  border-bottom: 1px solid var(--border);
 }
 
-.header-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 78px;
-  position: relative;
+.pd-banner {
+  background: var(--banner);
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
+.pd-brand {
+  color: var(--brand);
 }
 
-.logo {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
+.pd-accent {
+  color: var(--accent);
 }
 
-.brand-text {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #133b63;
+.pd-icon {
+  color: var(--brand);
 }
 
-.brand-accent {
-  color: #84b6f4;
+.pd-hover:hover {
+  background: rgba(148, 163, 184, 0.18);
 }
 
-.desktop-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.nav-link {
-  background: transparent;
-  border: none;
-  color: #133b63;
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #4d82bc;
-}
-
-.header-actions {
-  display: flex;
-  gap: 0.35rem;
-}
-
-.icon-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(19, 59, 99, 0.12);
-  background: #fff;
-  color: #133b63;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.icon-btn:hover {
-  background: #eef4fb;
-  transform: translateY(-1px);
-}
-
+/* POPOVERS */
 .search-popover,
 .profile-popover {
   position: absolute;
-  top: 92px;
+  top: calc(100% + 14px);
   right: 0;
-  background: #fff;
-  border-radius: 22px;
-  box-shadow: 0 24px 50px rgba(19, 59, 99, 0.12);
-  border: 1px solid rgba(19, 59, 99, 0.08);
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  z-index: 90;
 }
 
 .search-popover {
@@ -1223,9 +1207,10 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #f6f9fd;
+  background: var(--soft);
   border-radius: 16px;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
 }
 
 .search-box input {
@@ -1234,22 +1219,27 @@ export default {
   outline: none;
   width: 100%;
   font-size: 0.95rem;
-  color: #133b63;
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .profile-popover h4 {
   margin: 0 0 0.45rem;
+  color: var(--text);
+  font-size: 1rem;
 }
 
 .profile-popover p {
   margin: 0 0 1rem;
-  color: #5b7090;
+  color: var(--muted);
   line-height: 1.5;
+  font-size: 0.92rem;
 }
 
+/* HERO */
 .diagnostics-hero {
   padding: 3.5rem 0 2.5rem;
-  background: linear-gradient(135deg, rgba(233, 242, 252, 0.95), rgba(247, 248, 251, 0.98));
+  background: linear-gradient(135deg, var(--brand), var(--link));
 }
 
 .diagnostics-hero-grid {
@@ -1263,8 +1253,13 @@ export default {
   font-size: 0.8rem;
   letter-spacing: 0.22em;
   font-weight: 700;
-  color: #4c79aa;
+  color: rgba(255, 255, 255, 0.78);
   margin-bottom: 0.9rem;
+  text-transform: uppercase;
+}
+
+.section-eyebrow {
+  color: var(--brand);
 }
 
 .eyebrow.light {
@@ -1276,12 +1271,14 @@ export default {
   line-height: 1;
   margin: 0 0 1rem;
   letter-spacing: -0.03em;
+  color: #fff;
+  font-weight: 700;
 }
 
 .hero-text {
   font-size: 1.05rem;
   line-height: 1.8;
-  color: #4f6582;
+  color: rgba(255, 255, 255, 0.9);
   max-width: 680px;
 }
 
@@ -1292,6 +1289,7 @@ export default {
   flex-wrap: wrap;
 }
 
+/* CARDS */
 .hero-card,
 .form-card,
 .insight-card,
@@ -1305,27 +1303,30 @@ export default {
 .disclaimer-box,
 .selfie-card,
 .metrics-card {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(19, 59, 99, 0.08);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 28px;
-  box-shadow: 0 18px 40px rgba(19, 59, 99, 0.06);
-}
-
-.hero-card,
-.form-card,
-.insight-card,
-.upload-card,
-.booking-card,
-.booking-summary,
-.summary-card,
-.timeline-step,
-.routine-card,
-.disclaimer-box,
-.selfie-card,
-.metrics-card {
+  box-shadow: var(--shadow-soft);
   padding: 1.5rem;
 }
 
+.hero-card h3,
+.form-card h3,
+.insight-card h3,
+.upload-card h3,
+.booking-card h3,
+.booking-summary h3,
+.summary-card h3,
+.timeline-step h3,
+.routine-card h3,
+.disclaimer-box h3,
+.selfie-card h3,
+.metrics-card h3 {
+  color: var(--text);
+  margin-top: 0;
+}
+
+/* STATUS */
 .status-row {
   display: flex;
   justify-content: space-between;
@@ -1339,8 +1340,8 @@ export default {
   display: inline-flex;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  background: #e8f1fb;
-  color: #215487;
+  background: #eef6ff;
+  color: #0f4c81;
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -1355,28 +1356,29 @@ export default {
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(19, 59, 99, 0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 .summary-item .label {
-  color: #6a7f99;
+  color: var(--muted);
 }
 
 .hero-card-note {
   margin-top: 1rem;
-  color: #6a7f99;
+  color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.6;
 }
 
+/* SECTIONS */
 .section-light {
   padding: 4rem 0;
-  background: #f4f7fb;
+  background: var(--bg);
 }
 
 .section-white {
   padding: 4rem 0;
-  background: #ffffff;
+  background: transparent;
 }
 
 .section-heading {
@@ -1395,14 +1397,17 @@ export default {
   margin: 0 0 0.8rem;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   letter-spacing: -0.03em;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .section-heading p {
   margin: 0;
-  color: #5f748f;
+  color: var(--muted);
   line-height: 1.75;
 }
 
+/* GRIDS */
 .timeline-grid,
 .quiz-summary-grid,
 .routine-grid {
@@ -1431,8 +1436,8 @@ export default {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #eaf3fd;
-  color: #215487;
+  background: #eef6ff;
+  color: var(--brand);
   display: grid;
   place-items: center;
   font-weight: 700;
@@ -1440,12 +1445,20 @@ export default {
 }
 
 .summary-card p,
-.timeline-step p {
-  margin: 0;
-  color: #58708c;
+.timeline-step p,
+.routine-card li,
+.disclaimer-box p,
+.doctor-description,
+.doctor-meta,
+.muted-text,
+.insight-copy,
+.insight-box p,
+.summary-note {
+  color: var(--muted);
   line-height: 1.7;
 }
 
+/* QUIZ OVERVIEW */
 .case-overview-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
@@ -1467,7 +1480,7 @@ export default {
 
 .metric-item {
   padding: 0.8rem 0;
-  border-bottom: 1px solid rgba(19, 59, 99, 0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 .metric-head {
@@ -1475,7 +1488,7 @@ export default {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 0.55rem;
-  color: #214f7d;
+  color: var(--text);
 }
 
 .metric-bar {
@@ -1488,14 +1501,10 @@ export default {
 .metric-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #4d82bc, #84b6f4);
+  background: linear-gradient(90deg, var(--brand), var(--link));
 }
 
-.muted-text {
-  color: #6c829a;
-  line-height: 1.7;
-}
-
+/* DETAILS / BOOKING */
 .details-layout,
 .booking-layout {
   display: grid;
@@ -1517,7 +1526,7 @@ export default {
   margin: 1rem 0 0.55rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #234d77;
+  color: var(--text);
 }
 
 textarea,
@@ -1525,15 +1534,21 @@ select,
 input[type="text"],
 input[type="date"] {
   width: 100%;
-  border: 1px solid rgba(19, 59, 99, 0.12);
-  background: #fbfdff;
-  color: #133b63;
+  border: 1px solid var(--border);
+  background: var(--soft);
+  color: var(--text);
   border-radius: 16px;
   padding: 0.95rem 1rem;
   font-size: 0.96rem;
   outline: none;
   transition: 0.25s ease;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #94a3b8;
 }
 
 textarea:focus,
@@ -1553,37 +1568,28 @@ input:focus {
 .chip {
   padding: 0.75rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(19, 59, 99, 0.12);
-  background: #fff;
-  color: #214f7d;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
   cursor: pointer;
   transition: 0.25s ease;
   font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .chip:hover,
 .chip.active {
-  background: #eaf3fd;
+  background: #eef6ff;
   border-color: #7aa7d6;
-}
-
-.insight-copy {
-  color: #5d728d;
-  line-height: 1.7;
+  color: var(--brand);
 }
 
 .insight-box {
   margin: 1rem 0 1.2rem;
   padding: 1rem 1.1rem;
   border-radius: 18px;
-  background: #f5f9fe;
-  border: 1px solid rgba(19, 59, 99, 0.08);
-}
-
-.insight-box p {
-  margin: 0.45rem 0 0;
-  color: #5e7390;
-  line-height: 1.7;
+  background: var(--soft);
+  border: 1px solid var(--border);
 }
 
 .mini-points {
@@ -1595,33 +1601,34 @@ input:focus {
 .mini-points div {
   padding: 0.9rem 1rem;
   border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(19, 59, 99, 0.08);
+  background: var(--card);
+  border: 1px solid var(--border);
 }
 
 .mini-points span {
   display: block;
-  color: #6a8099;
+  color: var(--muted);
   font-size: 0.88rem;
   margin-bottom: 0.2rem;
 }
 
+/* UPLOAD */
 .upload-zone {
   min-height: 180px;
-  border: 2px dashed rgba(19, 59, 99, 0.16);
+  border: 2px dashed var(--border);
   border-radius: 24px;
   display: grid;
   place-items: center;
   text-align: center;
   gap: 0.3rem;
   padding: 1.5rem;
-  background: linear-gradient(180deg, #fbfdff, #f3f8fd);
+  background: linear-gradient(180deg, #fbfdff, var(--soft));
   cursor: pointer;
 }
 
 .upload-icon {
   font-size: 2.5rem;
-  color: #6d9dcf;
+  color: var(--link);
 }
 
 .preview-grid {
@@ -1635,7 +1642,8 @@ input:focus {
   border-radius: 20px;
   overflow: hidden;
   aspect-ratio: 1 / 1;
-  border: 1px solid rgba(19, 59, 99, 0.08);
+  border: 1px solid var(--border);
+  background: var(--card);
 }
 
 .preview-item img {
@@ -1644,6 +1652,7 @@ input:focus {
   object-fit: cover;
 }
 
+/* DOCTORS */
 .doctors-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1685,8 +1694,8 @@ input:focus {
 .doctor-rating {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #2b5a89;
-  background: #eef5fd;
+  color: var(--brand);
+  background: #eef6ff;
   padding: 0.4rem 0.65rem;
   border-radius: 999px;
 }
@@ -1697,29 +1706,15 @@ input:focus {
   margin: 0.3rem 0 0.7rem;
 }
 
-.doctor-description {
-  color: #657b97;
-  line-height: 1.7;
-  min-height: 82px;
-}
-
-.doctor-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  color: #6a819c;
-  font-size: 0.92rem;
-  margin-bottom: 1rem;
-}
-
+/* SUMMARY */
 .summary-block {
   padding: 0.95rem 0;
-  border-bottom: 1px solid rgba(19, 59, 99, 0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 .summary-block span {
   display: block;
-  color: #6c829a;
+  color: var(--muted);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
@@ -1728,24 +1723,17 @@ input:focus {
   margin-top: 1.2rem;
   padding: 1rem;
   border-radius: 18px;
-  background: #f3f8fd;
-  color: #5f7590;
-  line-height: 1.7;
+  background: var(--soft);
 }
 
 .disclaimer-section {
   padding-top: 1rem;
 }
 
-.disclaimer-box p {
-  margin: 0;
-  color: #5f748f;
-  line-height: 1.75;
-}
-
+/* FINAL CTA */
 .final-cta {
   padding: 4rem 0;
-  background: linear-gradient(135deg, #123a62, #3d6e9f);
+  background: linear-gradient(135deg, var(--brand), var(--link));
   color: #fff;
 }
 
@@ -1756,6 +1744,12 @@ input:focus {
   gap: 1.5rem;
 }
 
+.final-cta-inner h2,
+.final-cta-inner p {
+  color: #fff;
+}
+
+/* BUTTONS */
 .primary-btn,
 .ghost-btn,
 .light-btn {
@@ -1765,10 +1759,11 @@ input:focus {
   font-weight: 700;
   cursor: pointer;
   transition: 0.25s ease;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #133b63, #4d82bc);
+  background: linear-gradient(135deg, var(--brand), var(--primary-dark));
   color: #fff;
   box-shadow: 0 14px 28px rgba(19, 59, 99, 0.18);
 }
@@ -1780,8 +1775,8 @@ input:focus {
 
 .ghost-btn {
   background: #fff;
-  color: #133b63;
-  border: 1px solid rgba(19, 59, 99, 0.12);
+  color: var(--brand);
+  border: 1px solid var(--border);
 }
 
 .ghost-btn:hover {
@@ -1790,7 +1785,7 @@ input:focus {
 
 .light-btn {
   background: #fff;
-  color: #133b63;
+  color: var(--brand);
 }
 
 .full {
@@ -1806,6 +1801,7 @@ input:focus {
   margin-top: 0.5rem;
 }
 
+/* ANIMATIONS */
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.22s ease;
@@ -1817,6 +1813,7 @@ input:focus {
   transform: translateY(8px);
 }
 
+/* RESPONSIVE */
 @media (max-width: 1100px) {
   .diagnostics-hero-grid,
   .details-layout,
@@ -1831,10 +1828,6 @@ input:focus {
 
   .preview-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .desktop-nav {
-    display: none;
   }
 }
 

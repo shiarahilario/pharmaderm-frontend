@@ -197,17 +197,47 @@ const showPassword = ref(false);
 const go = (path) => router.push(path);
 
 const registrar = () => {
-  if (!nombre.value || !apellido.value || !email.value || !telefono.value || !password.value || !confirmPassword.value) {
+  if (
+    !nombre.value.trim() ||
+    !apellido.value.trim() ||
+    !email.value.trim() ||
+    !telefono.value.trim() ||
+    !password.value ||
+    !confirmPassword.value
+  ) {
     alert("Por favor, completa todos los campos.");
     return;
   }
+
   if (password.value !== confirmPassword.value) {
     alert("Las contraseñas no coinciden.");
     return;
   }
 
-  // Aquí luego conectas backend
-  alert("Cuenta creada correctamente ✅");
-  go("/inicio");
+  const user = {
+  name: `${nombre.value} ${apellido.value}`.trim(),
+  firstName: nombre.value.trim(),
+  lastName: apellido.value.trim(),
+  email: email.value.trim(),
+  phone: telefono.value.trim(),
+  password: password.value,
+  age: "",
+  address: "",
+  avatar: "",
+  createdAt: new Date().toISOString(),
+};
+
+localStorage.setItem("pharmaderm_user", JSON.stringify(user));
+localStorage.setItem(
+  "pharmaderm_session",
+  JSON.stringify({
+    isLoggedIn: true,
+    email: user.email,
+    loginAt: new Date().toISOString(),
+  })
+);
+
+alert("Cuenta creada correctamente.");
+go("/inicio");
 };
 </script>

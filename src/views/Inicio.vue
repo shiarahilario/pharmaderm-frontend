@@ -55,7 +55,9 @@
               @click.stop
             >
               <div class="pd-account-top">
-                <div class="pd-account-email">{{ currentUser.email }}</div>
+                <div class="pd-account-email">
+                  {{ currentUser.email || "Sin correo registrado" }}
+                </div>
 
                 <button
                   class="pd-account-close"
@@ -80,7 +82,7 @@
                   </div>
                 </div>
 
-                <h3 class="pd-account-greeting">¡Hola, {{ currentUser.name }}!</h3>
+                <h3 class="pd-account-greeting">¡Hola, {{ displayName }}!</h3>
 
                 <button
                   class="pd-account-manage"
@@ -92,26 +94,37 @@
               </div>
 
               <div class="pd-account-list">
-                <div class="pd-account-list-title">Ocultar más cuentas</div>
+                <div class="pd-account-list-title">Cuenta actual</div>
 
                 <div
-                  v-for="(acc, index) in linkedAccounts"
-                  :key="`${acc.email}-${index}`"
+                  v-if="hasUser"
                   class="pd-account-item"
                 >
                   <div class="pd-account-item-avatar">
                     <img
-                      v-if="acc.avatar"
-                      :src="acc.avatar"
+                      v-if="currentUser.avatar"
+                      :src="currentUser.avatar"
                       alt="Account"
                       class="pd-account-item-avatar-img"
                     />
-                    <span v-else>{{ (acc.name || acc.email || 'U').charAt(0).toUpperCase() }}</span>
+                    <span v-else>{{ currentInitial }}</span>
                   </div>
 
                   <div class="pd-account-item-text">
-                    <p class="pd-account-item-name">{{ acc.name }}</p>
-                    <p class="pd-account-item-email">{{ acc.email }}</p>
+                    <p class="pd-account-item-name">{{ displayName }}</p>
+                    <p class="pd-account-item-email">
+                      {{ currentUser.email || "Sin correo registrado" }}
+                    </p>
+                  </div>
+                </div>
+
+                <div v-else class="pd-account-item">
+                  <div class="pd-account-item-avatar">
+                    <span>U</span>
+                  </div>
+                  <div class="pd-account-item-text">
+                    <p class="pd-account-item-name">Usuario</p>
+                    <p class="pd-account-item-email">No has iniciado sesión</p>
                   </div>
                 </div>
 
@@ -447,7 +460,7 @@
           <button
             class="mt-6 w-full max-w-xl mx-auto py-4 rounded-xl pd-primary text-white font-bold shadow-lg"
             type="button"
-            @click="router.push('/Diagnostics')"
+            @click="router.push('/diagnostics')"
           >
             Book Appointment
           </button>
@@ -489,15 +502,15 @@
       <button
         type="button"
         class="pd-navitem pd-nav-button"
-        :class="{ active: isActive('/diagnostics') }"
+        :class="{ active: isActive('/quiz') }"
         aria-label="Routine"
-        @click="router.push('/diagnostics')"
+        @click="router.push('/quiz')"
       >
         <span class="material-symbols-outlined">local_hospital</span>
         <p>Routine</p>
       </button>
 
-      <RouterLink to="/perfil" class="pd-navitem" :class="{ active: isActive('/profile') || isActive('/perfil') }" aria-label="Profile">
+      <RouterLink to="/perfil" class="pd-navitem" :class="{ active: isActive('/perfil') }" aria-label="Profile">
         <span class="material-symbols-outlined">person</span>
         <p>Profile</p>
       </RouterLink>
@@ -520,21 +533,20 @@ const searchInputRef = ref(null);
 const bestSellersRef = ref(null);
 
 const defaultUser = {
-  name: "Shiara",
-  email: "hilarioluna.sh@gmail.com",
-  avatar: "https://i.pinimg.com/736x/8d/45/29/8d452972b91132da7fd5e07b533ee2dd.jpg",
+  name: "",
+  email: "",
+  avatar: "",
 };
 
-const fallbackAccounts = [
-  {
-    name: "SHIARA HILARIO LUNA",
-    email: "2220012@ipisa.edu.do",
-    avatar: "",
-  },
-];
-
 const currentUser = ref({ ...defaultUser });
-const linkedAccounts = ref([...fallbackAccounts]);
+
+const hasUser = computed(() => {
+  return !!(currentUser.value.name || currentUser.value.email);
+});
+
+const displayName = computed(() => {
+  return currentUser.value.name?.trim() || "Usuario";
+});
 
 const productCatalog = ref([
   {
@@ -649,19 +661,18 @@ const cartCount = computed(() => {
 });
 
 const currentInitial = computed(() => {
-  return (currentUser.value.name || currentUser.value.email || "U").charAt(0).toUpperCase();
+  return (displayName.value || "U").charAt(0).toUpperCase();
 });
 
 onMounted(() => {
-  const saved = localStorage.getItem("pd_dark");
+  const saved = localStorage.getItem("pharmaderm_dark");
   isDark.value = saved === "1";
-
   loadUserSession();
 });
 
 const toggleDark = () => {
   isDark.value = !isDark.value;
-  localStorage.setItem("pd_dark", isDark.value ? "1" : "0");
+  localStorage.setItem("pharmaderm_dark", isDark.value ? "1" : "0");
 };
 
 const isActive = (path) => route.path === path;
@@ -669,22 +680,18 @@ const isActive = (path) => route.path === path;
 const loadUserSession = () => {
   try {
     const savedUser = JSON.parse(localStorage.getItem("pharmaderm_user") || "null");
-    const savedAccounts = JSON.parse(localStorage.getItem("pharmaderm_accounts") || "null");
 
     if (savedUser) {
       currentUser.value = {
-        name: savedUser.name || "Shiara",
-        email: savedUser.email || "hilarioluna.sh@gmail.com",
-        avatar: savedUser.avatar || defaultUser.avatar,
+        name: savedUser.name || "",
+        email: savedUser.email || "",
+        avatar: savedUser.avatar || "",
       };
-    }
-
-    if (savedAccounts && Array.isArray(savedAccounts) && savedAccounts.length) {
-      linkedAccounts.value = savedAccounts;
+    } else {
+      currentUser.value = { ...defaultUser };
     }
   } catch {
     currentUser.value = { ...defaultUser };
-    linkedAccounts.value = [...fallbackAccounts];
   }
 };
 
@@ -755,6 +762,7 @@ const addToCart = (product) => {
     } else {
       cart.push({
         id: product.id,
+        slug: product.id,
         name: product.name,
         priceRD: product.priceRD,
         image: product.image,

@@ -104,7 +104,7 @@
         <!-- Botones -->
         <div class="w-full flex flex-col gap-4 mt-8">
           <button
-            @click="go('/inicio')"
+            @click="go('/login')"
             class="w-full h-14 rounded-lg bg-brand-light-blue text-white font-bold"
           >
             Iniciar sesión
@@ -133,4 +133,32 @@ const password = ref("");
 const showPassword = ref(false);
 
 const go = (path) => router.push(path);
+
+const login = () => {
+  const savedUser = JSON.parse(localStorage.getItem("pharmaderm_user") || "null");
+
+  if (!savedUser) {
+    alert("No hay una cuenta registrada todavía.");
+    return;
+  }
+
+  if (
+    email.value.trim().toLowerCase() !== String(savedUser.email || "").trim().toLowerCase() ||
+    password.value !== savedUser.password
+  ) {
+    alert("Correo o contraseña incorrectos.");
+    return;
+  }
+
+  localStorage.setItem(
+    "pharmaderm_session",
+    JSON.stringify({
+      isLoggedIn: true,
+      email: savedUser.email,
+      loginAt: new Date().toISOString(),
+    })
+  );
+
+  router.push("/inicio");
+};
 </script>

@@ -10,24 +10,25 @@
       <section class="cart-items">
         <article
           v-for="(item, index) in cart"
-          :key="`${item.id}-${item.size}-${index}`"
+          :key="`${item.slug || item.id}-${item.size || 'default'}-${index}`"
           class="cart-item"
         >
           <img :src="item.image" :alt="item.name" class="cart-item__img" />
 
           <div class="cart-item__body">
             <h3>{{ item.name }}</h3>
-            <p class="muted">Size: {{ item.size }}</p>
-            <p class="muted">
-              Purchase: {{ item.mode === "autoship" ? "Replenish & Save" : "One-time" }}
+            <p class="muted" v-if="item.size">Size: {{ item.size }}</p>
+            <p class="muted" v-if="item.mode">
+              Purchase: {{ item.mode === 'autoship' ? 'Replenish & Save' : 'One-time' }}
             </p>
-            <strong>${{ money(item.priceUSD) }}</strong>
+            <p class="muted" v-if="item.brand">Brand: {{ item.brand }}</p>
+            <strong>RD${{ money(item.priceRD) }}</strong>
           </div>
 
           <div class="cart-item__actions">
             <div class="qty-box">
               <button @click="decreaseQty(index)">−</button>
-              <span>{{ item.qty }}</span>
+              <span>{{ item.quantity }}</span>
               <button @click="increaseQty(index)">+</button>
             </div>
 
@@ -50,17 +51,17 @@
 
         <div class="summary-row">
           <span>Subtotal</span>
-          <strong>${{ money(subtotal) }}</strong>
+          <strong>RD${{ money(subtotal) }}</strong>
         </div>
 
         <div class="summary-row">
           <span>Estimated shipping</span>
-          <strong>{{ subtotal >= 45 ? "Free" : "$5.99" }}</strong>
+          <strong>{{ subtotal >= 3000 ? "Free" : "RD$250" }}</strong>
         </div>
 
         <div class="summary-row total">
           <span>Total</span>
-          <strong>${{ money(total) }}</strong>
+          <strong>RD${{ money(total) }}</strong>
         </div>
 
         <button class="checkout-btn">Proceed to Checkout</button>
@@ -71,19 +72,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import {
-  clearCart,
-  getCart,
-  removeCartItem,
-  updateCartItemQty,
-} from "../utils/cart";
-import { money } from "../data/lrpCatalog";
+import { computed, onMounted, onBeforeUnmount, ref } from "vue";
 
 const cart = ref([]);
 
 const loadCart = () => {
-  cart.value = getCart();
+  try {
+    const saved = JSON.parse(localStorage.getItem("pharmaderm_cart") || "[]");
+    cart.value = Array.isArray(saved) ? saved : [];
+  } catch {
+    cart.value = [];
+  }
 };
 
 onMounted(() => {
@@ -91,36 +90,48 @@ onMounted(() => {
   window.addEventListener("storage", loadCart);
 });
 
+onBeforeUnmount(() => {
+  window.removeEventListener("storage", loadCart);
+});
+
+const money = (value) => Number(value || 0).toLocaleString("en-US");
+
 const subtotal = computed(() =>
   cart.value.reduce(
-    (acc, item) => acc + Number(item.priceUSD || 0) * Number(item.qty || 0),
+    (acc, item) => acc + Number(item.priceRD || 0) * Number(item.quantity || 0),
     0
   )
 );
 
-const shipping = computed(() => (subtotal.value >= 45 ? 0 : 5.99));
+const shipping = computed(() => (subtotal.value >= 3000 ? 0 : 250));
 const total = computed(() => subtotal.value + shipping.value);
 
+const saveCart = () => {
+  localStorage.setItem("pharmaderm_cart", JSON.stringify(cart.value));
+  window.dispatchEvent(new Event("storage"));
+};
+
 const increaseQty = (index) => {
-  const item = cart.value[index];
-  updateCartItemQty(index, Number(item.qty || 1) + 1);
-  loadCart();
+  cart.value[index].quantity = Number(cart.value[index].quantity || 1) + 1;
+  saveCart();
 };
 
 const decreaseQty = (index) => {
-  const item = cart.value[index];
-  updateCartItemQty(index, Math.max(1, Number(item.qty || 1) - 1));
-  loadCart();
+  cart.value[index].quantity = Math.max(
+    1,
+    Number(cart.value[index].quantity || 1) - 1
+  );
+  saveCart();
 };
 
 const removeItem = (index) => {
-  removeCartItem(index);
-  loadCart();
+  cart.value.splice(index, 1);
+  saveCart();
 };
 
 const clearAll = () => {
-  clearCart();
-  loadCart();
+  cart.value = [];
+  saveCart();
 };
 </script>
 
