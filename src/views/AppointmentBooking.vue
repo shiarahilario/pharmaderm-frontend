@@ -296,14 +296,18 @@ async function bookAppointment() {
   }
 
   try {
-    if (isSupabaseConfigured && userId) {
+    if (isSupabaseConfigured) {
+      if (!userId) {
+        throw new Error('No hay usuario autenticado. Inicia sesión para guardar la cita en la base de datos.')
+      }
       const { error } = await supabase.from('appointments').insert(aptData)
       if (error) throw error
     }
     history.saveAppointment?.({ ...aptData, doctor_name: selectedDoctor.value.name })
     booked.value = true
   } catch (e) {
-    errorMsg.value = 'No se pudo guardar la cita en este momento.'
+    console.warn('[AppointmentBooking] Save failed:', e)
+    errorMsg.value = e?.message || 'No se pudo guardar la cita en este momento.'
   } finally {
     isSubmitting.value = false
   }

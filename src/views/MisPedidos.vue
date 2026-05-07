@@ -25,7 +25,7 @@
           <div class="order-card__header">
             <div>
               <p class="order-number">Pedido #{{ order.order_number || order.id }}</p>
-              <p class="order-date">{{ formatDate(order.created_at) }}</p>
+              <p class="order-date">{{ formatDate(order.created_at || order.date) }}</p>
             </div>
             <span class="order-status" :class="statusClass(order.status)">
               {{ statusLabel(order.status) }}
@@ -64,7 +64,7 @@ import { useHistoryStore } from '../stores/useHistoryStore'
 import { useAuthStore } from '../stores/useAuthStore'
 import { useSettingsStore } from '../stores/useSettingsStore'
 import { formatPrice, convertPrice } from '../utils/currency.js'
-import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
+import orderService from '../services/orderService.js'
 
 const router = useRouter()
 const history = useHistoryStore()
@@ -108,23 +108,12 @@ function paymentLabel(method) {
 async function loadOrders() {
   isLoading.value = true
   try {
-    // Intenta cargar desde Supabase
-    if (isSupabaseConfigured) {
-      const userId = auth.user?.value?.id
-      if (userId) {
-        const { data, error } = await supabase
-          .from('orders')
-          .select('*, order_items(*)')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
-
-        if (!error && data?.length) {
-          orders.value = data.map(o => ({
-            ...o,
-            items: o.order_items || [],
-          }))
-          return
-        }
+    const userId = auth.user?.value?.id
+    if (userId) {
+      const remoteOrders = await orderService.getUserOrdersFromSupabase(userId)
+      if (remoteOrders.length > 0) {
+        orders.value = remoteOrders
+        return
       }
     }
 

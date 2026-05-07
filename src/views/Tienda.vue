@@ -98,12 +98,11 @@
           </div>
         </aside>
 
-        <section class="products-zone" v-reveal>
+        <section class="products-zone">
           <div class="products-grid">
             <article
               v-for="(product, i) in sortedProducts"
               :key="product.id"
-              v-reveal="{ delay: (i % 3) * 0.08 }"
               class="product-card"
             >
               <div class="card-image-wrap" @click="openProduct(product.slug)">

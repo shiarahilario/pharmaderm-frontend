@@ -129,6 +129,47 @@ export const orderService = {
       return null
     }
   },
+
+  /**
+   * Get user orders from Supabase, normalized for UI consumption.
+   * @param {string} userId
+   * @returns {Promise<Array>}
+   */
+  async getUserOrdersFromSupabase(userId) {
+    if (!isSupabaseConfigured || !userId) {
+      return []
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+
+      if (error || !data) {
+        if (error) {
+          console.warn('[OrderService] Fetch orders failed:', error.message)
+        }
+        return []
+      }
+
+      return data.map(order => ({
+        ...order,
+        items: (order.order_items || []).map(item => ({
+          id: item.id,
+          name: item.product_name || 'Producto',
+          size: item.size_label || '',
+          quantity: item.quantity || 1,
+          priceRD: Number(item.unit_price_dop || 0),
+          subtotal: Number(item.subtotal || 0),
+        })),
+      }))
+    } catch (error) {
+      console.warn('[OrderService] Fetch orders exception:', error)
+      return []
+    }
+  },
 }
 
 export default orderService

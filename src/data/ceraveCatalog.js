@@ -2,7 +2,7 @@
 
 const ph = (text) => `https://placehold.co/900x1100/f0f7ff/1e3a8a?text=${encodeURIComponent(text)}`;
 
-export const ceraveCatalog = [
+const ceraveCoreCatalog = [
   {
     id: 'cerave-moisturizing-cream',
     slug: 'cerave-moisturizing-cream',
@@ -379,6 +379,90 @@ export const ceraveCatalog = [
     ],
     pairsBestWith: ['cerave-hydrating-cleanser', 'cerave-moisturizing-cream'],
   },
+];
+
+const ceraveExtraCatalog = [
+  { id: 'cerave-acne-control-cleanser', slug: 'cerave-acne-control-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Acne Prone', 'Oily Skin', 'Rough Texture'], name: 'Acne Control Cleanser', subtitle: '2% Salicylic Acid Cleanser For Acne-Prone Skin', priceUSD: 17.99, rating: 4.4, reviews: 2591, size: '237ML' },
+  { id: 'cerave-acne-foaming-cream-cleanser', slug: 'cerave-acne-foaming-cream-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Acne Prone', 'Oily Skin'], name: 'Acne Foaming Cream Cleanser', subtitle: '4% Benzoyl Peroxide Acne Cleanser', priceUSD: 17.99, rating: 4.4, reviews: 2190, size: '150ML' },
+  { id: 'cerave-renewing-sa-cleanser', slug: 'cerave-renewing-sa-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Acne Prone', 'Rough Texture', 'Oily Skin'], name: 'Renewing SA Cleanser', subtitle: 'Salicylic Acid Cleanser For Rough & Bumpy Skin', priceUSD: 16.99, rating: 4.6, reviews: 3570, size: '236ML' },
+  { id: 'cerave-cream-to-foam-cleanser', slug: 'cerave-cream-to-foam-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Dry Skin', 'Sensitive Skin'], name: 'Hydrating Cream-To-Foam Cleanser', subtitle: 'Gentle Makeup Removing Cleanser', priceUSD: 15.99, rating: 4.5, reviews: 2415, size: '236ML' },
+  { id: 'cerave-foaming-oil-cleanser', slug: 'cerave-foaming-oil-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Dry Skin', 'Sensitive Skin', 'Eczema'], name: 'Foaming Oil Cleanser', subtitle: 'Hydrating Cleanser For Very Dry Skin', priceUSD: 16.99, rating: 4.5, reviews: 1432, size: '236ML' },
+  { id: 'cerave-hydrating-cleanser-bar', slug: 'cerave-hydrating-cleanser-bar', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Dry Skin', 'Sensitive Skin'], name: 'Hydrating Cleanser Bar', subtitle: 'Soap-Free Cleansing Bar With Ceramides', priceUSD: 8.99, rating: 4.4, reviews: 1241, size: '128G' },
+  { id: 'cerave-blemish-control-cleanser', slug: 'cerave-blemish-control-cleanser', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Acne Prone', 'Oily Skin'], name: 'Blemish Control Cleanser', subtitle: 'Purifying Cleanser For Blemish-Prone Skin', priceUSD: 16.99, rating: 4.3, reviews: 1099, size: '236ML' },
+  { id: 'cerave-hydrating-micellar-water', slug: 'cerave-hydrating-micellar-water', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Hydrating Micellar Water', subtitle: 'No-Rinse Cleanser For Sensitive Skin', priceUSD: 12.99, rating: 4.4, reviews: 2018, size: '296ML' },
+
+  { id: 'cerave-moisturizing-lotion', slug: 'cerave-moisturizing-lotion', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Dry Skin', 'Dehydrated Skin', 'Sensitive Skin'], name: 'Moisturizing Lotion', subtitle: 'Daily Lightweight Moisturizer For Face & Body', priceUSD: 17.99, rating: 4.7, reviews: 5290, size: '355ML' },
+  { id: 'cerave-daily-moisturizing-lotion', slug: 'cerave-daily-moisturizing-lotion', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Dry Skin', 'Sensitive Skin'], name: 'Daily Moisturizing Lotion', subtitle: 'Oil-Free Hydration With Ceramides', priceUSD: 14.99, rating: 4.6, reviews: 4200, size: '236ML' },
+  { id: 'cerave-am-facial-moisturizing-lotion-spf30', slug: 'cerave-am-facial-moisturizing-lotion-spf30', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['UV Protection', 'Dry Skin', 'Sensitive Skin'], name: 'AM Facial Moisturizing Lotion SPF 30', subtitle: 'Day Moisturizer With Broad Spectrum SPF 30', priceUSD: 16.99, rating: 4.3, reviews: 6185, size: '89ML' },
+  { id: 'cerave-am-facial-moisturizing-lotion-spf50', slug: 'cerave-am-facial-moisturizing-lotion-spf50', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['UV Protection', 'Sensitive Skin'], name: 'AM Facial Moisturizing Lotion SPF 50', subtitle: 'Hydrating Daily Moisturizer With SPF 50', priceUSD: 18.99, rating: 4.4, reviews: 2418, size: '52ML' },
+  { id: 'cerave-ultra-light-moisturizing-lotion-spf30', slug: 'cerave-ultra-light-moisturizing-lotion-spf30', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Oily Skin', 'UV Protection', 'Acne Prone'], name: 'Ultra-Light Moisturizing Lotion SPF 30', subtitle: 'Oil-Free Day Lotion For Oily Skin', priceUSD: 19.99, rating: 4.5, reviews: 1760, size: '52ML' },
+  { id: 'cerave-oil-control-moisturizing-gel-cream', slug: 'cerave-oil-control-moisturizing-gel-cream', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Oily Skin', 'Acne Prone'], name: 'Oil Control Moisturizing Gel-Cream', subtitle: 'Shine Control Moisturizer For Oily Skin', priceUSD: 18.99, rating: 4.4, reviews: 1322, size: '52ML' },
+  { id: 'cerave-skin-renewing-night-cream', slug: 'cerave-skin-renewing-night-cream', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Anti-Aging', 'Dry Skin', 'Sensitive Skin'], name: 'Skin Renewing Night Cream', subtitle: 'Peptide-Rich Overnight Moisturizer', priceUSD: 22.99, rating: 4.6, reviews: 1653, size: '48G' },
+  { id: 'cerave-healing-ointment', slug: 'cerave-healing-ointment', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Dry Skin', 'Eczema', 'Sensitive Skin'], name: 'Healing Ointment', subtitle: 'Protective Ointment For Dry, Cracked Skin', priceUSD: 14.99, rating: 4.8, reviews: 4900, size: '144G' },
+  { id: 'cerave-itch-relief-moisturizing-cream', slug: 'cerave-itch-relief-moisturizing-cream', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Eczema', 'Dry Skin', 'Sensitive Skin'], name: 'Itch Relief Moisturizing Cream', subtitle: 'Soothing Moisturizer For Itchy, Dry Skin', priceUSD: 19.99, rating: 4.5, reviews: 1140, size: '340G' },
+  { id: 'cerave-diabetics-dry-skin-relief', slug: 'cerave-diabetics-dry-skin-relief', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Dry Skin', 'Rough Texture'], name: 'Diabetics’ Dry Skin Relief Moisturizing Cream', subtitle: 'Fast-Absorbing Relief For Very Dry Skin', priceUSD: 18.99, rating: 4.4, reviews: 843, size: '236ML' },
+  { id: 'cerave-eye-repair-cream', slug: 'cerave-eye-repair-cream', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Anti-Aging', 'Sensitive Skin'], name: 'Eye Repair Cream', subtitle: 'Under-Eye Cream For Puffiness & Dark Circles', priceUSD: 18.99, rating: 4.2, reviews: 1930, size: '14ML' },
+  { id: 'cerave-baby-moisturizing-lotion', slug: 'cerave-baby-moisturizing-lotion', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Baby Moisturizing Lotion', subtitle: 'Gentle Fragrance-Free Baby Lotion', priceUSD: 11.99, rating: 4.7, reviews: 1011, size: '237ML' },
+  { id: 'cerave-baby-cream', slug: 'cerave-baby-cream', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Sensitive Skin', 'Dry Skin', 'Eczema'], name: 'Baby Cream', subtitle: 'Rich Moisturizer For Delicate Baby Skin', priceUSD: 11.99, rating: 4.7, reviews: 998, size: '142G' },
+
+  { id: 'cerave-resurfacing-retinol-serum', slug: 'cerave-resurfacing-retinol-serum', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Acne Prone', 'Anti-Aging', 'Uneven Skin Tone'], name: 'Resurfacing Retinol Serum', subtitle: 'Post-Acne Mark Refining Retinol Serum', priceUSD: 21.99, rating: 4.5, reviews: 2860, size: '30ML' },
+  { id: 'cerave-skin-renewing-vitamin-c-serum', slug: 'cerave-skin-renewing-vitamin-c-serum', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Anti-Aging', 'Uneven Skin Tone'], name: 'Skin Renewing Vitamin C Serum', subtitle: '10% Vitamin C Brightening Serum', priceUSD: 23.99, rating: 4.4, reviews: 1912, size: '30ML' },
+  { id: 'cerave-hydrating-hyaluronic-serum', slug: 'cerave-hydrating-hyaluronic-serum', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Dehydrated Skin', 'Dry Skin', 'Sensitive Skin'], name: 'Hydrating Hyaluronic Serum', subtitle: 'Lightweight Hyaluronic Acid Serum', priceUSD: 19.99, rating: 4.5, reviews: 1774, size: '30ML' },
+  { id: 'cerave-acne-control-gel', slug: 'cerave-acne-control-gel', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Acne Prone', 'Oily Skin'], name: 'Acne Control Gel', subtitle: 'AHA/BHA Gel For Breakout-Prone Skin', priceUSD: 19.99, rating: 4.3, reviews: 1329, size: '40ML' },
+  { id: 'cerave-skin-renewing-retinol-serum-alt', slug: 'cerave-skin-renewing-retinol-serum-alt', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Anti-Aging', 'Rough Texture'], name: 'Skin Renewing Retinol Serum (Advanced)', subtitle: 'Encapsulated Retinol For Smoother Skin', priceUSD: 24.99, rating: 4.4, reviews: 1114, size: '30ML' },
+
+  { id: 'cerave-hydrating-mineral-sunscreen-spf30', slug: 'cerave-hydrating-mineral-sunscreen-spf30', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Sensitive Skin', 'Dry Skin'], name: 'Hydrating Mineral Sunscreen SPF 30', subtitle: '100% Mineral Face Sunscreen', priceUSD: 15.99, rating: 4.2, reviews: 1420, size: '75ML' },
+  { id: 'cerave-hydrating-mineral-sunscreen-spf30-sheer-tint', slug: 'cerave-hydrating-mineral-sunscreen-spf30-sheer-tint', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Uneven Skin Tone', 'Sensitive Skin'], name: 'Hydrating Mineral Sunscreen SPF 30 Sheer Tint', subtitle: 'Tinted Mineral Face Sunscreen', priceUSD: 16.99, rating: 4.3, reviews: 1885, size: '50ML' },
+  { id: 'cerave-invisible-zinc-sunscreen-spf50', slug: 'cerave-invisible-zinc-sunscreen-spf50', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Sensitive Skin', 'Oily Skin'], name: 'Invisible Zinc Sunscreen SPF 50', subtitle: 'Lightweight Mineral SPF For Daily Use', priceUSD: 16.99, rating: 4.5, reviews: 1222, size: '50ML' },
+  { id: 'cerave-hydrating-sheer-sunscreen-spf30', slug: 'cerave-hydrating-sheer-sunscreen-spf30', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Sensitive Skin'], name: 'Hydrating Sheer Sunscreen SPF 30', subtitle: 'Sheer Chemical-Mineral Hybrid SPF', priceUSD: 15.99, rating: 4.2, reviews: 1044, size: '88ML' },
+  { id: 'cerave-body-mineral-sunscreen-spf50', slug: 'cerave-body-mineral-sunscreen-spf50', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Sensitive Skin'], name: 'Body Mineral Sunscreen SPF 50', subtitle: 'Water-Resistant Mineral Sunscreen', priceUSD: 17.99, rating: 4.3, reviews: 832, size: '150ML' },
+  { id: 'cerave-ultra-light-moisturizing-gel', slug: 'cerave-ultra-light-moisturizing-gel', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Oiliness', 'Dehydrated Skin', 'Sensitive Skin'], name: 'Ultra-Light Moisturizing Gel', subtitle: 'Lightweight Gel Moisturizer For Combination To Oily Skin', priceUSD: 18.99, rating: 4.4, reviews: 1210, size: '52ML' },
+  { id: 'cerave-acne-control-spot-treatment', slug: 'cerave-acne-control-spot-treatment', line: 'Serums', type: 'Acne Treatment', category: 'Acne Treatment', concerns: ['Acne Prone Skin', 'Acne Prone', 'Oiliness'], name: 'Acne Control Spot Treatment', subtitle: 'Targeted Spot Treatment For Active Breakouts', priceUSD: 14.99, rating: 4.2, reviews: 742, size: '30ML' },
+  { id: 'cerave-skin-renewing-gel-oil', slug: 'cerave-skin-renewing-gel-oil', line: 'Serums', type: 'Serum', category: 'Face Serum', concerns: ['Dry Skin', 'Dehydrated Skin', 'Fine Lines & Wrinkles'], name: 'Skin Renewing Gel Oil', subtitle: 'Nourishing Gel Oil For Smoother Looking Skin', priceUSD: 23.99, rating: 4.4, reviews: 980, size: '29ML' },
+  { id: 'cerave-moisturizing-cream-spf30', slug: 'cerave-moisturizing-cream-spf30', line: 'Sunscreens', type: 'Moisturizer SPF', category: 'Moisturizer SPF', concerns: ['UV Protection', 'Dry Skin', 'Sensitive Skin'], name: 'Moisturizing Cream SPF 30', subtitle: 'Daily Moisturizer With Broad Spectrum SPF 30', priceUSD: 17.99, rating: 4.3, reviews: 810, size: '75ML' },
+  { id: 'cerave-renewing-nightly-exfoliating-treatment', slug: 'cerave-renewing-nightly-exfoliating-treatment', line: 'Serums', type: 'Treatment', category: 'Treatment', concerns: ['Rough Texture', 'Uneven Skin Tone', 'Fine Lines & Wrinkles'], name: 'Renewing Nightly Exfoliating Treatment', subtitle: 'Leave-On Exfoliating Night Treatment', priceUSD: 21.99, rating: 4.3, reviews: 690, size: '50ML' },
+  { id: 'cerave-mineral-sunscreen-stick-spf50', slug: 'cerave-mineral-sunscreen-stick-spf50', line: 'Sunscreens', type: 'Sunscreen', category: 'Face Sunscreen', concerns: ['UV Protection', 'Sensitive Skin'], name: 'Mineral Sunscreen Stick SPF 50', subtitle: 'Portable 100% Mineral Sunscreen Stick', priceUSD: 12.99, rating: 4.2, reviews: 1022, size: '13G' },
+  { id: 'cerave-anti-dandruff-hydrating-shampoo', slug: 'cerave-anti-dandruff-hydrating-shampoo', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Anti-Dandruff Hydrating Shampoo', subtitle: 'Hydrating Pyrithione Zinc Shampoo', priceUSD: 11.99, rating: 4.1, reviews: 630, size: '355ML' },
+  { id: 'cerave-anti-dandruff-hydrating-conditioner', slug: 'cerave-anti-dandruff-hydrating-conditioner', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Anti-Dandruff Hydrating Conditioner', subtitle: 'Moisturizing Conditioner For Flaky Scalp', priceUSD: 11.99, rating: 4.1, reviews: 612, size: '355ML' },
+  { id: 'cerave-gentle-hydrating-shampoo', slug: 'cerave-gentle-hydrating-shampoo', line: 'Cleansers', type: 'Cleanser', category: 'Face Wash', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Gentle Hydrating Shampoo', subtitle: 'Fragrance-Free Gentle Cleansing Shampoo', priceUSD: 10.99, rating: 4.2, reviews: 589, size: '355ML' },
+  { id: 'cerave-gentle-hydrating-conditioner', slug: 'cerave-gentle-hydrating-conditioner', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Sensitive Skin', 'Dry Skin'], name: 'Gentle Hydrating Conditioner', subtitle: 'Fragrance-Free Conditioning Formula', priceUSD: 10.99, rating: 4.2, reviews: 572, size: '355ML' },
+  { id: 'cerave-eczema-relief-cream-oil', slug: 'cerave-eczema-relief-cream-oil', line: 'Moisturizers', type: 'Moisturizer', category: 'Face Moisturizer', concerns: ['Eczema', 'Dry Skin', 'Sensitive Skin'], name: 'Eczema Relief Creamy Oil', subtitle: 'Soothing Creamy Oil For Eczema-Prone Skin', priceUSD: 17.99, rating: 4.5, reviews: 854, size: '236ML' },
+  { id: 'cerave-skin-renewing-day-cream-spf30', slug: 'cerave-skin-renewing-day-cream-spf30', line: 'Sunscreens', type: 'Moisturizer SPF', category: 'Moisturizer SPF', concerns: ['Fine Lines & Wrinkles', 'UV Protection', 'Dehydrated Skin'], name: 'Skin Renewing Day Cream SPF 30', subtitle: 'Anti-Aging Day Moisturizer With SPF', priceUSD: 24.99, rating: 4.4, reviews: 940, size: '50ML' },
+]
+
+const normalizeCeraVeProduct = (item) => ({
+  brand: 'cerave',
+  brandLabel: 'CERAVE',
+  safety: ['Fragrance Free', 'Non Comedogenic'],
+  ingredientsTags: ['Ceramides', 'Hyaluronic Acid', 'Niacinamide'],
+  gallery: [ph(item.name)],
+  image: ph(item.name),
+  priceFrom: item.priceUSD,
+  sizes: [{ label: item.size || 'Default', priceUSD: item.priceUSD, pricePer: '' }],
+  defaultSize: item.size || 'Default',
+  description: `${item.name} de CeraVe, formulado para ${item.concerns?.join(', ').toLowerCase()}.`,
+  benefits: ['Dermatologist developed', 'Supports skin barrier', 'Suitable for daily use'],
+  recommendedFor: { concerns: item.concerns || [], skinTypes: ['All skin types'] },
+  keyIngredients: [{ name: 'Ceramides', text: 'Help restore the skin barrier.' }],
+  fullIngredients: 'See product packaging for full ingredient list.',
+  howToUse: { quantity: 'As needed', when: 'AM/PM', where: 'Face', tip: 'Follow with SPF in daytime.' },
+  productSafety: ['Fragrance Free', 'Non Comedogenic', 'Dermatologist Tested'],
+  faqs: [],
+  pairsBestWith: [],
+  ...item,
+  concerns: (() => {
+    const inConcerns = item.concerns || []
+    const set = new Set(inConcerns)
+    if (set.has('Acne Prone')) set.add('Acne Prone Skin')
+    if (set.has('Oily Skin')) set.add('Oiliness')
+    if (set.has('Anti-Aging')) set.add('Fine Lines & Wrinkles')
+    return [...set]
+  })(),
+})
+
+export const ceraveCatalog = [
+  ...ceraveCoreCatalog,
+  ...ceraveExtraCatalog.map(normalizeCeraVeProduct),
 ];
 
 export const getCeraVeBySlug = (slug) => ceraveCatalog.find(p => p.slug === slug);

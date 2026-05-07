@@ -110,29 +110,107 @@ async function _syncWithSupabase(userId) {
       staleKeys.forEach(base => localStorage.removeItem(`pharmaderm_${base}_${userId}`))
     } else if (!cntErr && count > 0) {
       // 1. Reconstruct Quiz
-      const localQuizResult = localStorage.getItem(`pharmaderm_quiz_result_${userId}`)
-      if (!localQuizResult) {
+      const localQuizRaw = localStorage.getItem(`pharmaderm_quiz_result_${userId}`)
+      let localQuizParsed = null
+      try { localQuizParsed = localQuizRaw ? JSON.parse(localQuizRaw) : null } catch { localQuizParsed = null }
+      const needsQuizRebuild = !localQuizParsed || !localQuizParsed.completed
+
+      if (needsQuizRebuild) {
         let reconstructed = null
         try {
           const { data: qData } = await supabase
             .from('quiz_sessions')
-            .select('*')
+            .select(`
+              *,
+              skin_types ( code ),
+              skin_analyses (
+                primary_concern,
+                profile_title,
+                profile_summary,
+                routine_focus,
+                metrics,
+                detailed_findings,
+                created_at
+              )
+            `)
             .eq('user_id', userId)
-            .order('completed_at', { ascending: false })
+            .order('created_at', { ascending: false })
             .limit(1)
             .maybeSingle()
 
-          if (qData?.completed_at) {
+          if (qData) {
+            const latestAnalysis = Array.isArray(qData.skin_analyses) ? qData.skin_analyses[0] : null
+            const metrics = latestAnalysis?.metrics || qData.full_metrics || []
+            const resolvedDate =
+              qData.completed_at ||
+              latestAnalysis?.created_at ||
+              qData.created_at ||
+              new Date().toISOString()
+            const skinTypeCode =
+              qData.skin_type ||
+              qData.skin_types?.code ||
+              ''
+            const primaryConcern =
+              latestAnalysis?.primary_concern ||
+              qData.primary_concern ||
+              ''
+            const concerns =
+              Array.isArray(qData.concerns) && qData.concerns.length
+                ? qData.concerns
+                : (primaryConcern ? [primaryConcern] : [])
+
             reconstructed = {
-              completed: true, id: qData.id, date: qData.completed_at,
-              skinType: qData.skin_type || '', sensitivity: qData.sensitivity || '',
-              concerns: qData.concerns || [], primaryConcern: qData.primary_concern || '',
-              profileTitle: qData.profile_title || '', routineFocus: qData.routine_focus || '',
-              fullMetrics: qData.full_metrics || [], summaryMetrics: (qData.full_metrics || []).slice(0, 3),
+              completed: true,
+              id: qData.id,
+              date: resolvedDate,
+              skinType: skinTypeCode,
+              sensitivity: qData.sensitivity || qData.barrier_reactivity || '',
+              concerns,
+              primaryConcern,
+              profileTitle: latestAnalysis?.profile_title || qData.profile_title || '',
+              profileSummary: latestAnalysis?.profile_summary || qData.profile_summary || '',
+              routineFocus: latestAnalysis?.routine_focus || qData.routine_focus || '',
+              detailedFindings: latestAnalysis?.detailed_findings || qData.detailed_findings || [],
+              fullMetrics: metrics,
+              summaryMetrics: (metrics || []).slice(0, 3),
               answers: qData.answers || {}, photoMeta: qData.photo_meta || {},
             }
           }
         } catch { /* ignore */ }
+
+        if (!reconstructed) {
+          try {
+            const { data: aData } = await supabase
+              .from('skin_analyses')
+              .select('*')
+              .eq('user_id', userId)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle()
+
+            if (aData) {
+              const primaryConcern = aData.primary_concern || ''
+              const metrics = aData.metrics || []
+              reconstructed = {
+                completed: true,
+                id: aData.quiz_session_id || aData.id,
+                date: aData.created_at || new Date().toISOString(),
+                skinType: '',
+                sensitivity: '',
+                concerns: primaryConcern ? [primaryConcern] : [],
+                primaryConcern,
+                profileTitle: aData.profile_title || '',
+                profileSummary: aData.profile_summary || '',
+                routineFocus: aData.routine_focus || '',
+                detailedFindings: aData.detailed_findings || [],
+                fullMetrics: metrics,
+                summaryMetrics: (metrics || []).slice(0, 3),
+                answers: {},
+                photoMeta: {},
+              }
+            }
+          } catch { /* ignore */ }
+        }
 
         if (reconstructed) {
           localStorage.setItem(`pharmaderm_quiz_result_${userId}`, JSON.stringify(reconstructed))
@@ -172,20 +250,54 @@ async function _syncWithSupabase(userId) {
       try {
         const { data: aData } = await supabase
           .from('appointments')
-          .select('*')
+          .select(`
+            id,
+            user_id,
+            dermatologist_id,
+            appointment_type,
+            mode,
+            scheduled_date,
+            scheduled_time,
+            reason,
+            notes,
+            urgency,
+            status,
+            confirmation_code,
+            analysis_id,
+            created_at,
+            dermatologists (id, name, specialty, photo_url)
+          `)
           .eq('user_id', userId)
           .order('scheduled_date', { ascending: false })
           .limit(10)
 
         if (aData?.length > 0) {
           const reconstructedApts = aData.map(a => ({
-            id: a.id, date: a.scheduled_date, time: a.scheduled_time,
-            doctor: 'Dermatólogo Especialista', status: a.status === 'confirmed' ? 'Confirmada' : a.status,
-            mode: a.appointment_type, confirmationCode: a.confirmation_code
+            id: a.id,
+            doctor: a.dermatologists?.name || 'Dermatólogo Especialista',
+            doctor_name: a.dermatologists?.name || 'Dermatólogo Especialista',
+            doctor_specialty: a.dermatologists?.specialty || 'Dermatología',
+            doctor_photo: a.dermatologists?.photo_url || null,
+            date: a.scheduled_date,
+            scheduled_date: a.scheduled_date,
+            time: a.scheduled_time,
+            scheduled_time: a.scheduled_time,
+            appointment_type: a.appointment_type,
+            mode: a.mode || a.dermatologists?.mode || null,
+            reason: a.reason || null,
+            notes: a.notes || null,
+            urgency: a.urgency,
+            status: a.status,
+            confirmationCode: a.confirmation_code,
+            confirmation_code: a.confirmation_code,
+            analysis_id: a.analysis_id,
+            created_at: a.created_at,
           }))
           localStorage.setItem(`pharmaderm_appointments_list_${userId}`, JSON.stringify(reconstructedApts))
         }
-      } catch { /* ignore */ }
+      } catch (syncAptError) {
+        console.warn('[HistoryStore] Failed to sync appointments:', syncAptError)
+      }
 
       // 5. Sync Orders
       try {

@@ -866,6 +866,101 @@ for (const p of lrpCatalog) {
   p.gallery = [localImg(fileName)];
 }
 
+const lrpExtraCatalog = [
+  { id: "lrp-effaclar-adapalene-0-1-gel", slug: "effaclar-adapalene-gel-0-1-topical-retinoid-for-acne", line: "Effaclar", category: "Acne Treatment", type: "Treatment", concerns: ["Acne Prone Skin", "Acne Prone", "Rough Texture"], ingredientsTags: ["Adapalene"], name: "Effaclar Adapalene Gel 0.1% Topical Retinoid For Acne", subtitle: "Daily topical retinoid treatment for acne-prone skin", priceUSD: 39.99, rating: 4.4, reviews: 1280, sizes: [{ label: "45G", priceUSD: 39.99, pricePer: "" }], defaultSize: "45G" },
+  { id: "lrp-effaclar-multi-target-salicylic-treatment", slug: "effaclar-multi-target-acne-treatment-with-salicylic-acid", line: "Effaclar", category: "Acne Treatment", type: "Treatment", concerns: ["Acne Prone Skin", "Acne Prone", "Oiliness", "Uneven Skin Tone"], ingredientsTags: ["Salicylic Acid", "Niacinamide"], name: "Effaclar Multi-Target Acne Treatment with Salicylic Acid", subtitle: "Acne treatment for blemishes and post-acne marks", priceUSD: 29.99, rating: 4.4, reviews: 910, sizes: [{ label: "40ML", priceUSD: 29.99, pricePer: "" }], defaultSize: "40ML" },
+  { id: "lrp-effaclar-duo-plus-m", slug: "effaclar-duo-plus-m-multi-target-treatment", line: "Effaclar", category: "Treatment", type: "Treatment", concerns: ["Acne Prone Skin", "Acne Prone", "Oiliness"], ingredientsTags: ["Niacinamide"], name: "Effaclar Duo+M Multi-Target Blemish Treatment", subtitle: "Daily treatment to reduce blemishes and marks", priceUSD: 37.99, rating: 4.5, reviews: 1605, sizes: [{ label: "40ML", priceUSD: 37.99, pricePer: "" }], defaultSize: "40ML" },
+  { id: "lrp-effaclar-blemish-patches", slug: "effaclar-duo-plus-m-multi-target-blemish-patches", line: "Effaclar", category: "Acne Treatment", type: "Treatment", concerns: ["Acne Prone Skin", "Acne Prone"], ingredientsTags: ["Hydrocolloid"], name: "Effaclar Duo+M Multi-Target Blemish Patches", subtitle: "Invisible hydrocolloid patches for active blemishes", priceUSD: 12.99, rating: 4.2, reviews: 520, sizes: [{ label: "22 PATCHES", priceUSD: 12.99, pricePer: "" }], defaultSize: "22 PATCHES" },
+  { id: "lrp-toleriane-double-repair-matte-spf30", slug: "toleriane-double-repair-matte-face-moisturizer-spf-30-for-oily-skin", line: "Toleriane", category: "Moisturizer SPF", type: "Moisturizer SPF", concerns: ["Oiliness", "Sensitive Skin", "UV Protection"], ingredientsTags: ["Niacinamide"], name: "Toleriane Double Repair Matte Face Moisturizer SPF 30 for Oily Skin", subtitle: "Mattifying day moisturizer with SPF for oily skin", priceUSD: 29.99, rating: 4.4, reviews: 840, sizes: [{ label: "75ML", priceUSD: 29.99, pricePer: "" }], defaultSize: "75ML" },
+  { id: "lrp-anthelios-clear-skin-oil-free-spf60", slug: "anthelios-clear-skin-oil-free-sunscreen-spf-60", line: "Anthelios", category: "Face Sunscreen", type: "Sunscreen", concerns: ["UV Protection", "Oiliness", "Acne Prone Skin"], ingredientsTags: ["Thermal Spring Water"], name: "Anthelios Clear Skin Oil Free Sunscreen SPF 60", subtitle: "Oil-absorbing broad spectrum sunscreen for oily skin", priceUSD: 29.99, rating: 4.5, reviews: 2250, sizes: [{ label: "50ML", priceUSD: 29.99, pricePer: "" }], defaultSize: "50ML" },
+  { id: "lrp-retinol-b3-serum", slug: "retinol-b3-serum", line: "Retinol B3", category: "Face Serum", type: "Serum", concerns: ["Fine Lines & Wrinkles", "Uneven Skin Tone", "Rough Texture"], ingredientsTags: ["Retinol", "Niacinamide"], name: "Retinol B3 Serum", subtitle: "Night serum to visibly reduce wrinkles and texture", priceUSD: 44.99, rating: 4.5, reviews: 1530, sizes: [{ label: "30ML", priceUSD: 44.99, pricePer: "" }], defaultSize: "30ML" },
+  { id: "lrp-anthelios-age-correct-spf50", slug: "anthelios-age-correct-spf-50", line: "Anthelios", category: "Face Sunscreen", type: "Sunscreen", concerns: ["UV Protection", "Fine Lines & Wrinkles", "Dark Spots"], ingredientsTags: ["Hyaluronic Acid", "Niacinamide"], name: "Anthelios Age Correct SPF 50", subtitle: "Daily SPF with anti-aging correction", priceUSD: 44.99, rating: 4.4, reviews: 730, sizes: [{ label: "50ML", priceUSD: 44.99, pricePer: "" }], defaultSize: "50ML" },
+  { id: "lrp-anthelios-melt-in-milk-spf100", slug: "anthelios-melt-in-milk-sunscreen-spf-100", line: "Anthelios", category: "Face Sunscreen", type: "Sunscreen", concerns: ["UV Protection", "Sensitive Skin"], ingredientsTags: ["Thermal Spring Water"], name: "Anthelios Melt-In Milk Sunscreen SPF 100", subtitle: "High protection body and face sunscreen", priceUSD: 29.99, rating: 4.5, reviews: 1210, sizes: [{ label: "150ML", priceUSD: 29.99, pricePer: "" }], defaultSize: "150ML" },
+  { id: "lrp-anthelios-uv-correct-spf70", slug: "anthelios-uv-correct-spf-70", line: "Anthelios", category: "Face Sunscreen", type: "Sunscreen", concerns: ["UV Protection", "Dark Spots", "Fine Lines & Wrinkles"], ingredientsTags: ["Niacinamide"], name: "Anthelios UV Correct SPF 70", subtitle: "Broad spectrum SPF with visible correction benefits", priceUSD: 39.99, rating: 4.4, reviews: 860, sizes: [{ label: "50ML", priceUSD: 39.99, pricePer: "" }], defaultSize: "50ML" },
+  { id: "lrp-anthelios-ao-x-daily-antioxidant-serum-spf50", slug: "anthelios-ao-x-daily-antioxidant-serum-spf-50", line: "Anthelios", category: "Face Sunscreen", type: "Sunscreen", concerns: ["UV Protection", "Dull Skin", "Fine Lines & Wrinkles"], ingredientsTags: ["Vitamin C"], name: "Anthelios AOX Daily Antioxidant Serum SPF 50", subtitle: "Antioxidant SPF serum for daily environmental defense", priceUSD: 44.99, rating: 4.4, reviews: 540, sizes: [{ label: "30ML", priceUSD: 44.99, pricePer: "" }], defaultSize: "30ML" },
+  { id: "lrp-cicaplast-balm-b5-40ml", slug: "cicaplast-balm-b5-40ml", line: "Cicaplast", category: "Face Moisturizer", type: "Balm", concerns: ["Dry Skin", "Dry/Damaged", "Sensitive Skin"], ingredientsTags: ["Vitamin B"], name: "Cicaplast Balm B5+ 40ML", subtitle: "Soothing balm for compromised skin barrier", priceUSD: 18.99, rating: 4.7, reviews: 5200, sizes: [{ label: "40ML", priceUSD: 18.99, pricePer: "" }], defaultSize: "40ML" },
+  { id: "lrp-cicaplast-baume-b5-baby", slug: "cicaplast-baume-b5-baby", line: "Cicaplast", category: "Face Moisturizer", type: "Balm", concerns: ["Sensitive Skin", "Dry Skin", "Eczema"], ingredientsTags: ["Vitamin B"], name: "Cicaplast Baume B5 Baby", subtitle: "Daily soothing care for delicate baby skin", priceUSD: 17.99, rating: 4.6, reviews: 690, sizes: [{ label: "100ML", priceUSD: 17.99, pricePer: "" }], defaultSize: "100ML" },
+  { id: "lrp-cicaplast-levres-repair-lip-balm", slug: "cicaplast-levres-repair-lip-balm", line: "Cicaplast", category: "Lip Balm", type: "Lip Balm", concerns: ["Dry Skin", "Dry/Damaged"], ingredientsTags: ["Panthenol"], name: "Cicaplast Levres Repair Lip Balm", subtitle: "Barrier-repairing lip balm for dry lips", priceUSD: 9.99, rating: 4.5, reviews: 510, sizes: [{ label: "7.5ML", priceUSD: 9.99, pricePer: "" }], defaultSize: "7.5ML" },
+  { id: "lrp-lipikar-syndet-ap-plus", slug: "lipikar-syndet-ap-plus-cream-wash", line: "Lipikar", category: "Face Wash", type: "Cleanser", concerns: ["Eczema", "Dry Skin", "Sensitive Skin"], ingredientsTags: ["Niacinamide", "Shea Butter"], name: "Lipikar Syndet AP+ Cream Wash", subtitle: "Ultra-gentle cream wash for dry eczema-prone skin", priceUSD: 17.99, rating: 4.6, reviews: 940, sizes: [{ label: "400ML", priceUSD: 17.99, pricePer: "" }], defaultSize: "400ML" },
+  { id: "lrp-lipikar-lait-body-lotion", slug: "lipikar-lait-body-lotion", line: "Lipikar", category: "Face Moisturizer", type: "Moisturizer", concerns: ["Dry Skin", "Sensitive Skin"], ingredientsTags: ["Niacinamide"], name: "Lipikar Lait Body Lotion", subtitle: "Daily lightweight body lotion for sensitive dry skin", priceUSD: 24.99, rating: 4.5, reviews: 630, sizes: [{ label: "400ML", priceUSD: 24.99, pricePer: "" }], defaultSize: "400ML" },
+  { id: "lrp-lipikar-baum-light-apm", slug: "lipikar-baum-light-apm", line: "Lipikar", category: "Face Moisturizer", type: "Moisturizer", concerns: ["Eczema", "Dry Skin", "Sensitive Skin"], ingredientsTags: ["Niacinamide", "Shea Butter"], name: "Lipikar Baume Light AP+M", subtitle: "Fast-absorbing balm for very dry sensitive skin", priceUSD: 29.99, rating: 4.6, reviews: 570, sizes: [{ label: "400ML", priceUSD: 29.99, pricePer: "" }], defaultSize: "400ML" },
+  { id: "lrp-hyalu-b5-ampoules", slug: "hyalu-b5-ampoules", line: "Hyalu B5", category: "Face Serum", type: "Serum", concerns: ["Fine Lines & Wrinkles", "Dehydrated Skin"], ingredientsTags: ["Hyaluronic Acid", "Vitamin B"], name: "Hyalu B5 Ampoules", subtitle: "Concentrated hydration ampoules for replumping skin", priceUSD: 39.99, rating: 4.4, reviews: 340, sizes: [{ label: "10X1.8ML", priceUSD: 39.99, pricePer: "" }], defaultSize: "10X1.8ML" },
+  { id: "lrp-mela-b3-uv-daily-spf30", slug: "mela-b3-uv-daily-spf-30", line: "Mela B3", category: "Moisturizer SPF", type: "Moisturizer SPF", concerns: ["Dark Spots", "Uneven Skin Tone", "UV Protection"], ingredientsTags: ["Niacinamide"], name: "Mela B3 UV Daily SPF 30", subtitle: "Daily SPF moisturizer for dark spot prone skin", priceUSD: 39.99, rating: 4.4, reviews: 410, sizes: [{ label: "40ML", priceUSD: 39.99, pricePer: "" }], defaultSize: "40ML" },
+  { id: "lrp-pure-vitamin-c-eye-cream", slug: "pure-vitamin-c-eye-cream", line: "Vitamin C", category: "Eye Care", type: "Eye Serum", concerns: ["Fine Lines & Wrinkles", "Dull Skin"], ingredientsTags: ["Vitamin C"], name: "Pure Vitamin C Eye Cream", subtitle: "Brightening anti-wrinkle eye cream", priceUSD: 42.99, rating: 4.3, reviews: 350, sizes: [{ label: "15ML", priceUSD: 42.99, pricePer: "" }], defaultSize: "15ML" },
+  { id: "lrp-redermic-c-vitamin-c-cream", slug: "redermic-c-vitamin-c-cream", line: "Vitamin C", category: "Face Moisturizer", type: "Moisturizer", concerns: ["Fine Lines & Wrinkles", "Dull Skin", "Uneven Skin Tone"], ingredientsTags: ["Vitamin C"], name: "Redermic C Vitamin C Cream", subtitle: "Daily anti-aging moisturizer with vitamin C", priceUSD: 49.99, rating: 4.4, reviews: 480, sizes: [{ label: "40ML", priceUSD: 49.99, pricePer: "" }], defaultSize: "40ML" },
+]
+
+const normalizeLrpProduct = (item) => {
+  const concerns = item.concerns || []
+  const tags = item.ingredientsTags || []
+  const defaultPairs = []
+  if ((item.line || '').toLowerCase().includes('effaclar')) defaultPairs.push('lrp-effaclar-gel-wash', 'lrp-effaclar-mat')
+  if ((item.line || '').toLowerCase().includes('toleriane')) defaultPairs.push('lrp-toleriane-hydrating-cleanser', 'lrp-toleriane-double-repair')
+  if ((item.line || '').toLowerCase().includes('anthelios')) defaultPairs.push('lrp-toleriane-double-repair', 'lrp-hyalu-b5-serum')
+  if ((item.line || '').toLowerCase().includes('lipikar')) defaultPairs.push('lrp-lipikar-cleansing-oil', 'lrp-lipikar-ap-max-cream')
+  if ((item.line || '').toLowerCase().includes('hyalu')) defaultPairs.push('lrp-hyalu-b5-serum', 'lrp-hyalu-b5-cream')
+  if ((item.line || '').toLowerCase().includes('cicaplast')) defaultPairs.push('lrp-cicaplast-balm-b5', 'lrp-toleriane-hydrating-cleanser')
+  if ((item.line || '').toLowerCase().includes('mela')) defaultPairs.push('lrp-mela-b3-serum', 'lrp-anthelios-fluid-spf60')
+
+  return {
+    brand: "larocheposay",
+    brandLabel: "LA ROCHE-POSAY",
+    category: "Face Serum",
+    type: "Serum",
+    concerns,
+    safety: item.safety || [],
+    ingredientsTags: tags,
+    subtitle: item.subtitle || item.name,
+    priceFrom: item.priceFrom ?? item.priceUSD ?? 0,
+    rating: item.rating ?? 4.5,
+    reviews: item.reviews ?? 0,
+    sizes: (item.sizes && item.sizes.length > 0)
+      ? item.sizes
+      : [{ label: item.defaultSize || "30ML", priceUSD: item.priceUSD ?? item.priceFrom ?? 0, pricePer: "" }],
+    defaultSize: item.defaultSize || item.sizes?.[0]?.label || "30ML",
+    image: item.image || placeholder,
+    gallery: item.gallery?.length ? item.gallery : [item.image || placeholder],
+    description: item.description || `${item.name} is a dermatologist-tested formula designed for daily skincare support.`,
+    benefits: item.benefits?.length ? item.benefits : [
+      "Dermatologist-tested daily care",
+      "Supports skin comfort and hydration",
+      "Suitable as part of a complete skincare routine",
+    ],
+    recommendedFor: item.recommendedFor || {
+      concerns: concerns.length ? concerns : ["General skincare support"],
+      skinTypes: ["All skin types"],
+    },
+    keyIngredients: item.keyIngredients?.length ? item.keyIngredients : [
+      { name: "Thermal Spring Water", text: "Helps soothe skin and support skin comfort." },
+    ],
+    fullIngredients: item.fullIngredients || "Refer to product packaging for the full ingredient list.",
+    howToUse: item.howToUse || {
+      quantity: "As directed",
+      when: "Morning and/or evening",
+      where: "Face and neck",
+      tip: "Apply gently and follow with sunscreen during the day.",
+    },
+    productSafety: item.productSafety?.length ? item.productSafety : [
+      "Dermatologist Tested",
+      "Suitable for Sensitive Skin",
+      "Non Comedogenic",
+    ],
+    faqs: item.faqs || [],
+    pairsBestWith: item.pairsBestWith?.length ? item.pairsBestWith : defaultPairs,
+    ...item,
+  }
+}
+
+for (const extra of lrpExtraCatalog) {
+  if (!lrpCatalog.some((p) => p.id === extra.id || p.slug === extra.slug)) {
+    lrpCatalog.push(normalizeLrpProduct(extra))
+  }
+}
+
+for (let i = 0; i < lrpCatalog.length; i += 1) {
+  lrpCatalog[i] = normalizeLrpProduct(lrpCatalog[i])
+}
+
 export const getProductBySlug = (slug) =>
   lrpCatalog.find((p) => p.slug === slug);
 

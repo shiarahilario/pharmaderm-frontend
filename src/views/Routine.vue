@@ -225,11 +225,17 @@ function buildStepsFromNameList(names) {
   }))
 }
 
+function hasRenderableStepData(steps) {
+  return (steps || []).some((step) => step && (step.name || step.image || step.longDescription))
+}
+
 const currentSteps = computed(() => {
   if (!currentRoutine.value) return []
   const key = activeTab.value === 'morning' ? 'morningSteps' : 'nightSteps'
   const raw = currentRoutine.value[key] || currentRoutine.value.routineSteps || []
-  if (raw.length) return raw.map((p, i) => ({ ...p, step: i + 1 }))
+  if (raw.length && hasRenderableStepData(raw)) {
+    return raw.map((p, i) => ({ ...p, step: i + 1 }))
+  }
 
   // Handle older or reconstructed quiz objects with only named routines
   const nameKey = activeTab.value === 'morning' ? 'morningRoutine' : 'nightRoutine'
@@ -336,13 +342,29 @@ async function sendRoutineEmail() {
     return
   }
 
-  const morning = (currentRoutine.value?.morningSteps || []).map((s) => s.name).filter(Boolean).join(' | ')
-  const night = (currentRoutine.value?.nightSteps || []).map((s) => s.name).filter(Boolean).join(' | ')
-  const recommended = [...(currentRoutine.value?.morningSteps || []), ...(currentRoutine.value?.nightSteps || [])]
-    .map((s) => s.name)
-    .filter(Boolean)
-    .filter((v, i, arr) => arr.indexOf(v) === i)
-    .join(' | ')
+  const quizFallback = getQuizFallback()
+  const rebuiltFromQuiz = buildRoutineFromQuizData(quizFallback)
+
+  const fromSteps = (steps = []) => steps.map((s) => s?.name).filter(Boolean)
+  const dedupe = (list = []) => list.filter((v, i, arr) => arr.indexOf(v) === i)
+
+  const morningNames = dedupe([
+    ...fromSteps(currentRoutine.value?.morningSteps || []),
+    ...(currentRoutine.value?.morningRoutine || []).filter(Boolean),
+    ...fromSteps(rebuiltFromQuiz.morningSteps || []),
+  ])
+
+  const nightNames = dedupe([
+    ...fromSteps(currentRoutine.value?.nightSteps || []),
+    ...(currentRoutine.value?.nightRoutine || []).filter(Boolean),
+    ...fromSteps(rebuiltFromQuiz.nightSteps || []),
+  ])
+
+  const recommendedNames = dedupe([...morningNames, ...nightNames])
+
+  const morning = morningNames.join(' | ')
+  const night = nightNames.join(' | ')
+  const recommended = recommendedNames.join(' | ')
 
   const result = await sendRoutineByEmail({
     to_email: email,

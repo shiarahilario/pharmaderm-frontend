@@ -17,6 +17,13 @@
         <p>Cargando tus citas...</p>
       </div>
 
+      <div v-else-if="fetchError" class="empty-state">
+        <span class="material-symbols-outlined empty-icon">warning</span>
+        <h2>No se pudieron cargar tus citas</h2>
+        <p>{{ fetchError }}</p>
+        <button class="btn-primary" @click="loadAppointments">Reintentar</button>
+      </div>
+
       <div v-else-if="appointments.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">clinical_notes</span>
         <h2>No tienes citas programadas</h2>
@@ -70,17 +77,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
 
 const router = useRouter()
 const auth = useAuthStore()
+const userId = computed(() => auth.user?.value?.id || null)
 
 const appointments = ref([])
 const isLoading = ref(true)
+const fetchError = ref(null)
 const DOCTOR_PLACEHOLDER = 'https://placehold.co/80x80/e2e8f0/334155?text=DR'
+
+watch(userId, async (newUserId) => {
+  if (newUserId) {
+    await loadAppointments()
+  }
+}, { immediate: true })
 
 function formatDate(iso) {
   if (!iso) return 'Por confirmar'
@@ -121,51 +136,59 @@ function goToBooking() {
 
 async function loadAppointments() {
   isLoading.value = true
+  fetchError.value = null
   try {
-    if (isSupabaseConfigured) {
-      const userId = auth.user?.value?.id
-      if (userId) {
-        const { data, error } = await supabase
-          .from('appointments')
-          .select(`
-            id,
-            user_id,
-            dermatologist_id,
-            appointment_type,
-            mode,
-            scheduled_date,
-            scheduled_time,
-            reason,
-            notes,
-            urgency,
-            status,
-            confirmation_code,
-            analysis_id,
-            created_at,
-            dermatologists (id, name, specialty, mode, photo_url)
-          `)
-          .eq('user_id', userId)
-          .order('scheduled_date', { ascending: false })
-          .order('scheduled_time', { ascending: false })
-
-        if (!error) {
-          appointments.value = (data || [])
-            .filter(a => a.user_id === userId)
-            .map(a => ({
-              ...a,
-              doctor_name: a.dermatologists?.name || 'Especialista',
-              doctor_specialty: a.dermatologists?.specialty || 'Dermatologia',
-              doctor_photo: a.dermatologists?.photo_url || DOCTOR_PLACEHOLDER,
-              mode: a.mode || a.dermatologists?.mode || null,
-            }))
-          return
-        }
-      }
+    if (!isSupabaseConfigured) {
+      fetchError.value = 'La aplicación no está conectada a Supabase. Revisa la configuración de .env.'
+      appointments.value = []
+      return
     }
 
-    appointments.value = []
+    if (!userId.value) {
+      fetchError.value = 'No se encontró usuario autenticado. Inicia sesión de nuevo.'
+      appointments.value = []
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('appointments')
+      .select(`
+        id,
+        user_id,
+        dermatologist_id,
+        appointment_type,
+        mode,
+        scheduled_date,
+        scheduled_time,
+        reason,
+        notes,
+        urgency,
+        status,
+        confirmation_code,
+        analysis_id,
+        created_at,
+        dermatologists (id, name, specialty, mode, photo_url)
+      `)
+      .eq('user_id', userId.value)
+      .order('scheduled_date', { ascending: false })
+      .order('scheduled_time', { ascending: false })
+
+    if (error) {
+      fetchError.value = `Supabase: ${error.message || 'Error desconocido'}`
+      appointments.value = []
+      return
+    }
+
+    appointments.value = (data || []).map(a => ({
+      ...a,
+      doctor_name: a.dermatologists?.name || 'Especialista',
+      doctor_specialty: a.dermatologists?.specialty || 'Dermatología',
+      doctor_photo: a.dermatologists?.photo_url || DOCTOR_PLACEHOLDER,
+      mode: a.mode || a.dermatologists?.mode || null,
+    }))
   } catch (e) {
     console.warn('[MisCitas] Error cargando citas:', e)
+    fetchError.value = e?.message || 'Error cargando citas'
     appointments.value = []
   } finally {
     isLoading.value = false

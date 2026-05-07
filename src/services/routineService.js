@@ -2,6 +2,12 @@ import storageService from './storageService.js'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
 
 export const routineService = {
+  hasRenderableSteps(routine) {
+    if (!routine) return false
+    const steps = [...(routine.morningSteps || []), ...(routine.nightSteps || [])]
+    return steps.some(step => step && (step.name || step.image || step.longDescription))
+  },
+
   async getLatestRoutine() {
     // Try Supabase first
     if (isSupabaseConfigured) {
@@ -28,7 +34,10 @@ export const routineService = {
             .maybeSingle()
 
           if (!error && data) {
-            return this.formatRoutineFromDB(data)
+            const formatted = this.formatRoutineFromDB(data)
+            if (this.hasRenderableSteps(formatted)) {
+              return formatted
+            }
           }
         }
       } catch (e) {
@@ -184,13 +193,16 @@ export const routineService = {
 
     // Process routine_steps
     if (dbRoutine.routine_steps) {
-      dbRoutine.routine_steps.forEach(step => {
+      dbRoutine.routine_steps
+        .slice()
+        .sort((a, b) => (a.step_number || 0) - (b.step_number || 0))
+        .forEach(step => {
         const stepData = {
           id: step.product_id,
           step: step.step_number,
           category: step.category,
           note: step.note,
-          ...step.products // Include product details if joined
+          ...(step.products || {}), // Include product details if joined
         }
 
         if (step.time_of_day === 'morning') {
@@ -203,7 +215,10 @@ export const routineService = {
 
     // Fallback: if the response contains routine_products but no routine_steps, use that instead
     if (!routine.morningSteps.length && !routine.nightSteps.length && dbRoutine.routine_products) {
-      dbRoutine.routine_products.forEach(step => {
+      dbRoutine.routine_products
+        .slice()
+        .sort((a, b) => (a.step_number || 0) - (b.step_number || 0))
+        .forEach(step => {
         const stepData = {
           id: step.product_id,
           step: step.step_number,

@@ -23,7 +23,7 @@
         <div class="buy-box">
           <div class="rating-line">
             <span class="stars">★★★★★</span>
-            <span>{{ product.rating.toFixed(1) }} ({{ product.reviews }})</span>
+            <span>{{ Number(product.rating || 4.5).toFixed(1) }} ({{ Number(product.reviews || 0) }})</span>
           </div>
 
           <p class="brand-line">{{ product.brandLabel }}</p>
@@ -31,7 +31,7 @@
           <p class="subtitle">{{ product.subtitle }}</p>
 
           <div class="selected-price">
-            <strong>{{ fmtPrice(selectedSizeObj.priceUSD || product.priceUSD) }}</strong>
+            <strong>{{ fmtPrice(selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0) }}</strong>
             <span v-if="selectedSizeObj.pricePer">{{ selectedSizeObj.pricePer }}</span>
           </div>
 
@@ -72,7 +72,7 @@
             </div>
 
             <button class="add-bag" @click="addToCart(product)">
-              {{ fmtPrice((selectedSizeObj.priceUSD || product.priceUSD) * qty) }} — ADD TO BAG
+              {{ fmtPrice((selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0) * qty) }} — ADD TO BAG
             </button>
           </div>
 
@@ -298,8 +298,8 @@ const addToCart = (item) => {
 
   const usd =
     item.id === product.value?.id
-      ? selectedSizeObj.value.priceUSD || item.priceUSD
-      : item.priceFrom || item.priceUSD;
+      ? (selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0)
+      : (item.priceFrom ?? item.priceUSD ?? 0);
 
   cart.addItem(item, {
     size: activeSize,
@@ -313,7 +313,7 @@ const addToCart = (item) => {
 
 const buyNow = (item) => {
   const activeSize = size.value || item.defaultSize || item.sizes?.[0]?.label || "Default";
-  const usd = selectedSizeObj.value.priceUSD || item.priceUSD;
+  const usd = selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0;
   cart.addItem(item, {
     size: activeSize,
     qty: qty.value,

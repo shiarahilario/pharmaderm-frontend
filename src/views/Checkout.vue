@@ -456,7 +456,7 @@ async function placeOrder() {
 
   // Save to Supabase if user is authenticated
   try {
-    const userId = auth.user?.value?.id
+    const userId = user.value?.id
     if (userId) {
       await orderService.saveOrderToSupabase(orderData, userId)
     }

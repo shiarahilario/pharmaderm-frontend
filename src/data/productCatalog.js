@@ -9,6 +9,11 @@ import { useHistoryStore } from '../stores/useHistoryStore.js';
 
 export const allProducts = [...lrpCatalog, ...ceraveCatalog];
 
+/** Productos por marca */
+export function getProductsByBrand(brand) {
+  return allProducts.filter((p) => p.brand === brand);
+}
+
 /** Busca por slug en todo el catálogo */
 export function getProductBySlug(slug) {
   return allProducts.find(p => p.slug === slug);
