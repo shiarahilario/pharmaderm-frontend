@@ -1,13 +1,13 @@
-<template>
+﻿<template>
   <div class="expert-page">
 
     <!-- Hero -->
     <section class="expert-hero">
       <div class="container">
-        <p class="eyebrow">CONSEJOS DE EXPERTOS</p>
-        <h1>Guías Dermatológicas<br>Respaldadas por Especialistas</h1>
-        <p class="hero-sub">Consejos basados en evidencia clínica, organizados por tipo de piel y preocupación principal.</p>
-        <button class="hero-cta" @click="router.push('/quiz')">Analizar mi piel</button>
+        <p class="eyebrow">EXPERT ADVICE</p>
+        <h1>Dermatology Guides<br>Backed by Specialists</h1>
+        <p class="hero-sub">Evidence-based advice organized by skin type and primary concern.</p>
+        <button class="hero-cta" @click="router.push('/quiz')">Analyze my skin</button>
       </div>
     </section>
 
@@ -19,9 +19,9 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
           </div>
           <div>
-            <p class="featured-tag">CONSEJO DE LA SEMANA</p>
-            <h2>La barrera cutánea lo es todo</h2>
-            <p>Una barrera cutánea comprometida está detrás de la mayoría de los problemas de piel — desde sensibilidad y enrojecimiento hasta deshidratación y brotes. Restaurarla empieza con limpiadores suaves, hidratantes con ceramidas y uso constante de protector solar. Todo lo demás es secundario.</p>
+            <p class="featured-tag">TIP OF THE WEEK</p>
+            <h2>The skin barrier is everything</h2>
+            <p>A compromised skin barrier is behind many skin concerns, from sensitivity and redness to dehydration and breakouts. Restoring it starts with gentle cleansers, ceramide moisturizers and consistent sunscreen. Everything else comes second.</p>
           </div>
         </div>
       </div>
@@ -31,8 +31,8 @@
     <section class="articles-section">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow blue">GUÍAS Y CONSEJOS</p>
-          <h2>Biblioteca de Cuidado de la Piel</h2>
+          <p class="eyebrow blue">GUIDES AND TIPS</p>
+          <h2>Skincare Library</h2>
         </div>
         <div class="articles-grid">
           <article
@@ -53,7 +53,7 @@
             </div>
             <h3>{{ article.title }}</h3>
             <p class="article-excerpt">{{ article.excerpt }}</p>
-            <button class="read-more-btn">Leer guía completa →</button>
+            <button class="read-more-btn">Read full guide â†’</button>
           </article>
         </div>
       </div>
@@ -63,9 +63,9 @@
     <section class="skin-types-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow blue">CONOCE TU PIEL</p>
-          <h2>Tipos de Piel</h2>
-          <p>Cada tipo de piel tiene necesidades únicas. Conocer el tuyo es el primer paso para una rutina efectiva.</p>
+          <p class="eyebrow blue">KNOW YOUR SKIN</p>
+          <h2>Skin Types</h2>
+          <p>Every skin type has unique needs. Knowing yours is the first step toward an effective routine.</p>
         </div>
         <div class="skin-types-grid">
           <div v-for="type in skinTypes" :key="type.name" class="skin-type-card">
@@ -84,8 +84,8 @@
     <section class="ingredients-section">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow blue">GLOSARIO DE INGREDIENTES</p>
-          <h2>Ingredientes Clave Explicados</h2>
+          <p class="eyebrow blue">INGREDIENT GLOSSARY</p>
+          <h2>Key Ingredients Explained</h2>
         </div>
         <div class="ingredients-grid">
           <div v-for="ing in ingredients" :key="ing.name" class="ingredient-card">
@@ -100,16 +100,16 @@
     <!-- CTA -->
     <section class="expert-cta">
       <div class="container">
-        <h2>Obtén Tu Rutina Personalizada</h2>
-        <p>Realiza nuestro análisis de piel y recibe una rutina adaptada a tu perfil único.</p>
+        <h2>Get Your Personalized Routine</h2>
+        <p>Complete our skin analysis and receive a routine tailored to your unique profile.</p>
         <div class="cta-buttons">
-          <button class="btn-primary" @click="router.push('/quiz')">Comenzar análisis</button>
-          <button class="btn-ghost" @click="router.push('/tienda')">Ver productos</button>
+          <button class="btn-primary" @click="router.push('/quiz')">Start analysis</button>
+          <button class="btn-ghost" @click="router.push('/tienda')">View products</button>
         </div>
       </div>
     </section>
 
-    <!-- ── Modal de artículo ── -->
+    <!-- Article modal -->
     <Teleport to="body">
       <div v-if="activeArticle" class="modal-overlay" @click.self="closeArticle">
         <div class="modal-panel" role="dialog" aria-modal="true">
@@ -120,7 +120,7 @@
               <h2>{{ activeArticle.title }}</h2>
               <span class="modal-read">{{ activeArticle.readTime }}</span>
             </div>
-            <button class="modal-close" @click="closeArticle" aria-label="Cerrar">✕</button>
+            <button class="modal-close" @click="closeArticle" aria-label="Close">âœ•</button>
           </div>
 
           <!-- Body -->
@@ -132,14 +132,14 @@
             </div>
 
             <div v-if="activeArticle.tips.length" class="modal-tips">
-              <h4>Consejos prácticos</h4>
+              <h4>Practical tips</h4>
               <ul>
                 <li v-for="tip in activeArticle.tips" :key="tip">{{ tip }}</li>
               </ul>
             </div>
 
             <div v-if="activeArticle.relatedConcerns?.length" class="modal-related-concerns">
-              <h4>Tipos de piel que más se benefician</h4>
+              <h4>Skin types that benefit most</h4>
               <div class="concern-chips">
                 <span v-for="c in activeArticle.relatedConcerns" :key="c" class="concern-chip">{{ c }}</span>
               </div>
@@ -147,12 +147,12 @@
 
             <div class="modal-disclaimer">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-              <p>Esta información es educativa y no sustituye la consulta con un dermatólogo certificado. Si tienes dudas sobre tu piel, te recomendamos agendar una orientación con un especialista.</p>
+              <p>This information is educational and does not replace a consultation with a certified dermatologist. If you have concerns about your skin, we recommend booking guidance with a specialist.</p>
             </div>
 
             <div class="modal-actions">
-              <button class="btn-primary" @click="() => { closeArticle(); router.push('/quiz') }">Analizar mi piel</button>
-              <button class="btn-ghost-dark" @click="() => { closeArticle(); router.push('/diagnostics') }">Consultar especialista</button>
+              <button class="btn-primary" @click="() => { closeArticle(); router.push('/quiz') }">Analyze my skin</button>
+              <button class="btn-ghost-outline" @click="() => { closeArticle(); router.push('/diagnostics') }">Consult a specialist</button>
             </div>
           </div>
         </div>
@@ -186,182 +186,158 @@ const articles = [
     id: 1,
     color: 'linear-gradient(135deg,#0077b6,#00b4d8)',
     svgPath: SVG_WATER,
-    category: 'HIDRATACIÓN',
+    category: 'HYDRATION',
     readTime: '3 min',
-    title: 'Hidratación vs. Humectación: ¿Cuál es la diferencia?',
-    excerpt: 'Muchas personas confunden estos dos conceptos. La hidratación agrega agua a las células de la piel, mientras que la humectación atrapa y sella esa agua.',
+    title: 'Hydration vs. Moisturizing: What is the difference?',
+    excerpt: 'Hydration adds water to the skin, while moisturizing helps seal that water in and protect the barrier.',
     body: [
-      'La hidratación y la humectación son dos procesos diferentes pero complementarios. Los productos hidratantes, como el ácido hialurónico, atraen agua hacia las capas superficiales de la piel. Los humectantes, como ceramidas o aceites, crean una barrera que impide que esa agua se evapore.',
-      'Para una piel bien hidratada necesitas ambos: primero un hidratante (suero con ácido hialurónico aplicado sobre piel húmeda), y después un humectante (crema o loción) que selle la hidratación. Saltarte uno de los dos pasos reduce la efectividad a la mitad.',
-      'En climas secos o con aire acondicionado, la piel pierde agua más rápidamente. En estos casos, los sueros con glicerina y panthenol actúan como reservorios que mantienen el nivel de hidratación estable durante horas.',
+      'Hydration and moisturizing are different but complementary. Hydrating ingredients such as hyaluronic acid attract water into the upper layers of the skin, while moisturizers with ceramides or emollients help prevent that water from evaporating.',
+      'For well-balanced skin, use both: apply a hydrating serum on slightly damp skin, then seal it with a moisturizer or lotion.',
+      'Dry climates and air conditioning can increase water loss, so humectants like glycerin and panthenol can help keep hydration stable for longer.',
     ],
-    tips: ['Aplica ácido hialurónico sobre piel ligeramente húmeda', 'Sella con una crema hidratante a continuación', 'Bebe al menos 1.5 litros de agua al día', 'Evita duchas con agua muy caliente: resecan la piel'],
-    relatedConcerns: ['Piel seca', 'Piel deshidratada', 'Piel normal', 'Piel madura'],
+    tips: ['Apply hyaluronic acid on slightly damp skin', 'Seal with moisturizer afterward', 'Drink enough water throughout the day', 'Avoid very hot showers because they dry the skin'],
+    relatedConcerns: ['Dry skin', 'Dehydrated skin', 'Normal skin', 'Mature skin'],
   },
   {
     id: 2,
     color: 'linear-gradient(135deg,#f77f00,#fcbf49)',
     svgPath: SVG_SUN,
-    category: 'PROTECCIÓN SOLAR',
+    category: 'SUN PROTECTION',
     readTime: '4 min',
-    title: '¿Por Qué el SPF Es el Paso Más Importante de Tu Rutina?',
-    excerpt: 'La protección solar previene el envejecimiento prematuro, la hiperpigmentación y el cáncer de piel. Los dermatólogos coinciden: ninguna rutina está completa sin SPF.',
+    title: 'Why SPF is the most important step in your routine',
+    excerpt: 'Sunscreen helps prevent premature aging, hyperpigmentation and UV damage. No routine is complete without SPF.',
     body: [
-      'El sol emite dos tipos de radiación que afectan la piel: UVA (penetra profundo, causa envejecimiento y manchas) y UVB (quema la superficie, principal responsable del cáncer de piel). Un protector de amplio espectro con SPF 30 o superior bloquea más del 97% de los rayos UVB y una parte significativa de los UVA.',
-      'El error más común es aplicar protector solar solo cuando hay sol directo. Los rayos UVA penetran nubes y cristales, lo que significa que la exposición acumulada en interiores, en el auto o en días nublados también daña la piel a largo plazo.',
-      'La cantidad importa: para el rostro, aplica una cantidad equivalente a una moneda de un peso (unos 0.75 mL). Aplicar muy poco reduce significativamente la protección real. Reaplicar cada 2 horas si estás al exterior no es opcional.',
+      'UVA rays penetrate deeply and contribute to aging and dark spots, while UVB rays burn the surface and are strongly linked to skin cancer risk. Broad-spectrum SPF 30 or higher is a daily essential.',
+      'A common mistake is using sunscreen only on sunny days. UVA rays can pass through clouds and windows, so daily exposure adds up over time.',
+      'Amount matters: apply enough product to cover the face and reapply every two hours when outdoors.',
     ],
-    tips: ['Aplica SPF 30+ todas las mañanas como último paso', 'Reaplicar cada 2 horas si estás al exterior', 'Úsalo incluso en días nublados o en interiores', 'El SPF no sustituye ropa, gorras y sombra'],
-    relatedConcerns: ['Todo tipo de piel', 'Manchas', 'Piel fotosensible', 'Anti-envejecimiento'],
+    tips: ['Apply SPF 30+ every morning as the last step', 'Reapply every two hours outdoors', 'Use it even on cloudy days or indoors near windows', 'SPF does not replace hats, shade and protective clothing'],
+    relatedConcerns: ['All skin types', 'Dark spots', 'Photosensitive skin', 'Anti-aging'],
   },
   {
     id: 3,
     color: 'linear-gradient(135deg,#7b2d8b,#c77dff)',
     svgPath: SVG_LAYERS,
-    category: 'ACTIVOS',
+    category: 'ACTIVES',
     readTime: '5 min',
-    title: 'Cómo Capas Correctamente Los Productos de Skincare',
-    excerpt: 'Aplicar productos en el orden equivocado reduce su efectividad. La regla general: del más ligero al más denso, base acuosa antes que oleosa.',
+    title: 'How to layer skincare products correctly',
+    excerpt: 'The wrong order can reduce results. A simple rule: apply from thinnest to thickest.',
     body: [
-      'El orden de aplicación importa porque determina qué ingredientes logran penetrar y cuáles quedan bloqueados. Aplicar una crema densa antes de un suero, por ejemplo, impide que los activos del suero lleguen a las capas donde son más efectivos.',
-      'El orden estándar recomendado por dermatólogos es: limpiador → tónico → suero → crema hidratante → protector solar (de mañana) o aceite facial (de noche). Cada capa debe ser absorbida parcialmente antes de aplicar la siguiente (30-60 segundos es suficiente).',
-      'Combinar ciertos activos puede irritar la piel. El retinol y los AHA/BHA no deben usarse la misma noche en pieles sensibles, ya que ambos renuevan la epidermis y pueden causar descamación excesiva. La vitamina C y el niacinamide, por el contrario, se complementan bien.',
+      'Product order matters because it affects which ingredients can reach the skin. A heavy cream before a serum can block the serum from absorbing properly.',
+      'A common order is cleanser, toner, serum, moisturizer and sunscreen in the morning. At night, replace sunscreen with a repair product or facial oil when appropriate.',
+      'Some actives can irritate when combined. Retinol and AHA/BHA exfoliants should be introduced carefully, especially for sensitive skin.',
     ],
-    tips: ['Orden AM: limpiador → tónico → suero → hidratante → SPF', 'Orden PM: limpiador → tónico → suero → hidratante → aceite/retinol', 'Espera 30 segundos entre activos potentes', 'No mezcles retinol con AHA/BHA la misma noche'],
-    relatedConcerns: ['Piel con acné', 'Manchas', 'Anti-envejecimiento', 'Piel madura'],
+    tips: ['AM: cleanser, serum, moisturizer, SPF', 'PM: cleanser, serum, moisturizer, repair treatment', 'Wait briefly between strong actives', 'Do not overload sensitive skin with too many actives'],
+    relatedConcerns: ['Acne-prone skin', 'Dark spots', 'Anti-aging', 'Mature skin'],
   },
   {
     id: 4,
     color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)',
     svgPath: SVG_SPA,
-    category: 'PIEL SENSIBLE',
+    category: 'SENSITIVE SKIN',
     readTime: '3 min',
-    title: 'Cómo Construir Una Rutina Para Piel Reactiva',
-    excerpt: 'La piel sensible necesita un enfoque minimalista y sin fragancia. Menos pasos, fórmulas más suaves y prueba de parche para cada producto nuevo.',
+    title: 'How to build a routine for reactive skin',
+    excerpt: 'Sensitive skin usually does best with fewer steps, fragrance-free formulas and careful patch testing.',
     body: [
-      'La piel sensible o reactiva reacciona a estímulos que otras pieles toleran sin problema: cambios de temperatura, ingredientes activos, fragancias, alcohol. La clave no es eliminar todos los productos sino simplificar al máximo y elegir con criterio.',
-      'Una rutina básica para piel sensible tiene solo 3-4 pasos: limpiador suave sin sulfatos → hidratante con ceramidas y sin fragancia → protector solar de filtro mineral (zinc, titanio). Añadir más pasos sin necesidad aumenta el riesgo de irritación acumulada.',
-      'La prueba de parche es esencial: aplica el producto nuevo en la parte interna del antebrazo o detrás de la oreja durante 24-48 horas antes de usarlo en el rostro. Si hay enrojecimiento, picazón o inflamación, descarta ese producto.',
+      'Reactive skin can respond to temperature changes, fragrance, alcohol or strong actives. The goal is not to avoid all products, but to simplify and choose carefully.',
+      'A basic sensitive-skin routine can include a gentle cleanser, a ceramide moisturizer and a mineral sunscreen.',
+      'Patch testing helps reduce risk: apply a new product to a small area for 24 to 48 hours before using it on the face.',
     ],
-    tips: ['Máximo 3-4 productos en tu rutina', 'Evita fragancias sintéticas y alcohol desnaturalizado', 'Introduce un producto nuevo a la vez, nunca varios simultáneos', 'Los filtros minerales (zinc) son más tolerados que los químicos'],
-    relatedConcerns: ['Piel sensible', 'Piel con rosácea', 'Barrera comprometida', 'Piel reactiva'],
+    tips: ['Keep the routine to 3 or 4 products', 'Avoid fragrance and harsh alcohols', 'Introduce one new product at a time', 'Mineral filters are often better tolerated'],
+    relatedConcerns: ['Sensitive skin', 'Rosacea-prone skin', 'Compromised barrier', 'Reactive skin'],
   },
   {
     id: 5,
     color: 'linear-gradient(135deg,#1d3557,#457b9d)',
     svgPath: SVG_CLEAN,
-    category: 'LIMPIEZA',
+    category: 'CLEANSING',
     readTime: '2 min',
-    title: 'Doble Limpieza: ¿Quién La Necesita y Quién No?',
-    excerpt: 'La doble limpieza (limpiador oleoso + limpiador acuoso) elimina eficazmente el maquillaje y el protector solar. No es necesaria para todos.',
+    title: 'Double cleansing: who needs it and who does not?',
+    excerpt: 'Double cleansing can remove heavy makeup and sunscreen, but it is not necessary for everyone.',
     body: [
-      'La doble limpieza nació en Corea como parte de las rutinas de cuidado intensivo. El primer paso (aceite o bálsamo) disuelve impurezas liposolubles: maquillaje resistente al agua, protector solar, exceso de sebo. El segundo paso (limpiador espumante) elimina residuos acuosos y deja la piel limpia sin resecarla.',
-      'Para quienes usan protector solar mineral pesado o maquillaje de cobertura alta, la doble limpieza asegura que ningún residuo quede bloqueando los poros. Si usas solo protector solar ligero y sin maquillaje, un buen limpiador convencional es suficiente.',
-      'Las pieles secas y sensibles deben evitar el paso del aceite si este las deja con sensación de tirantez. Los limpiadores en crema o leche cumplen una función similar sin el riesgo de desequilibrar el manto ácido de la piel.',
+      'The first cleanse dissolves oil-soluble residue such as waterproof makeup, sunscreen and excess sebum. The second cleanse removes water-based residue.',
+      'If you wear heavy sunscreen or makeup, double cleansing can help prevent pore buildup. If you use only light sunscreen, one good cleanser may be enough.',
+      'Dry and sensitive skin should avoid any cleansing step that leaves tightness or irritation.',
     ],
-    tips: ['Úsala si llevas maquillaje pesado o SPF denso', 'Piel seca/sensible: omite el primer paso aceite', 'Agua tibia siempre — el agua caliente reseca', 'Dos veces al día es suficiente; más puede alterar la barrera'],
-    relatedConcerns: ['Piel mixta', 'Piel grasa', 'Piel normal', 'Piel con acné'],
+    tips: ['Use it for heavy makeup or dense SPF', 'Dry or sensitive skin can skip the oil step', 'Use lukewarm water', 'Over-cleansing can disrupt the barrier'],
+    relatedConcerns: ['Combination skin', 'Oily skin', 'Normal skin', 'Acne-prone skin'],
   },
   {
     id: 6,
     color: 'linear-gradient(135deg,#9b2226,#e9c46a)',
     svgPath: SVG_AGE,
-    category: 'ANTI-ENVEJECIMIENTO',
+    category: 'ANTI-AGING',
     readTime: '4 min',
-    title: 'Retinol: Guía Para Principiantes',
-    excerpt: 'El retinol es el estándar de oro anti-envejecimiento, pero requiere paciencia y una introducción gradual para evitar irritación.',
+    title: 'Retinol: a beginner guide',
+    excerpt: 'Retinol is a gold-standard anti-aging ingredient, but it should be introduced gradually.',
     body: [
-      'El retinol es un derivado de la vitamina A que acelera la renovación celular, estimula la producción de colágeno y suaviza líneas finas. Sus efectos están bien documentados científicamente y es uno de los pocos ingredientes anti-aging con décadas de investigación clínica detrás.',
-      'El error más común al empezar con retinol es usar concentraciones altas de inmediato. La piel necesita tiempo para adaptarse. Empieza con 0.025% o 0.05% una vez por semana, durante 2 semanas. Si no hay irritación, aumenta a dos veces por semana, y así gradualmente hasta llegar a uso diario.',
-      'El retinol fotosensibiliza la piel, por lo que debe aplicarse exclusivamente de noche. Al día siguiente, un SPF 30+ es obligatorio. Combinarlo con un humectante sólido (ceramidas, glicerina, pantenol) reduce significativamente la descamación inicial.',
+      'Retinol is a vitamin A derivative that supports cell turnover, collagen production and smoother-looking texture.',
+      'Start low and slow. Use it once weekly at first, then increase frequency only if your skin tolerates it.',
+      'Retinol is best used at night. Daily sunscreen is essential the next morning.',
     ],
-    tips: ['Comienza con concentración 0.025–0.05%', 'Aplica solo de noche, sobre piel seca', 'Siempre hidratante después y SPF a la mañana siguiente', 'Si hay irritación excesiva, usa el método "sandwich": hidratante → retinol → hidratante'],
-    relatedConcerns: ['Anti-envejecimiento', 'Manchas', 'Piel madura', 'Textura irregular'],
+    tips: ['Start with a low concentration', 'Apply at night on dry skin', 'Moisturize afterward and use SPF daily', 'Use the moisturizer-retinol-moisturizer sandwich method if needed'],
+    relatedConcerns: ['Anti-aging', 'Dark spots', 'Mature skin', 'Uneven texture'],
   },
   {
     id: 7,
     color: 'linear-gradient(135deg,#023e8a,#0096c7)',
     svgPath: SVG_OILY,
-    category: 'PIEL GRASA',
+    category: 'OILY SKIN',
     readTime: '3 min',
-    title: 'Controlar el Exceso de Grasa Sin Dañar la Barrera',
-    excerpt: 'La limpieza excesiva y los productos agresivos producen el efecto contrario: más grasa. El equilibrio es la clave.',
+    title: 'Control excess oil without damaging the barrier',
+    excerpt: 'Over-cleansing and harsh products can make oiliness worse. Balance is key.',
     body: [
-      'La piel grasa produce sebo en exceso, lo que puede obstruir los poros y generar brotes. El error más frecuente es tratar de eliminar toda la grasa, lo cual activa un mecanismo de rebote: la piel detecta que está "seca" y produce más sebo para compensar.',
-      'La niacinamida al 4-10% es uno de los ingredientes más estudiados para regular la producción de sebo. Reduce el tamaño visible de los poros, mejora la textura y equilibra la piel sin resecarla. El ácido salicílico (BHA) exfolia dentro del poro, previniendo la acumulación que genera puntos negros.',
-      'Las pieles grasas también necesitan hidratante. Un gel hidratante ligero (base de agua, sin aceite) mantiene la barrera intacta sin añadir brillo. Evitar el paso de hidratante porque "la piel ya tiene grasa" es un mito que empeora el problema a largo plazo.',
+      'Oily skin produces extra sebum, which can clog pores and lead to breakouts. Stripping the skin can trigger rebound oiliness.',
+      'Niacinamide can help regulate sebum and improve the look of pores. Salicylic acid exfoliates inside the pore and helps prevent buildup.',
+      'Oily skin still needs moisturizer. A lightweight water-based gel can support the barrier without adding shine.',
     ],
-    tips: ['Limpiador suave espumante dos veces al día', 'Niacinamida: regula el sebo sin resecar', 'Gel hidratante sin aceite: no te saltes este paso', 'Exfolia con ácido salicílico 2-3 veces por semana'],
-    relatedConcerns: ['Piel grasa', 'Piel mixta', 'Acné', 'Poros dilatados'],
+    tips: ['Use a gentle foaming cleanser twice daily', 'Try niacinamide for oil balance', 'Do not skip lightweight moisturizer', 'Use salicylic acid two or three times weekly if tolerated'],
+    relatedConcerns: ['Oily skin', 'Combination skin', 'Acne', 'Visible pores'],
   },
   {
     id: 8,
     color: 'linear-gradient(135deg,#2b9348,#55a630)',
     svgPath: SVG_ROUTINE,
-    category: 'RUTINAS',
+    category: 'ROUTINES',
     readTime: '5 min',
-    title: 'Los 5 Productos Que Toda Rutina Necesita',
-    excerpt: 'No necesitas 12 pasos. La mayoría de los dermatólogos coincide: una rutina sólida de 5 productos cubre todo lo que tu piel necesita.',
+    title: 'The 5 products every routine needs',
+    excerpt: 'You do not need 12 steps. A consistent routine with a few essentials can cover most skin needs.',
     body: [
-      'La industria del skincare tiene incentivos para hacer creer que necesitas docenas de productos. La realidad clínica es diferente: la mayoría de las pieles responden muy bien a una rutina de 4-5 pasos bien elegidos y aplicados con constancia.',
-      'El limpiador es la base de todo: determina el estado de la piel antes de cualquier otro producto. Un buen limpiador elimina suciedad sin comprometer la barrera. El tratamiento (suero) aborda el problema específico de tu piel. La hidratante sella y protege. El SPF previene daño acumulado. El retinol o reparador nocturno trabaja mientras duermes.',
-      'La constancia supera a la complejidad. Una rutina de 5 pasos aplicada cada día durante 3 meses dará mejores resultados que una rutina de 12 pasos aplicada de forma irregular. Tu piel prefiere estabilidad.',
+      'Most skin responds well to a simple routine chosen carefully and used consistently.',
+      'The core routine is cleanser, targeted treatment, moisturizer, sunscreen and a night repair step when needed.',
+      'Consistency beats complexity. A routine you can follow daily will perform better than one you abandon.',
     ],
-    tips: ['AM: limpiador → suero → hidratante → SPF', 'PM: limpiador → suero → hidratante → retinol o reparador', 'Introduce cambios de a uno por vez', 'Dale al menos 4 semanas a cada producto antes de juzgarlo'],
-    relatedConcerns: ['Todo tipo de piel', 'Principiantes', 'Rutina básica'],
+    tips: ['AM: cleanser, serum, moisturizer, SPF', 'PM: cleanser, serum, moisturizer, repair product', 'Change one product at a time', 'Give products several weeks before judging results'],
+    relatedConcerns: ['All skin types', 'Beginners', 'Basic routine'],
   },
 ]
 
 const skinTypes = [
-  {
-    name: 'Piel Seca',
-    initial: 'S',
-    color: 'linear-gradient(135deg,#0077b6,#90e0ef)',
-    description: 'Produce poco sebo y tiene dificultad para retener humedad. A menudo se siente tensa y puede mostrar descamación.',
-    tips: ['Limpiadores cremosos sin sulfatos agresivos', 'Hidratante aplicado sobre piel húmeda', 'Busca ceramidas y ácidos grasos en los ingredientes'],
-  },
-  {
-    name: 'Piel Normal',
-    initial: 'N',
-    color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)',
-    description: 'Bien equilibrada: ni demasiado grasa ni demasiado seca. Pocos brotes y poros pequeños.',
-    tips: ['Mantén tu rutina actual', 'Enfócate en prevención con SPF diario', 'Los sueros antioxidantes ayudan a largo plazo'],
-  },
-  {
-    name: 'Piel Mixta',
-    initial: 'M',
-    color: 'linear-gradient(135deg,#7b2d8b,#c77dff)',
-    description: 'Zona T (frente, nariz, mentón) grasa con mejillas normales o secas. El tipo de piel más común.',
-    tips: ['Limpiador suave y equilibrante', 'Hidratante ligera para todo el rostro', 'Trata solo la zona T si es necesario'],
-  },
-  {
-    name: 'Piel Grasa',
-    initial: 'G',
-    color: 'linear-gradient(135deg,#023e8a,#48cae4)',
-    description: 'Produce sebo en exceso. Propensa a poros dilatados, brillo y brotes.',
-    tips: ['Limpia dos veces al día', 'Evita cremas pesadas y aceites comedogénicos', 'Niacinamida + ácido salicílico son tus aliados'],
-  },
+  { name: 'Dry Skin', initial: 'D', color: 'linear-gradient(135deg,#0077b6,#90e0ef)', description: 'Produces little sebum and struggles to retain moisture. It can feel tight or flaky.', tips: ['Use creamy sulfate-free cleansers', 'Apply moisturizer on damp skin', 'Look for ceramides and fatty acids'] },
+  { name: 'Normal Skin', initial: 'N', color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)', description: 'Well balanced: not too oily and not too dry, with few breakouts.', tips: ['Maintain your current routine', 'Prioritize daily SPF', 'Antioxidant serums can help long term'] },
+  { name: 'Combination Skin', initial: 'C', color: 'linear-gradient(135deg,#7b2d8b,#c77dff)', description: 'An oily T-zone with normal or dry cheeks. It is one of the most common skin types.', tips: ['Use a gentle balancing cleanser', 'Choose a lightweight moisturizer', 'Treat the T-zone only when needed'] },
+  { name: 'Oily Skin', initial: 'O', color: 'linear-gradient(135deg,#023e8a,#48cae4)', description: 'Produces excess sebum and is prone to shine, enlarged pores and breakouts.', tips: ['Cleanse twice daily', 'Avoid heavy comedogenic oils', 'Niacinamide and salicylic acid can help'] },
 ]
 
 const ingredients = [
-  { name: 'Ácido Hialurónico', benefit: 'Hidratación', description: 'Atrae hasta 1000 veces su peso en agua, hidratando y voluminizando todos los tipos de piel.' },
-  { name: 'Niacinamida', benefit: 'Multi-función', description: 'Regula el sebo, mejora los poros, unifica el tono y fortalece la barrera cutánea.' },
-  { name: 'Ceramidas', benefit: 'Reparación de barrera', description: 'Lípidos naturales que mantienen unidas las células cutáneas y previenen la pérdida de agua.' },
-  { name: 'Retinol', benefit: 'Anti-envejecimiento', description: 'Derivado de vitamina A que acelera la renovación celular, reduce arrugas y aclara manchas.' },
-  { name: 'Vitamina C', benefit: 'Iluminación', description: 'Antioxidante que neutraliza radicales libres, unifica el tono y estimula el colágeno.' },
-  { name: 'Ácido Salicílico', benefit: 'Acné y poros', description: 'BHA que exfolia dentro del poro, elimina bloqueos y reduce brotes.' },
-  { name: 'Pantenol (B5)', benefit: 'Calmante', description: 'Calma la inflamación, apoya la cicatrización y añade una capa de hidratación.' },
-  { name: 'SPF (Protector Solar)', benefit: 'Protección', description: 'Protege contra daño UVA/UVB: el ingrediente anti-envejecimiento más efectivo disponible.' },
+  { name: 'Hyaluronic Acid', benefit: 'Hydration', description: 'Attracts water to hydrate and plump the look of all skin types.' },
+  { name: 'Niacinamide', benefit: 'Multi-function', description: 'Helps regulate oil, refine the look of pores, even tone and support the barrier.' },
+  { name: 'Ceramides', benefit: 'Barrier repair', description: 'Natural lipids that help keep skin cells together and reduce water loss.' },
+  { name: 'Retinol', benefit: 'Anti-aging', description: 'A vitamin A derivative that supports cell turnover and improves the look of wrinkles and spots.' },
+  { name: 'Vitamin C', benefit: 'Brightening', description: 'An antioxidant that helps even tone and support collagen.' },
+  { name: 'Salicylic Acid', benefit: 'Acne and pores', description: 'A BHA that exfoliates inside the pore and helps reduce breakouts.' },
+  { name: 'Panthenol (B5)', benefit: 'Soothing', description: 'Helps calm the skin and supports barrier recovery.' },
+  { name: 'SPF (Sunscreen)', benefit: 'Protection', description: 'Protects against UVA/UVB damage and is the most effective anti-aging step.' },
 ]
+
 </script>
 
 <style scoped>
 .expert-page { background: #f8fafc; min-height: 100vh; }
-.dark .expert-page { background: #0f172a; }
 
 .container { width: min(1280px, 92%); margin: 0 auto; }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .expert-hero { background: linear-gradient(135deg,#004e92,#5dbcd2); padding: 5rem 0 4rem; text-align: center; color: white; }
 .expert-hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; margin: 0.5rem 0 1rem; line-height: 1.1; }
 .hero-sub { font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; line-height: 1.7; }
@@ -370,31 +346,24 @@ const ingredients = [
 
 .eyebrow { font-size: 0.75rem; letter-spacing: 0.22em; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; margin: 0 0 0.8rem; }
 .eyebrow.blue { color: #004e92; }
-.dark .eyebrow.blue { color: #5dbcd2; }
 
-/* ── Featured ── */
+/* â”€â”€ Featured â”€â”€ */
 .featured-section { padding: 3.5rem 0; }
 .featured-card { display: grid; grid-template-columns: 80px 1fr; gap: 2rem; align-items: start; background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2rem; box-shadow: 0 8px 24px rgba(0,0,0,.04); }
-.dark .featured-card { background: #1e293b; border-color: #334155; }
 .featured-visual { width: 80px; height: 80px; border-radius: 20px; display: grid; place-items: center; flex-shrink: 0; }
 .featured-tag { font-size: 0.72rem; letter-spacing: 0.2em; font-weight: 700; color: #5dbcd2; text-transform: uppercase; margin: 0 0 0.5rem; }
 .featured-card h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin: 0 0 0.75rem; }
-.dark .featured-card h2 { color: #f1f5f9; }
 .featured-card p { color: #475569; line-height: 1.75; margin: 0; }
-.dark .featured-card p { color: #94a3b8; }
 
-/* ── Articles ── */
+/* â”€â”€ Articles â”€â”€ */
 .articles-section { padding: 3rem 0 4rem; }
 .section-heading { margin-bottom: 2rem; }
 .section-heading.center { text-align: center; max-width: 700px; margin: 0 auto 2.5rem; }
 .section-heading h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; color: #0f172a; margin: 0.3rem 0 0; }
-.dark .section-heading h2 { color: #f1f5f9; }
 .section-heading p { color: #64748b; margin: 0.5rem 0 0; }
-.dark .section-heading p { color: #94a3b8; }
 
 .articles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
 .article-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 0; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
-.dark .article-card { background: #1e293b; border-color: #334155; }
 .article-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0,0,0,.12); }
 .article-card:focus { outline: 2px solid #5dbcd2; outline-offset: 2px; }
 
@@ -403,40 +372,28 @@ const ingredients = [
 .article-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; color: #5dbcd2; text-transform: uppercase; }
 .article-read { font-size: 0.72rem; color: #94a3b8; }
 .article-card h3 { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0.5rem 1.25rem 0.4rem; line-height: 1.35; }
-.dark .article-card h3 { color: #f1f5f9; }
 .article-excerpt { font-size: 0.84rem; color: #64748b; line-height: 1.6; margin: 0 1.25rem 0.75rem; flex: 1; }
-.dark .article-excerpt { color: #94a3b8; }
 .read-more-btn { margin: 0 1.25rem 1.25rem; align-self: flex-start; background: none; border: none; color: #004e92; font-weight: 700; font-size: 0.82rem; cursor: pointer; padding: 0; }
-.dark .read-more-btn { color: #5dbcd2; }
 
-/* ── Skin types ── */
+/* â”€â”€ Skin types â”€â”€ */
 .skin-types-section { padding: 4rem 0; background: white; }
-.dark .skin-types-section { background: #1e293b; }
 .skin-types-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
 .skin-type-card { border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.5rem; }
-.dark .skin-type-card { border-color: #334155; background: #0f172a; }
 .skin-type-badge { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem; font-weight: 900; color: white; margin-bottom: 0.75rem; }
 .skin-type-card h3 { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.5rem; }
-.dark .skin-type-card h3 { color: #f1f5f9; }
 .skin-type-card p { font-size: 0.88rem; color: #64748b; line-height: 1.6; margin: 0 0 0.75rem; }
-.dark .skin-type-card p { color: #94a3b8; }
 .skin-type-card ul { padding-left: 1rem; margin: 0; }
 .skin-type-card li { font-size: 0.82rem; color: #475569; margin-bottom: 0.35rem; }
-.dark .skin-type-card li { color: #94a3b8; }
 
-/* ── Ingredients ── */
+/* â”€â”€ Ingredients â”€â”€ */
 .ingredients-section { padding: 4rem 0; }
 .ingredients-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .ingredient-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; }
-.dark .ingredient-card { background: #1e293b; border-color: #334155; }
 .ingredient-card strong { display: block; font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.25rem; }
-.dark .ingredient-card strong { color: #f1f5f9; }
 .ing-benefit { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; color: #5dbcd2; text-transform: uppercase; background: #eef9fc; padding: 0.2rem 0.5rem; border-radius: 999px; margin-bottom: 0.6rem; }
-.dark .ing-benefit { background: #0f3348; }
 .ingredient-card p { font-size: 0.85rem; color: #64748b; line-height: 1.6; margin: 0; }
-.dark .ingredient-card p { color: #94a3b8; }
 
-/* ── CTA ── */
+/* â”€â”€ CTA â”€â”€ */
 .expert-cta { padding: 5rem 0; background: linear-gradient(135deg,#004e92,#5dbcd2); text-align: center; color: white; }
 .expert-cta h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin: 0 0 1rem; }
 .expert-cta p { font-size: 1.1rem; opacity: 0.9; margin: 0 0 2rem; }
@@ -446,7 +403,7 @@ const ingredients = [
 .btn-ghost { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); padding: 1rem 2rem; font-weight: 800; cursor: pointer; border-radius: 999px; font-size: 1rem; }
 .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
-/* ── Modal ── */
+/* â”€â”€ Modal â”€â”€ */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999;
   display: flex; align-items: flex-end; justify-content: center;
@@ -459,7 +416,6 @@ const ingredients = [
   background: white; border-radius: 24px 24px 24px 24px; width: min(680px, 100%);
   max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;
 }
-.dark .modal-panel { background: #1e293b; }
 @keyframes slideUp { from { transform: translateY(40px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
 
 .modal-visual { position: relative; padding: 2.5rem 2rem 2rem; color: white; border-radius: 24px 24px 0 0; }
@@ -472,39 +428,30 @@ const ingredients = [
 
 .modal-body { padding: 1.75rem 2rem 2rem; }
 .modal-excerpt { font-size: 1rem; color: #475569; line-height: 1.7; margin: 0 0 1.5rem; font-weight: 500; }
-.dark .modal-excerpt { color: #94a3b8; }
 
 .modal-content p { font-size: 0.92rem; color: #475569; line-height: 1.75; margin: 0 0 1rem; }
-.dark .modal-content p { color: #94a3b8; }
 
 .modal-tips { margin: 1.25rem 0; background: #f0f9ff; border-radius: 16px; padding: 1.25rem 1.5rem; }
-.dark .modal-tips { background: #0f2d3d; }
 .modal-tips h4 { font-size: 0.85rem; font-weight: 700; color: #004e92; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.75rem; }
-.dark .modal-tips h4 { color: #5dbcd2; }
 .modal-tips ul { padding-left: 1.2rem; margin: 0; }
 .modal-tips li { font-size: 0.9rem; color: #334155; margin-bottom: 0.4rem; line-height: 1.5; }
-.dark .modal-tips li { color: #cbd5e1; }
 
 .modal-related-concerns { margin: 1.25rem 0; }
 .modal-related-concerns h4 { font-size: 0.82rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.6rem; }
 .concern-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .concern-chip { background: #e0f2fe; color: #0369a1; font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.75rem; border-radius: 999px; }
-.dark .concern-chip { background: #0f3348; color: #7dd3fc; }
 
 .modal-disclaimer { display: flex; gap: 0.75rem; align-items: flex-start; background: #fefce8; border: 1px solid #fde047; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
-.dark .modal-disclaimer { background: #1c1408; border-color: #713f12; }
 .modal-disclaimer svg { color: #b45309; flex-shrink: 0; margin-top: 2px; }
 .modal-disclaimer p { font-size: 0.83rem; color: #78350f; line-height: 1.6; margin: 0; }
-.dark .modal-disclaimer p { color: #fbbf24; }
 
 .modal-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
 .modal-actions .btn-primary { background: #004e92; color: white; border: none; padding: 0.85rem 1.5rem; font-weight: 700; cursor: pointer; border-radius: 999px; font-size: 0.92rem; }
 .modal-actions .btn-primary:hover { background: #003a70; }
-.btn-ghost-dark { background: transparent; color: #004e92; border: 2px solid #004e92; padding: 0.85rem 1.5rem; font-weight: 700; cursor: pointer; border-radius: 999px; font-size: 0.92rem; }
-.dark .btn-ghost-dark { color: #5dbcd2; border-color: #5dbcd2; }
-.btn-ghost-dark:hover { background: #eef5fd; }
+.btn-ghost-outline { background: transparent; color: #004e92; border: 2px solid #004e92; padding: 0.85rem 1.5rem; font-weight: 700; cursor: pointer; border-radius: 999px; font-size: 0.92rem; }
+.btn-ghost-outline:hover { background: #eef5fd; }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1100px) {
   .articles-grid, .skin-types-grid, .ingredients-grid { grid-template-columns: repeat(2, 1fr); }
 }

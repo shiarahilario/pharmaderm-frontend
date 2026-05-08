@@ -5,32 +5,32 @@
         <button class="back-btn" @click="router.push('/perfil')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <h1>Mis Citas</h1>
+        <h1>My Appointments</h1>
         <button class="btn-new-apt" @click="goToBooking">
           <span class="material-symbols-outlined">add</span>
-          Nueva cita
+          New appointment
         </button>
       </div>
 
       <div v-if="isLoading" class="loading-state">
         <div class="loading-spinner"></div>
-        <p>Cargando tus citas...</p>
+        <p>Loading your appointments...</p>
       </div>
 
       <div v-else-if="fetchError" class="empty-state">
         <span class="material-symbols-outlined empty-icon">warning</span>
-        <h2>No se pudieron cargar tus citas</h2>
+        <h2>Could not load your appointments</h2>
         <p>{{ fetchError }}</p>
-        <button class="btn-primary" @click="loadAppointments">Reintentar</button>
+        <button class="btn-primary" @click="loadAppointments">Retry</button>
       </div>
 
       <div v-else-if="appointments.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">clinical_notes</span>
-        <h2>No tienes citas programadas</h2>
-        <p>Agenda una cita con un especialista dermatológico.</p>
-        <button class="btn-primary" @click="goToBooking">Agendar cita</button>
+        <h2>You have no scheduled appointments</h2>
+        <p>Book an appointment with a dermatology specialist.</p>
+        <button class="btn-primary" @click="goToBooking">Book appointment</button>
         <button class="btn-secondary" style="margin-top:0.75rem" @click="router.push('/diagnostics')">
-          Ir a diagnóstico
+          Go to diagnostics
         </button>
       </div>
 
@@ -39,29 +39,29 @@
           <div class="apt-card__photo">
             <img
               :src="apt.doctor_photo || DOCTOR_PLACEHOLDER"
-              :alt="apt.doctor_name || 'Especialista'"
+              :alt="apt.doctor_name || 'Specialist'"
             />
           </div>
 
           <div class="apt-card__body">
-            <p class="apt-doctor">{{ apt.doctor_name || apt.specialist_name || 'Especialista' }}</p>
-            <p class="apt-specialty">{{ apt.doctor_specialty || apt.specialty || 'Dermatología' }}</p>
+            <p class="apt-doctor">{{ apt.doctor_name || apt.specialist_name || 'Specialist' }}</p>
+            <p class="apt-specialty">{{ specialtyLabel(apt.doctor_specialty || apt.specialty) }}</p>
             <div class="apt-meta-row">
               <span class="apt-meta"><span class="material-symbols-outlined">calendar_month</span>{{ formatDate(apt.scheduled_date) }}</span>
-              <span class="apt-meta"><span class="material-symbols-outlined">schedule</span>{{ apt.scheduled_time || 'Por confirmar' }}</span>
+              <span class="apt-meta"><span class="material-symbols-outlined">schedule</span>{{ apt.scheduled_time || 'To be confirmed' }}</span>
             </div>
             <div class="apt-meta-row">
               <span class="apt-meta"><span class="material-symbols-outlined">{{ (apt.mode || '').toLowerCase() === 'virtual' ? 'videocam' : 'location_on' }}</span>{{ modalityLabel(apt.mode) }}</span>
-              <span v-if="apt.appointment_type" class="apt-meta"><span class="material-symbols-outlined">medical_services</span>{{ apt.appointment_type }}</span>
+              <span v-if="apt.appointment_type" class="apt-meta"><span class="material-symbols-outlined">medical_services</span>{{ appointmentTypeLabel(apt.appointment_type) }}</span>
             </div>
             <p v-if="apt.reason" class="apt-reason">
-              <em>{{ apt.reason }}</em>
+              <em>{{ concernLabel(apt.reason) }}</em>
             </p>
             <p v-if="apt.notes" class="apt-notes">
-              Notas: {{ apt.notes }}
+              Notes: {{ concernLabel(apt.notes) }}
             </p>
             <p v-if="apt.confirmation_code" class="apt-code">
-              Codigo: <strong>{{ apt.confirmation_code }}</strong>
+              Code: <strong>{{ apt.confirmation_code }}</strong>
             </p>
           </div>
 
@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, nextTick, watch, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
@@ -90,24 +90,28 @@ const appointments = ref([])
 const isLoading = ref(true)
 const fetchError = ref(null)
 const DOCTOR_PLACEHOLDER = 'https://placehold.co/80x80/e2e8f0/334155?text=DR'
+let loadToken = 0
 
 watch(userId, async (newUserId) => {
   if (newUserId) {
-    await loadAppointments()
+    await loadAppointments({ scrollTop: true })
+  } else {
+    appointments.value = []
+    isLoading.value = false
   }
 }, { immediate: true })
 
 function formatDate(iso) {
-  if (!iso) return 'Por confirmar'
-  return new Date(iso).toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' })
+  if (!iso) return 'To be confirmed'
+  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 function aptStatusLabel(status) {
   const map = {
-    pending: 'Pendiente', confirmed: 'Confirmada', completed: 'Completada',
-    cancelled: 'Cancelada', rescheduled: 'Reprogramada',
+    pending: 'Pending', confirmed: 'Confirmed', completed: 'Completed',
+    cancelled: 'Cancelled', rescheduled: 'Rescheduled',
   }
-  return map[status] || status || 'Pendiente'
+  return map[status] || status || 'Pending'
 }
 
 function aptStatusClass(status) {
@@ -121,9 +125,50 @@ function aptStatusClass(status) {
 function modalityLabel(mode) {
   const m = String(mode || '').toLowerCase()
   if (m === 'virtual') return 'Virtual'
-  if (m === 'presencial') return 'Presencial'
-  if (m === 'both' || m === 'ambos') return 'Virtual y Presencial'
-  return 'Por confirmar'
+  if (m === 'presencial') return 'In-person'
+  if (m === 'both' || m === 'ambos') return 'Virtual and In-person'
+  return 'To be confirmed'
+}
+
+function appointmentTypeLabel(type) {
+  const map = {
+    consulta_general: 'General consultation',
+    seguimiento: 'Follow-up',
+    urgencia: 'Urgent care',
+    estetica: 'Aesthetic consultation',
+  }
+  return map[type] || type || 'General consultation'
+}
+
+function specialtyLabel(specialty) {
+  const value = String(specialty || '').trim()
+  const map = {
+    dermatologia: 'Dermatology',
+    dermatología: 'Dermatology',
+    'dermatología clínica': 'Clinical dermatology',
+    'dermatologia clinica': 'Clinical dermatology',
+    estetica: 'Aesthetic dermatology',
+    estética: 'Aesthetic dermatology',
+  }
+  return map[value.toLowerCase()] || value || 'Dermatology'
+}
+
+function concernLabel(value) {
+  const text = String(value || '').trim()
+  const map = {
+    luminosidad: 'Radiance',
+    deshidratacion: 'Hydration',
+    hidratacion: 'Hydration',
+    manchas: 'Dark spots',
+    sensibilidad: 'Sensitivity',
+    barrera: 'Skin barrier',
+    arrugas: 'Early lines',
+    poros: 'Visible pores',
+    textura: 'Texture',
+    acne: 'Acne',
+    rojez: 'Redness',
+  }
+  return map[text.toLowerCase()] || text
 }
 
 function bookingRoute() {
@@ -134,18 +179,21 @@ function goToBooking() {
   router.push(bookingRoute())
 }
 
-async function loadAppointments() {
+async function loadAppointments({ scrollTop = false } = {}) {
+  const token = ++loadToken
   isLoading.value = true
   fetchError.value = null
   try {
     if (!isSupabaseConfigured) {
-      fetchError.value = 'La aplicación no está conectada a Supabase. Revisa la configuración de .env.'
+      if (token !== loadToken) return
+      fetchError.value = 'The app is not connected to Supabase. Check your .env configuration.'
       appointments.value = []
       return
     }
 
     if (!userId.value) {
-      fetchError.value = 'No se encontró usuario autenticado. Inicia sesión de nuevo.'
+      if (token !== loadToken) return
+      fetchError.value = 'No authenticated user was found. Please sign in again.'
       appointments.value = []
       return
     }
@@ -174,28 +222,47 @@ async function loadAppointments() {
       .order('scheduled_time', { ascending: false })
 
     if (error) {
-      fetchError.value = `Supabase: ${error.message || 'Error desconocido'}`
+      if (token !== loadToken) return
+      fetchError.value = `Supabase: ${error.message || 'Unknown error'}`
       appointments.value = []
       return
     }
 
+    if (token !== loadToken) return
     appointments.value = (data || []).map(a => ({
       ...a,
-      doctor_name: a.dermatologists?.name || 'Especialista',
-      doctor_specialty: a.dermatologists?.specialty || 'Dermatología',
+      doctor_name: a.dermatologists?.name || 'Specialist',
+      doctor_specialty: specialtyLabel(a.dermatologists?.specialty),
       doctor_photo: a.dermatologists?.photo_url || DOCTOR_PLACEHOLDER,
       mode: a.mode || a.dermatologists?.mode || null,
     }))
   } catch (e) {
-    console.warn('[MisCitas] Error cargando citas:', e)
-    fetchError.value = e?.message || 'Error cargando citas'
+    console.warn('[MisAppointments] Error loading appointments:', e)
+    if (token !== loadToken) return
+    fetchError.value = e?.message || 'Error loading appointments'
     appointments.value = []
   } finally {
-    isLoading.value = false
+    if (token === loadToken) {
+      isLoading.value = false
+      if (scrollTop) {
+        await nextTick()
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      }
+    }
   }
 }
 
-onMounted(loadAppointments)
+function reloadWhenVisible() {
+  if (!document.hidden && userId.value) loadAppointments()
+}
+
+window.addEventListener('focus', reloadWhenVisible)
+document.addEventListener('visibilitychange', reloadWhenVisible)
+
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', reloadWhenVisible)
+  document.removeEventListener('visibilitychange', reloadWhenVisible)
+})
 </script>
 
 <style scoped>

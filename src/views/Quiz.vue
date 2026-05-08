@@ -16,28 +16,29 @@
       <div :key="step">
       <section v-if="step === 'selfie_instructions'">
         <div class="relative overflow-hidden bg-white">
+          <button class="quiz-home-btn" type="button" @click="closeQuiz">GO HOME</button>
           <div class="relative h-[300px] sm:h-[360px]">
             <img :src="heroSelfieBg" alt="Selfie guide" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-slate-900/30"></div>
           </div>
 
           <div class="px-6 py-8 bg-[#F7F7F4]">
-            <h1 class="text-[28px] sm:text-[40px] tracking-wide font-light text-slate-900">TOMAR UN SELFIE</h1>
+            <h1 class="text-[28px] sm:text-[40px] tracking-wide font-light text-slate-900">{{ t('quiz.takeSelfie') }}</h1>
 
             <ul class="mt-7 space-y-5 text-[15px] sm:text-[18px] text-slate-800 leading-relaxed">
-              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Quitarse el maquillaje y los anteojos</span></li>
-              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Tire de su cabello hacia atrás</span></li>
-              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Cámara facial y mantener la expresión neutral</span></li>
-              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Manténgase en una luz natural bien iluminada</span></li>
+              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Remove makeup and glasses</span></li>
+              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Pull your hair back</span></li>
+              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Use front camera and keep a neutral expression</span></li>
+              <li class="flex gap-4"><span class="mt-[10px] w-[5px] h-[5px] rounded-full bg-slate-800 shrink-0"></span><span>Stay in well-lit natural light</span></li>
             </ul>
 
             <div class="mt-8 border border-slate-500 px-5 py-6 text-center text-slate-700 text-[14px] sm:text-[18px] leading-relaxed bg-white/60">
-              <p>La IA de MyRoutine necesita acceder a su cámara para proporcionar una experiencia personalizada basada en su selfie.</p>
-              <p class="mt-2">Su selfie no se almacenará en nuestra base de datos.</p>
+              <p>The skin analysis AI needs camera access to provide a personalized experience based on your selfie.</p>
+              <p class="mt-2">Your selfie will not be stored in our database.</p>
             </div>
 
-            <button class="mt-10 w-full h-[58px] bg-[#16A6E2] text-white text-[15px] sm:text-[18px] tracking-wide" type="button" @click="openCamera">TOMAR UN SELFIE</button>
-            <button class="mt-5 w-full h-[58px] text-slate-900 text-[15px] sm:text-[18px] tracking-wide" type="button" @click="triggerUpload">CARGAR UNA FOTOGRAFÍA</button>
+            <button class="mt-10 w-full h-[58px] bg-[#16A6E2] text-white text-[15px] sm:text-[18px] tracking-wide" type="button" @click="openCamera">{{ t('quiz.takeSelfie') }}</button>
+            <button class="mt-5 w-full h-[58px] text-slate-900 text-[15px] sm:text-[18px] tracking-wide" type="button" @click="triggerUpload">{{ t('quiz.uploadPhoto') }}</button>
           </div>
         </div>
       </section>
@@ -49,9 +50,9 @@
           <div class="absolute inset-0 bg-black/10"></div>
 
           <div class="absolute top-3 left-3 right-3 flex gap-3 z-20">
-            <div class="camera-chip" :class="{ ok: liveChecks.lighting }">ILUMINACIÓN</div>
-            <div class="camera-chip" :class="{ ok: liveChecks.position }">POSICIÓN FACIAL</div>
-            <div class="camera-chip" :class="{ ok: liveChecks.straight }">VEA RECTO</div>
+            <div class="camera-chip" :class="{ ok: liveChecks.lighting }">LIGHTING</div>
+            <div class="camera-chip" :class="{ ok: liveChecks.position }">FACE POSITION</div>
+            <div class="camera-chip" :class="{ ok: liveChecks.straight }">LOOK STRAIGHT</div>
           </div>
 
           <p class="absolute top-16 left-0 right-0 text-center text-white text-[16px] sm:text-[22px] z-20 drop-shadow px-4">{{ statusText }}</p>
@@ -69,8 +70,8 @@
 
           <div class="absolute left-0 right-0 bottom-0 z-20 px-4 pb-5">
             <div class="bg-white/80 backdrop-blur-md rounded-[26px] p-5">
-              <button class="w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide disabled:opacity-50 disabled:cursor-not-allowed" type="button" :disabled="!cameraReady || detectorLoading" @click="captureWithValidation">{{ detectorLoading ? 'CARGANDO DETECTOR...' : 'TOMAR SELFIE' }}</button>
-              <button class="mt-4 w-full h-[56px] border border-slate-400 text-slate-800 text-[16px]" type="button" @click="triggerUpload">CARGAR UNA FOTOGRAFÍA</button>
+              <button class="w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide disabled:opacity-50 disabled:cursor-not-allowed" type="button" :disabled="!cameraReady || detectorLoading" @click="captureWithValidation">{{ detectorLoading ? t('quiz.loadingDetector') : t('quiz.takeSelfie') }}</button>
+              <button class="mt-4 w-full h-[56px] border border-slate-400 text-slate-800 text-[16px]" type="button" @click="triggerUpload">{{ t('quiz.uploadPhoto') }}</button>
             </div>
           </div>
 
@@ -89,11 +90,11 @@
                 <span class="material-symbols-outlined text-red-600 mt-[2px]">cancel</span>
                 <div>
                   <p class="text-[18px] text-slate-900">{{ validationMessage }}</p>
-                  <p class="text-[13px] uppercase tracking-wide text-slate-500 mt-1">Intente de nuevo</p>
+                  <p class="text-[13px] uppercase tracking-wide text-slate-500 mt-1">Try again</p>
                 </div>
               </div>
-              <button class="mt-5 w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide" type="button" @click="retakeSelfie">RETOME EL SELFIE</button>
-              <button class="mt-2 w-full h-[56px] border border-slate-400 text-slate-800 text-[16px]" type="button" @click="triggerUpload">CARGAR UNA FOTOGRAFÍA</button>
+              <button class="mt-5 w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide" type="button" @click="retakeSelfie">{{ t('quiz.retakeSelfie') }}</button>
+              <button class="mt-2 w-full h-[56px] border border-slate-400 text-slate-800 text-[16px]" type="button" @click="triggerUpload">{{ t('quiz.uploadPhoto') }}</button>
             </div>
           </div>
         </div>
@@ -107,40 +108,40 @@
               <div class="flex items-start gap-3">
                 <span class="material-symbols-outlined text-emerald-600 text-[34px]">check_circle</span>
                 <div>
-                  <p class="text-[20px] font-normal text-slate-900">HECHO</p>
-                  <p class="text-[13px] uppercase tracking-wide text-slate-500 mt-1">OK PARA ANÁLISIS</p>
+                  <p class="text-[20px] font-normal text-slate-900">DONE</p>
+                  <p class="text-[13px] uppercase tracking-wide text-slate-500 mt-1">OK FOR ANALYSIS</p>
                 </div>
               </div>
-              <button class="mt-5 w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide" type="button" @click="goToAbout">CONTINUE</button>
-              <button class="mt-4 w-full h-[56px] border border-slate-500 text-slate-800 text-[16px]" type="button" @click="retakeSelfie">RETOMAR SELFIE</button>
+              <button class="mt-5 w-full h-[56px] bg-[#16A6E2] text-white text-[16px] tracking-wide" type="button" @click="goToAbout">{{ t('quiz.continue') }}</button>
+              <button class="mt-4 w-full h-[56px] border border-slate-500 text-slate-800 text-[16px]" type="button" @click="retakeSelfie">{{ t('quiz.retakeSelfie') }}</button>
             </div>
           </div>
         </div>
       </section>
 
       <section v-else-if="step === 'about_you'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light text-slate-900">Acerca de usted</h2>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light text-slate-900">{{ t('quiz.aboutYou') }}</h2>
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">¡Hola! Soy el asistente del bot de análisis de la piel de La Roche-Posay.</div>
-          <div class="chat-bubble">Analizaré su piel para ayudarle a comprender sus prioridades. Le haré algunas preguntas para completar el análisis.</div>
-          <div class="chat-bubble">¿Cuántos años tiene?</div>
+          <div class="chat-bubble">Hello! I'm your skin analysis assistant.</div>
+          <div class="chat-bubble">I'll analyze your skin to help you understand your priorities. I'll ask you a few questions to complete the analysis.</div>
+          <div class="chat-bubble">How old are you?</div>
           <div class="pt-10 pb-4 flex items-center justify-center">
             <button class="age-line-btn" type="button" @click="openAgeModal">
               <span class="dash"></span>
               <span class="value">{{ answers.age ? answers.age : '— —' }}</span>
-              <span class="suffix">años de edad</span>
+              <span class="suffix">years old</span>
             </button>
           </div>
         </div>
       </section>
 
       <section v-else-if="step === 'skin_type'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">{{ t('quiz.skinProfile') }}</h2>
 
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">Estamos comparando tu foto con otras 50,000 imágenes.</div>
-          <div class="chat-bubble">Nuestro análisis sugiere que puede tener la piel <b>{{ suggestedSkinTypeText }}</b>.</div>
-          <div class="chat-bubble">Puede confirmar o seleccionar otro tipo de piel.</div>
+          <div class="chat-bubble">We're comparing your photo with over 50,000 images.</div>
+          <div class="chat-bubble">Our analysis suggests you may have <b>{{ suggestedSkinTypeText }}</b> skin.</div>
+          <div class="chat-bubble">You can confirm or select a different skin type.</div>
         </div>
 
         <div class="mt-8">
@@ -163,19 +164,19 @@
           </div>
         </div>
 
-        <div v-if="answers.skinType" class="mt-8 pill-blue">Mi tipo de piel es {{ skinTypeLabel(answers.skinType) }}</div>
+        <div v-if="answers.skinType" class="mt-8 pill-blue">My skin type is {{ skinTypeLabel(answers.skinType) }}</div>
 
         <div class="mt-8 flex justify-center">
-          <button class="w-full max-w-[420px] h-[56px] bg-[#16A6E2] text-white text-[16px]" type="button" @click="goToDiagnosticQuestion('barrier_reactivity')">CONFIRMAR</button>
+          <button class="w-full max-w-[420px] h-[56px] bg-[#16A6E2] text-white text-[16px]" type="button" @click="goToDiagnosticQuestion('barrier_reactivity')">CONFIRM</button>
         </div>
       </section>
 
       <section v-else-if="step === 'barrier_reactivity'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
-        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Diagnóstico guiado 1 de 4</div>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">SKIN PROFILE</h2>
+        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Guided diagnosis 1 of 4</div>
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">¿Cómo suele reaccionar su piel ante productos nuevos, clima fuerte o exfoliación?</div>
-          <div class="chat-bubble">Esta respuesta nos ayuda a estimar la tolerancia cutánea y el estado de la barrera.</div>
+          <div class="chat-bubble">How does your skin usually react to new products, harsh weather, or exfoliation?</div>
+          <div class="chat-bubble">This helps us estimate your skin tolerance and barrier condition.</div>
         </div>
         <div class="mt-8 grid gap-4">
           <button v-for="option in diagnosticQuestions.barrierReactivity" :key="option.key" class="question-card" :class="{ selected: answers.barrierReactivity === option.key }" @click="selectDiagnosticOption('barrierReactivity', option.key, 'post_cleanse_feel')">
@@ -194,11 +195,11 @@
       </section>
 
       <section v-else-if="step === 'post_cleanse_feel'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
-        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Diagnóstico guiado 2 de 4</div>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">SKIN PROFILE</h2>
+        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Guided diagnosis 2 of 4</div>
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">Después de lavarse la cara y esperar unos minutos, ¿cómo se siente su piel normalmente?</div>
-          <div class="chat-bubble">Con esto diferenciamos mejor entre deshidratación, resequedad real y equilibrio cutáneo.</div>
+          <div class="chat-bubble">After washing your face and waiting a few minutes, how does your skin normally feel?</div>
+          <div class="chat-bubble">This helps us differentiate between dehydration, true dryness, and skin balance.</div>
         </div>
         <div class="mt-8 grid gap-4">
           <button v-for="option in diagnosticQuestions.postCleanseFeel" :key="option.key" class="question-card" :class="{ selected: answers.postCleanseFeel === option.key }" @click="selectDiagnosticOption('postCleanseFeel', option.key, 'shine_pattern')">
@@ -217,11 +218,11 @@
       </section>
 
       <section v-else-if="step === 'shine_pattern'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
-        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Diagnóstico guiado 3 de 4</div>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">SKIN PROFILE</h2>
+        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Guided diagnosis 3 of 4</div>
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">Al final del día, ¿en qué zonas nota brillo o exceso de grasa con más frecuencia?</div>
-          <div class="chat-bubble">Esto afina si el comportamiento sebáceo es global, localizado o mínimo.</div>
+          <div class="chat-bubble">By the end of the day, where do you most often notice shine or excess oil?</div>
+          <div class="chat-bubble">This refines whether sebum behavior is widespread, localized, or minimal.</div>
         </div>
         <div class="mt-8 grid gap-4">
           <button v-for="option in diagnosticQuestions.shinePattern" :key="option.key" class="question-card" :class="{ selected: answers.shinePattern === option.key }" @click="selectDiagnosticOption('shinePattern', option.key, 'breakout_pattern')">
@@ -240,11 +241,11 @@
       </section>
 
       <section v-else-if="step === 'breakout_pattern'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
-        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Diagnóstico guiado 4 de 4</div>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">SKIN PROFILE</h2>
+        <div class="mt-3 text-center text-[11px] sm:text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Guided diagnosis 4 of 4</div>
         <div class="mt-8 space-y-4">
-          <div class="chat-bubble">¿Con qué frecuencia presenta poros obstruidos, granitos o brotes?</div>
-          <div class="chat-bubble">Esto nos permite separar una piel grasa estable de una piel con tendencia acneica o congestiva.</div>
+          <div class="chat-bubble">How often do you experience clogged pores, pimples, or breakouts?</div>
+          <div class="chat-bubble">This helps us distinguish stable oily skin from acne-prone or congested skin.</div>
         </div>
         <div class="mt-8 grid gap-4">
           <button v-for="option in diagnosticQuestions.breakoutPattern" :key="option.key" class="question-card" :class="{ selected: answers.breakoutPattern === option.key }" @click="selectDiagnosticOption('breakoutPattern', option.key, 'profile_complete')">
@@ -263,34 +264,34 @@
       </section>
 
       <section v-else-if="step === 'profile_complete'" class="pt-6">
-        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">PERFIL DE LA PIEL</h2>
+        <h2 class="text-center text-[22px] sm:text-[30px] font-light tracking-wide text-slate-900">SKIN PROFILE</h2>
         <div class="mt-8 space-y-5">
-          <div class="chat-bubble">Ya tengo suficiente información para construir un perfil más personalizado de su piel.</div>
-          <div class="pill-blue">Mi tipo de piel es {{ skinTypeLabel(answers.skinType || suggestedSkinType) }}</div>
-          <div class="pill-blue">Mi piel {{ diagnosticLabel('barrierReactivity', answers.barrierReactivity) }}</div>
-          <div class="pill-blue">Después de limpiarla, mi piel {{ diagnosticLabel('postCleanseFeel', answers.postCleanseFeel) }}</div>
-          <div class="pill-blue">El brillo aparece {{ diagnosticLabel('shinePattern', answers.shinePattern) }}</div>
-          <div class="pill-blue">Los brotes aparecen {{ diagnosticLabel('breakoutPattern', answers.breakoutPattern) }}</div>
-          <div class="chat-bubble">Gracias por responder. Ahora generaré un análisis en función de la combinación completa de sus respuestas.</div>
+          <div class="chat-bubble">I now have enough information to build a more personalized profile for your skin.</div>
+          <div class="pill-blue">My skin type is {{ skinTypeLabel(answers.skinType || suggestedSkinType) }}</div>
+          <div class="pill-blue">My skin {{ diagnosticLabel('barrierReactivity', answers.barrierReactivity) }}</div>
+          <div class="pill-blue">After cleansing, my skin {{ diagnosticLabel('postCleanseFeel', answers.postCleanseFeel) }}</div>
+          <div class="pill-blue">Shine appears {{ diagnosticLabel('shinePattern', answers.shinePattern) }}</div>
+          <div class="pill-blue">Breakouts appear {{ diagnosticLabel('breakoutPattern', answers.breakoutPattern) }}</div>
+          <div class="chat-bubble">Thank you for answering. I will now generate an analysis based on the full combination of your answers.</div>
         </div>
         <div class="mt-10 flex justify-center">
-          <button class="w-full max-w-[480px] h-[62px] bg-[#16A6E2] text-white text-[18px] tracking-wide shadow-[0_8px_24px_rgba(22,166,226,.25)]" type="button" @click="generateAnalysisAndGoResults">SIGUIENTE</button>
+          <button class="w-full max-w-[480px] h-[62px] bg-[#16A6E2] text-white text-[18px] tracking-wide shadow-[0_8px_24px_rgba(22,166,226,.25)]" type="button" @click="generateAnalysisAndGoResults">NEXT</button>
         </div>
       </section>
 
       <section v-else-if="step === 'results_summary'" class="pt-4">
         <div class="flex justify-center"><img :src="logoSrc" class="h-12 object-contain" alt="My Routine AI" /></div>
-        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Consigue un 10 % de descuento en tu pedido al registrarte para recibir tus resultados.</p></div>
-        <p class="mt-6 text-[16px] sm:text-[20px] text-slate-800 leading-relaxed">Este perfil ha sido creado específicamente para usted en función de sus respuestas, la interacción entre barrera cutánea, hidratación, brillo y tendencia a brotes.</p>
+        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Get 10% off your order by signing up to receive your results.</p></div>
+        <p class="mt-6 text-[16px] sm:text-[20px] text-slate-800 leading-relaxed">This profile was created specifically for you based on your answers and the interaction between skin barrier, hydration, shine, and breakout tendency.</p>
         <div class="mt-5 rounded-[18px] border border-slate-200 bg-white px-5 py-5 shadow-[0_6px_20px_rgba(0,0,0,.04)]">
-          <p class="text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Diagnóstico personalizado</p>
+          <p class="text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Personalized Diagnosis</p>
           <h3 class="mt-2 text-[22px] sm:text-[30px] text-slate-900 leading-tight">{{ analysis.profileTitle }}</h3>
           <p class="mt-3 text-[15px] sm:text-[18px] text-slate-700 leading-relaxed">{{ analysis.profileSummary }}</p>
         </div>
         <div class="mt-6 result-summary-card">
           <div class="photo-backdrop"><img :src="capturedDataUrl || selfiePlaceholder" alt="Selfie" class="summary-selfie" /></div>
           <div class="result-sheet">
-            <span class="result-tag">Prioridad principal</span>
+            <span class="result-tag">Main Priority</span>
             <div v-for="metric in summaryMetrics" :key="metric.key" class="py-4 border-t border-slate-200 first:border-t-0">
               <div class="flex items-start justify-between gap-4">
                 <div class="flex-1">
@@ -301,25 +302,25 @@
                 <div class="text-[18px] sm:text-[30px] text-slate-800 whitespace-nowrap mt-[2px]">{{ metric.score.toFixed(1) }}/10</div>
               </div>
             </div>
-            <button class="mt-4 underline text-slate-700 text-[15px] sm:text-[18px]" type="button" @click="step = 'analysis_full'">Ver análisis completo</button>
+            <button class="mt-4 underline text-slate-700 text-[15px] sm:text-[18px]" type="button" @click="step = 'analysis_full'">View Full Analysis</button>
           </div>
         </div>
         <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[480px] mx-auto">
           <button class="w-full h-[58px] bg-white border border-slate-200 text-slate-900 text-[16px] shadow-[0_6px_18px_rgba(0,0,0,.05)]" type="button" @click="goToDiagnostics">
-            CONTINUAR DIAGNÓSTICO
+            CONTINUE DIAGNOSIS
           </button>
           <button class="w-full h-[58px] bg-[#16A6E2] text-white text-[16px]" type="button" @click="step = 'routine_intro'">
-            VER RUTINA
+            VIEW ROUTINE
           </button>
         </div>
       </section>
 
       <section v-else-if="step === 'routine_intro'" class="pt-4">
         <div class="flex justify-center"><img :src="logoSrc" class="h-12 object-contain" alt="My Routine AI" /></div>
-        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Consigue un 10 % de descuento en tu pedido al registrarte para recibir tus resultados.</p></div>
+        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Get 10% off your order by signing up to receive your results.</p></div>
         <div class="mt-8">
-          <h2 class="text-[30px] sm:text-[48px] font-light tracking-wide text-slate-900">SU RUTINA PERSONALIZADA</h2>
-          <p class="mt-4 text-[17px] sm:text-[24px] text-slate-700 leading-relaxed">Sus elementos esenciales de rutina para el día y la noche para abordar su área de enfoque principal.</p>
+          <h2 class="text-[30px] sm:text-[48px] font-light tracking-wide text-slate-900">YOUR PERSONALIZED ROUTINE</h2>
+          <p class="mt-4 text-[17px] sm:text-[24px] text-slate-700 leading-relaxed">Your essential day and night routine elements to address your main focus area.</p>
         </div>
         <div class="mt-8 rounded-[8px] border border-slate-300 p-6 bg-[#F7F7F4]">
           <h3 class="text-[24px] sm:text-[34px] text-slate-900">{{ primaryConcernTitle }}</h3>
@@ -329,7 +330,7 @@
         <div class="mt-8" v-if="routine.morning.length">
           <div class="border border-[#16A6E2] bg-white shadow-[0_6px_24px_rgba(0,0,0,.06)]">
             <div class="flex items-center justify-between">
-              <div class="bg-[#16A6E2] text-white px-6 py-3 text-[14px] sm:text-[18px]">SU n.o 1 OBLIGATORIO</div>
+              <div class="bg-[#16A6E2] text-white px-6 py-3 text-[14px] sm:text-[18px]">YOUR #1 ESSENTIAL</div>
               <div class="px-5 text-[15px] sm:text-[20px] text-slate-800">{{ starText(routine.morning[0].rating) }} <span class="text-slate-500">({{ routine.morning[0].reviews }})</span></div>
             </div>
             <div class="p-6 grid grid-cols-[1fr_140px] sm:grid-cols-[1fr_220px] gap-6 items-center">
@@ -343,21 +344,24 @@
           </div>
         </div>
         <div class="mt-8 email-buy-bar">
-          <button class="email-cta" type="button" @click="sendRoutineByEmail"><span class="material-symbols-outlined">mail</span><span>ENVIAR MI RUTINA POR CORREO ELECTRÓNICO</span></button>
+          <button class="email-cta" type="button" @click="sendRoutineByEmail"><span class="material-symbols-outlined">mail</span><span>EMAIL MY ROUTINE</span></button>
           <button class="buy-lock-btn" type="button" @click="goToRoutine"><span class="material-symbols-outlined">shopping_bag</span></button>
+        </div>
+        <div class="quiz-confirm-actions">
+          <button class="btn-primary" type="button" @click="goToRoutinePage">Go to routine page</button>
         </div>
       </section>
 
       <section v-else-if="step === 'routine'" class="pt-4">
         <div class="flex justify-center"><img :src="logoSrc" class="h-12 object-contain" alt="My Routine AI" /></div>
-        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Consigue un 10 % de descuento en tu pedido al registrarte para recibir tus resultados.</p></div>
+        <div class="mt-6 promo-strip"><span class="material-symbols-outlined text-white">content_copy</span><p>Get 10% off your order by signing up to receive your results.</p></div>
         <div class="mt-8 border-b border-slate-300 flex">
-          <button class="routine-tab" :class="{ active: routineTab === 'morning' }" type="button" @click="routineTab = 'morning'">MAÑANA</button>
-          <button class="routine-tab" :class="{ active: routineTab === 'night' }" type="button" @click="routineTab = 'night'">NOCHE</button>
+          <button class="routine-tab" :class="{ active: routineTab === 'morning' }" type="button" @click="routineTab = 'morning'">MORNING</button>
+          <button class="routine-tab" :class="{ active: routineTab === 'night' }" type="button" @click="routineTab = 'night'">NIGHT</button>
         </div>
         <div class="mt-8 space-y-10">
           <div v-for="product in currentRoutineList" :key="product.step + '-' + product.slug">
-            <p class="text-[22px] sm:text-[30px] text-slate-900">Paso {{ product.step }}</p>
+            <p class="text-[22px] sm:text-[30px] text-slate-900">Step {{ product.step }}</p>
             <p class="mt-2 text-[18px] sm:text-[24px] tracking-wide text-slate-700 uppercase">{{ product.category }}</p>
             <div class="mt-5 border border-[#16A6E2] bg-white shadow-[0_6px_24px_rgba(0,0,0,.06)]">
               <div class="flex items-center justify-between"><div class="px-6 py-3"></div><div class="px-5 text-[15px] sm:text-[20px] text-slate-800">{{ starText(product.rating) }} <span class="text-slate-500">({{ product.reviews }})</span></div></div>
@@ -370,8 +374,8 @@
                 <div class="flex items-center justify-center"><TransparentImg :src="product.image" :alt="product.name" class="max-h-[200px] sm:max-h-[260px] object-contain" /></div>
               </div>
               <div class="grid grid-cols-2">
-                <button type="button" class="h-[66px] border-t border-r border-slate-300 text-[16px] sm:text-[24px] text-slate-900" @click="addProductAndGo(product)">VER EN TIENDA</button>
-                <button type="button" class="h-[66px] border-t border-slate-300 bg-[#16A6E2] text-white text-[16px] sm:text-[24px] flex items-center justify-center gap-2" @click="addProductAndGo(product)"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">shopping_bag</span>AGREGAR AL CARRITO</button>
+                <button type="button" class="h-[66px] border-t border-r border-slate-300 text-[16px] sm:text-[24px] text-slate-900" @click="addProductAndGo(product)">VIEW IN STORE</button>
+                <button type="button" class="h-[66px] border-t border-slate-300 bg-[#16A6E2] text-white text-[16px] sm:text-[24px] flex items-center justify-center gap-2" @click="addProductAndGo(product)"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">shopping_bag</span>ADD TO BAG</button>
               </div>
             </div>
           </div>
@@ -380,10 +384,10 @@
 
       <section v-else-if="step === 'analysis_full'" class="pt-6">
         <button class="mb-6 w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-200/60" type="button" @click="step = 'results_summary'"><span class="material-symbols-outlined">arrow_back</span></button>
-        <h2 class="text-[30px] sm:text-[44px] font-light text-slate-900">Mi análisis</h2>
+        <h2 class="text-[30px] sm:text-[44px] font-light text-slate-900">My Analysis</h2>
         <p class="mt-4 text-[17px] sm:text-[24px] text-slate-700 leading-relaxed max-w-[860px]">{{ analysis.profileSummary }}</p>
         <div class="mt-6 rounded-[18px] bg-white border border-slate-200 px-5 py-5 shadow-[0_6px_20px_rgba(0,0,0,.04)]">
-          <p class="text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Interpretación clínica orientativa</p>
+          <p class="text-[13px] uppercase tracking-[0.18em] text-[#16A6E2]">Indicative clinical interpretation</p>
           <ul class="mt-4 space-y-3 text-[15px] sm:text-[18px] text-slate-700 leading-relaxed">
             <li v-for="item in analysis.detailedFindings" :key="item">• {{ item }}</li>
           </ul>
@@ -410,13 +414,13 @@
     <div v-if="ageModal" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
       <div class="bg-white w-full max-w-[520px] p-6 sm:p-8 relative">
         <button class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-slate-700" type="button" @click="closeAgeModal"><span class="material-symbols-outlined">close</span></button>
-        <h3 class="text-[28px] sm:text-[38px] tracking-wide font-light text-slate-900">SU EDAD</h3>
-        <p class="mt-4 text-[15px] sm:text-[19px] text-slate-700 leading-relaxed">Su piel requiere atención diferente a medida que evoluciona con la edad. Conocer su edad nos ayudará a determinar las necesidades de su piel.</p>
+        <h3 class="text-[28px] sm:text-[38px] tracking-wide font-light text-slate-900">YOUR AGE</h3>
+        <p class="mt-4 text-[15px] sm:text-[19px] text-slate-700 leading-relaxed">Your skin requires different care as it evolves with age. Knowing your age will help us determine your skin's needs.</p>
         <div class="mt-8 flex items-center gap-5">
           <input v-model.number="ageDraft" type="number" min="10" max="99" class="age-modal-input" />
-          <span class="text-[20px] sm:text-[30px] text-slate-800">años de edad</span>
+          <span class="text-[20px] sm:text-[30px] text-slate-800">years old</span>
         </div>
-        <button class="mt-8 w-full h-[56px] bg-[#16A6E2] text-white text-[18px]" type="button" @click="saveAge">ESTÁ BIEN</button>
+        <button class="mt-8 w-full h-[56px] bg-[#16A6E2] text-white text-[18px]" type="button" @click="saveAge">CONFIRM</button>
       </div>
     </div>
 
@@ -427,7 +431,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../stores/useCartStore';
 import { useHistoryStore } from '../stores/useHistoryStore';
@@ -437,18 +441,39 @@ import { convertPrice } from '../utils/currency';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 import { sendRoutineByEmail as emailRoutine, emailServiceConfigured } from '../services/emailService.js';
 import TransparentImg from '../components/TransparentImg.vue';
+import { useI18n } from '../lib/i18n.js';
+import { withTimeout } from '../utils/async.js';
 
 const router = useRouter();
 const cart = useCartStore();
 const history = useHistoryStore();
 const auth = useAuthStore();
+const { t } = useI18n();
 
 const logoSrc = 'https://placehold.co/300x80/ffffff/111827?text=My+Routine+AI';
 const logoSrcWhite = 'https://placehold.co/300x80/0f172a/ffffff?text=My+Routine+AI';
-const heroSelfieBg = 'https://placehold.co/900x1200/e5e7eb/475569?text=SELFIE+GUIDE';
+import quizBannerImg from '../assets/fondo/quiz.png';
+const heroSelfieBg = quizBannerImg;
+import skinSeca from '../assets/fondo/seca.jpg';
+import skinNormal from '../assets/fondo/normal.jpg';
+import skinMixta from '../assets/fondo/mixta.jpg';
+import skinGrasa from '../assets/fondo/grasa.jpg';
 const selfiePlaceholder = 'https://placehold.co/800x1000/dbeafe/1e3a8a?text=SELFIE';
 
 const step = ref('selfie_instructions');
+const immersiveSteps = new Set([
+  'selfie_instructions',
+  'camera',
+  'selfie_error',
+  'selfie_confirm',
+  'about_you',
+  'skin_type',
+  'barrier_reactivity',
+  'post_cleanse_feel',
+  'shine_pattern',
+  'breakout_pattern',
+  'profile_complete',
+]);
 const routineTab = ref('morning');
 const ageModal = ref(false);
 const ageDraft = ref(17);
@@ -460,8 +485,8 @@ const capturedDataUrl = ref('');
 const cameraReady = ref(false);
 const detectorLoading = ref(false);
 const countdown = ref(0);
-const statusText = ref('Modo prueba activo: puedes capturar');
-const validationMessage = ref('Intente de nuevo.');
+const statusText = ref('Test mode active: you can capture');
+const validationMessage = ref('Please try again.');
 
 const answers = reactive({
   age: null,
@@ -476,36 +501,36 @@ const liveChecks = reactive({ lighting: true, position: true, straight: true });
 
 const diagnosticQuestions = {
   barrierReactivity: [
-    { key: 'resilient', title: 'Rara vez reacciona', description: 'Tolera bien productos nuevos, clima y activos sin ardor o enrojecimiento notable.', icon: 'sentiment_satisfied' },
-    { key: 'mild', title: 'A veces se irrita', description: 'Puede picar o enrojecerse levemente con algunos productos o cambios de clima.', icon: 'sentiment_neutral' },
-    { key: 'reactive', title: 'Reacciona con facilidad', description: 'Con frecuencia arde, se enrojece o se sensibiliza ante exfoliantes, fragancias o sol.', icon: 'sentiment_dissatisfied' },
-    { key: 'very_reactive', title: 'Muy reactiva o intolerante', description: 'La piel suele molestarse con facilidad y necesita fórmulas muy suaves y reparadoras.', icon: 'health_and_safety' },
+    { key: 'resilient', title: 'Rarely reacts', description: 'Tolerates new products, weather, and actives well without noticeable burning or redness.', icon: 'sentiment_satisfied' },
+    { key: 'mild', title: 'Sometimes irritated', description: 'May itch or slightly redden with some products or climate changes.', icon: 'sentiment_neutral' },
+    { key: 'reactive', title: 'Reacts easily', description: 'Often burns, reddens, or becomes sensitized to exfoliants, fragrances, or sun.', icon: 'sentiment_dissatisfied' },
+    { key: 'very_reactive', title: 'Very reactive or intolerant', description: 'Skin gets easily irritated and needs very gentle, repairing formulas.', icon: 'health_and_safety' },
   ],
   postCleanseFeel: [
-    { key: 'comfortable', title: 'Cómoda y equilibrada', description: 'No se siente tirante ni demasiado grasa después de limpiar.', icon: 'spa' },
-    { key: 'slightly_tight', title: 'Algo tirante', description: 'Nota una ligera sensación de sequedad o necesidad de crema al poco rato.', icon: 'water_drop' },
-    { key: 'very_tight', title: 'Muy tirante o áspera', description: 'La piel se siente seca, incómoda o incluso algo descamada después del lavado.', icon: 'air' },
-    { key: 'tight_but_oily', title: 'Tirante pero luego brillante', description: 'Primero se siente seca o tensa, pero más tarde aparece grasa o brillo.', icon: 'contrast' },
+    { key: 'comfortable', title: 'Comfortable and balanced', description: "Doesn't feel tight or too oily after cleansing.", icon: 'spa' },
+    { key: 'slightly_tight', title: 'Slightly tight', description: 'Notices a slight dryness or need for moisturizer shortly after.', icon: 'water_drop' },
+    { key: 'very_tight', title: 'Very tight or rough', description: 'Skin feels dry, uncomfortable, or slightly flaky after washing.', icon: 'air' },
+    { key: 'tight_but_oily', title: 'Tight then shiny', description: 'First feels dry or tight, but later becomes oily or shiny.', icon: 'contrast' },
   ],
   shinePattern: [
-    { key: 'minimal', title: 'Casi no aparece brillo', description: 'La piel se mantiene bastante mate o equilibrada durante el día.', icon: 'radio_button_unchecked' },
-    { key: 'tzone', title: 'Principalmente en zona T', description: 'El brillo se concentra en frente, nariz o barbilla.', icon: 'face_retouching_natural' },
-    { key: 'all_over', title: 'En casi todo el rostro', description: 'El exceso de grasa aparece de forma generalizada a lo largo del día.', icon: 'wb_sunny' },
-    { key: 'localized_with_pores', title: 'Brillo con poros visibles', description: 'Además del brillo, nota poros notorios o textura congestionada.', icon: 'blur_on' },
+    { key: 'minimal', title: 'Barely any shine', description: 'Skin stays fairly matte or balanced throughout the day.', icon: 'radio_button_unchecked' },
+    { key: 'tzone', title: 'Mainly in T-zone', description: 'Shine concentrates on the forehead, nose, or chin.', icon: 'face_retouching_natural' },
+    { key: 'all_over', title: 'Across most of the face', description: 'Excess oil appears throughout the face over the course of the day.', icon: 'wb_sunny' },
+    { key: 'localized_with_pores', title: 'Shine with visible pores', description: 'Along with shine, noticeable pores or congested texture are visible.', icon: 'blur_on' },
   ],
   breakoutPattern: [
-    { key: 'rare', title: 'Casi nunca', description: 'Los granitos o poros obstruidos aparecen rara vez.', icon: 'check_circle' },
-    { key: 'occasional', title: 'Ocasionalmente', description: 'Aparecen de vez en cuando, por estrés, ciclo menstrual o algún producto.', icon: 'schedule' },
-    { key: 'frequent', title: 'Con frecuencia', description: 'Hay brotes, textura o comedones de manera repetida.', icon: 'priority_high' },
-    { key: 'persistent', title: 'Persistentes y recurrentes', description: 'La congestión o los brotes se mantienen activos durante gran parte del tiempo.', icon: 'warning' },
+    { key: 'rare', title: 'Almost never', description: 'Pimples or clogged pores appear very rarely.', icon: 'check_circle' },
+    { key: 'occasional', title: 'Occasionally', description: 'Appear from time to time due to stress, hormonal cycles, or a product.', icon: 'schedule' },
+    { key: 'frequent', title: 'Frequently', description: 'Breakouts, texture, or blackheads appear repeatedly.', icon: 'priority_high' },
+    { key: 'persistent', title: 'Persistent and recurring', description: 'Congestion or breakouts remain active most of the time.', icon: 'warning' },
   ],
 };
 
 const skinTypes = [
-  { key: 'seca', title: 'PIEL SECA', description: 'Seleccione este tipo de piel si la piel tiende a sentirse incómoda debido a la descamación, el estiramiento o la falta de humedad.', image: 'https://placehold.co/600x400/f5e6dc/7c5a43?text=PIEL+SECA', actionLabel: 'Confirmar' },
-  { key: 'normal', title: 'PIEL NORMAL', description: 'Seleccione este tipo de piel si su piel se siente equilibrada, cómoda y sin exceso de grasa o resequedad marcada.', image: 'https://placehold.co/600x400/e8eef3/4b5563?text=PIEL+NORMAL', actionLabel: 'Seleccionar' },
-  { key: 'mixta', title: 'PIEL MIXTA', description: 'Seleccione este tipo de piel si nota una zona T más grasa y otras áreas con sensación más equilibrada.', image: 'https://placehold.co/600x400/f3eadb/6b7280?text=PIEL+MIXTA', actionLabel: 'Seleccionar' },
-  { key: 'grasa', title: 'PIEL GRASA', description: 'Seleccione este tipo de piel si percibe brillo, poros notorios o tendencia a exceso de sebo con frecuencia.', image: 'https://placehold.co/600x400/d9eaf7/2563eb?text=PIEL+GRASA', actionLabel: 'Seleccionar' },
+  { key: 'seca', title: 'DRY SKIN', description: 'Select this skin type if your skin tends to feel uncomfortable due to flaking, tightness, or lack of moisture.', image: skinSeca, actionLabel: 'Select' },
+  { key: 'normal', title: 'NORMAL SKIN', description: 'Select this skin type if your skin feels balanced, comfortable, without excess oil or noticeable dryness.', image: skinNormal, actionLabel: 'Select' },
+  { key: 'mixta', title: 'COMBINATION SKIN', description: 'Select this skin type if you notice a shinier T-zone and other areas that feel more balanced.', image: skinMixta, actionLabel: 'Select' },
+  { key: 'grasa', title: 'OILY SKIN', description: 'Select this skin type if you frequently notice shine, prominent pores, or excess sebum.', image: skinGrasa, actionLabel: 'Select' },
 ];
 
 // El catálogo ya no se define aquí — se usa getProductsByQuizResult del catálogo unificado
@@ -542,30 +567,30 @@ const fullMetrics = computed(() => analysis.value.fullMetrics);
 const routine = computed(() => buildRoutine());
 const currentRoutineList = computed(() => routine.value[routineTab.value]);
 const primaryConcernDescription = computed(() => ({
-  luminosidad: 'La piel de aspecto radiante suele asociarse con luminosidad, tono uniforme y textura descansada.',
-  deshidratacion: 'Cuando la piel pierde agua con facilidad puede sentirse opaca, tirante o con textura irregular.',
-  manchas: 'La apariencia desigual del tono puede hacer que la piel se vea menos uniforme.',
-  sensibilidad: 'Cuando la piel reacciona fácilmente, la rutina debe enfocarse en apoyar la barrera.',
-  arrugas: 'Con el tiempo pueden verse líneas más notorias y cambios en textura.',
-  poros: 'Cuando hay brillo y poros más visibles, conviene una rutina balanceada que ayude a controlar el exceso de grasa.',
-  barrera: 'Cuando la barrera cutánea está comprometida, la piel tolera peor los activos y suele resentirse con clima o limpieza.',
-}[analysis.value.primaryConcern] || 'La piel de aspecto radiante suele asociarse con luminosidad, tono uniforme y textura descansada.'));
+  luminosidad: 'Radiant-looking skin is associated with brightness, even tone, and rested texture.',
+  deshidratacion: 'When skin loses water easily it can look dull, feel tight, or have an uneven texture.',
+  manchas: 'Uneven skin tone can make skin look less uniform.',
+  sensibilidad: 'When skin reacts easily, the routine should focus on supporting the barrier.',
+  arrugas: 'Over time, more noticeable lines and texture changes may appear.',
+  poros: 'When there is shine and more visible pores, a balanced routine helps control excess oil.',
+  barrera: 'When the skin barrier is compromised, skin tolerates actives poorly and is affected by climate or cleansing.',
+}[analysis.value.primaryConcern] || 'Radiant-looking skin is associated with brightness, even tone, and rested texture.'));
 
-function skinTypeLabel(key) { return ({ seca: 'seca', normal: 'normal', mixta: 'mixta', grasa: 'grasa' }[key] || 'normal'); }
-function concernTitle(key) { return ({ luminosidad: 'Luminosidad', deshidratacion: 'Deshidratación', manchas: 'Manchas oscuras', sensibilidad: 'Sensibilidad', arrugas: 'Líneas tempranas', poros: 'Poros visibles', barrera: 'Barrera cutánea' }[key] || 'Luminosidad'); }
-function metricNote(score) { if (score >= 9) return 'Muy estable'; if (score >= 8) return 'Buen equilibrio'; if (score >= 7) return 'Requiere atención'; return 'Prioridad visible'; }
+function skinTypeLabel(key) { return ({ seca: 'dry', normal: 'normal', mixta: 'combination', grasa: 'oily' }[key] || 'normal'); }
+function concernTitle(key) { return ({ luminosidad: 'Radiance', deshidratacion: 'Hydration', manchas: 'Dark spots', sensibilidad: 'Sensitivity', arrugas: 'Early lines', poros: 'Visible pores', barrera: 'Skin barrier' }[key] || 'Radiance'); }
+function metricNote(score) { if (score >= 9) return 'Very stable'; if (score >= 8) return 'Good balance'; if (score >= 7) return 'Needs attention'; return 'Visible priority'; }
 function clamp(value) { return Math.max(5.8, Math.min(9.6, Number(value.toFixed(1)))); }
 function starText(value) { const r = Math.round(value || 0); return '★'.repeat(Math.max(0, Math.min(5, r))) + '☆'.repeat(Math.max(0, 5 - r)); }
 function showToast(message) { toastMessage.value = message; clearTimeout(toastTimer); toastTimer = setTimeout(() => { if (toastMessage.value === message) toastMessage.value = ''; }, 2500); }
 
 function diagnosticLabel(group, key) {
   const labels = {
-    resilient: 'rara vez reacciona', mild: 'a veces se irrita', reactive: 'reacciona con facilidad', very_reactive: 'es muy reactiva o intolerante',
-    comfortable: 'se siente cómoda y equilibrada', slightly_tight: 'queda algo tirante', very_tight: 'queda muy tirante o áspera', tight_but_oily: 'queda tirante, pero luego se vuelve brillante',
-    minimal: 'muy poco', tzone: 'principalmente en la zona T', all_over: 'en casi todo el rostro', localized_with_pores: 'en zonas con poros visibles',
-    rare: 'casi nunca', occasional: 'ocasionalmente', frequent: 'con frecuencia', persistent: 'de forma persistente',
+    resilient: 'rarely reacts', mild: 'sometimes gets irritated', reactive: 'reacts easily', very_reactive: 'is very reactive or intolerant',
+    comfortable: 'feels comfortable and balanced', slightly_tight: 'feels slightly tight', very_tight: 'feels very tight or rough', tight_but_oily: 'feels tight, then becomes shiny',
+    minimal: 'very little', tzone: 'mainly in the T-zone', all_over: 'across most of the face', localized_with_pores: 'in areas with visible pores',
+    rare: 'almost never', occasional: 'occasionally', frequent: 'frequently', persistent: 'persistently',
   };
-  return labels[key] || 'aún no ha sido definida';
+  return labels[key] || 'not yet defined';
 }
 
 function handleBack() {
@@ -584,7 +609,7 @@ function continueWithoutSelfie() { stopCamera(); capturedDataUrl.value = ''; ana
 function goToRoutine() { step.value = 'routine'; }
 function openAgeModal() { ageDraft.value = answers.age ?? 17; ageModal.value = true; }
 function closeAgeModal() { ageModal.value = false; }
-function saveAge() { const value = Number(ageDraft.value); if (!Number.isFinite(value) || value < 10 || value > 99) return showToast('Ingrese una edad válida.'); answers.age = value; ageModal.value = false; step.value = 'skin_type'; }
+function saveAge() { const value = Number(ageDraft.value); if (!Number.isFinite(value) || value < 10 || value > 99) return showToast('Please enter a valid age.'); answers.age = value; ageModal.value = false; step.value = 'skin_type'; }
 function triggerUpload() { if (fileInput.value) { fileInput.value.value = ''; fileInput.value.click(); } }
 
 async function openCamera() { step.value = 'camera'; capturedDataUrl.value = ''; countdown.value = 0; await nextTick(); await startCamera(); }
@@ -601,8 +626,8 @@ async function startCamera() {
     }
   } catch (e) {
     cameraReady.value = false;
-    statusText.value = 'No se pudo acceder a la cámara. Use CARGAR UNA FOTOGRAFÍA.';
-    showToast('No se pudo abrir la cámara. Prueba subiendo una foto.');
+    statusText.value = 'Could not access camera. Please UPLOAD A PHOTO instead.';
+    showToast('Could not open camera. Try uploading a photo instead.');
   }
 }
 function stopCamera() { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } if (videoEl.value) videoEl.value.srcObject = null; cameraReady.value = false; clearInterval(countdownTimer); countdown.value = 0; }
@@ -632,7 +657,7 @@ function analyzeImageMeta(dataUrl) {
 async function onFilePicked(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  if (!file.type.startsWith('image/')) return showToast('El archivo seleccionado no es una imagen.');
+  if (!file.type.startsWith('image/')) return showToast('The selected file is not an image.');
   const reader = new FileReader();
   reader.onload = async () => {
     capturedDataUrl.value = String(reader.result || '');
@@ -662,49 +687,49 @@ async function captureFrameAndContinue() {
   capturedDataUrl.value = canvas.toDataURL('image/jpeg', 0.92);
   analysis.value.photoMeta = await analyzeImageMeta(capturedDataUrl.value);
   stopCamera();
-  if (analysis.value.photoMeta.brightness < 45) { validationMessage.value = 'La foto está demasiado oscura para el análisis.'; step.value = 'selfie_error'; return; }
+  if (analysis.value.photoMeta.brightness < 45) { validationMessage.value = 'The photo is too dark for analysis.'; step.value = 'selfie_error'; return; }
   step.value = 'selfie_confirm';
 }
 
 async function retakeSelfie() { await openCamera(); }
 function selectSkinType(key) { answers.skinType = key; }
-function goToDiagnosticQuestion(target) { if (!answers.skinType) return showToast('Seleccione su tipo de piel para continuar.'); step.value = target; }
+function goToDiagnosticQuestion(target) { if (!answers.skinType) return showToast('Please select your skin type to continue.'); step.value = target; }
 function selectDiagnosticOption(field, value, nextStep) { answers[field] = value; step.value = nextStep; }
 
 function buildProfileTitle(ctx) {
-  const base = { seca: 'Perfil seco', normal: 'Perfil equilibrado', mixta: 'Perfil mixto', grasa: 'Perfil seborregulador' }[ctx.skinType] || 'Perfil cutáneo';
-  let suffix = 'estable';
-  if (['reactive', 'very_reactive'].includes(ctx.barrierReactivity)) suffix = 'con barrera sensible';
-  else if (['slightly_tight', 'very_tight'].includes(ctx.postCleanseFeel)) suffix = 'con tendencia a deshidratación';
-  else if (ctx.shinePattern === 'localized_with_pores' || ctx.breakoutPattern === 'persistent') suffix = 'con tendencia congestionada';
-  else if (ctx.shinePattern === 'tzone') suffix = 'con sebo localizado';
+  const base = { seca: 'Dry profile', normal: 'Balanced profile', mixta: 'Combination profile', grasa: 'Oily profile' }[ctx.skinType] || 'Skin profile';
+  let suffix = 'stable';
+  if (['reactive', 'very_reactive'].includes(ctx.barrierReactivity)) suffix = 'with sensitive barrier';
+  else if (['slightly_tight', 'very_tight'].includes(ctx.postCleanseFeel)) suffix = 'with dehydration tendency';
+  else if (ctx.shinePattern === 'localized_with_pores' || ctx.breakoutPattern === 'persistent') suffix = 'with congestion tendency';
+  else if (ctx.shinePattern === 'tzone') suffix = 'with localized sebum';
   return `${base} ${suffix}`;
 }
 
 function buildProfileSummary(ctx) {
   const parts = [];
-  parts.push({ seca: 'Su combinación de respuestas se parece a una piel seca o seca-deshidratada.', normal: 'Su combinación de respuestas se acerca a una piel relativamente equilibrada.', mixta: 'Su combinación de respuestas encaja con una piel mixta.', grasa: 'Su combinación de respuestas sugiere una piel con actividad sebácea elevada.' }[ctx.skinType] || 'Su combinación de respuestas define un perfil cutáneo orientativo.');
-  if (['reactive', 'very_reactive'].includes(ctx.barrierReactivity)) parts.push('Además, la respuesta cutánea indica una barrera más vulnerable, por lo que conviene priorizar fórmulas suaves.');
-  if (['slightly_tight', 'very_tight'].includes(ctx.postCleanseFeel)) parts.push('La sensación posterior a la limpieza apunta a pérdida de agua o falta de confort.');
-  if (ctx.postCleanseFeel === 'tight_but_oily') parts.push('Ese patrón de tirantez seguido de brillo suele indicar deshidratación con compensación sebácea.');
-  if (['localized_with_pores', 'all_over'].includes(ctx.shinePattern) || ['frequent', 'persistent'].includes(ctx.breakoutPattern)) parts.push('La presencia de brillo, poros notorios o brotes frecuentes sugiere congestión y necesidad de equilibrio entre control de sebo y barrera.');
-  parts.push({ sensibilidad: 'La prioridad principal ahora mismo es mejorar tolerancia y confort cutáneo.', barrera: 'La prioridad principal ahora mismo es reforzar la barrera cutánea.', deshidratacion: 'La prioridad principal ahora mismo es recuperar hidratación y confort.', poros: 'La prioridad principal ahora mismo es equilibrar sebo, textura y poros.', manchas: 'La prioridad principal ahora mismo es unificar el tono.', arrugas: 'La prioridad principal ahora mismo es prevención y suavizado de líneas tempranas.', luminosidad: 'La prioridad principal ahora mismo es mejorar o mantener la luminosidad.' }[ctx.primaryConcern] || 'La prioridad principal ahora mismo es mejorar o mantener la luminosidad.');
+  parts.push({ seca: 'Your combination of answers resembles dry or dry-dehydrated skin.', normal: 'Your combination of answers resembles relatively balanced skin.', mixta: 'Your combination of answers fits a combination skin profile.', grasa: 'Your combination of answers suggests skin with high sebaceous activity.' }[ctx.skinType] || 'Your combination of answers defines an indicative skin profile.');
+  if (['reactive', 'very_reactive'].includes(ctx.barrierReactivity)) parts.push('Additionally, the skin response indicates a more vulnerable barrier, so gentle formulas should be prioritized.');
+  if (['slightly_tight', 'very_tight'].includes(ctx.postCleanseFeel)) parts.push('The post-cleansing sensation points to water loss or lack of comfort.');
+  if (ctx.postCleanseFeel === 'tight_but_oily') parts.push('That pattern of tightness followed by shine often indicates dehydration with sebaceous compensation.');
+  if (['localized_with_pores', 'all_over'].includes(ctx.shinePattern) || ['frequent', 'persistent'].includes(ctx.breakoutPattern)) parts.push('The presence of shine, noticeable pores, or frequent breakouts suggests congestion and the need for balance between sebum control and barrier support.');
+  parts.push({ sensibilidad: 'The main priority right now is improving tolerance and skin comfort.', barrera: 'The main priority right now is strengthening the skin barrier.', deshidratacion: 'The main priority right now is restoring hydration and comfort.', poros: 'The main priority right now is balancing sebum, texture, and pores.', manchas: 'The main priority right now is evening out skin tone.', arrugas: 'The main priority right now is prevention and softening of early lines.', luminosidad: 'The main priority right now is improving or maintaining radiance.' }[ctx.primaryConcern] || 'The main priority right now is improving or maintaining radiance.');
   return parts.join(' ');
 }
 
 function buildDetailedFindings(ctx, metrics) {
   const findings = [];
-  if (ctx.skinType === 'seca') findings.push('El comportamiento general apunta a menor nivel de lípidos y más riesgo de tirantez.');
-  if (ctx.skinType === 'mixta') findings.push('El perfil mixto sugiere un rostro con necesidades diferentes según la zona.');
-  if (ctx.skinType === 'grasa') findings.push('La producción de sebo parece tener un peso importante en el comportamiento de su piel.');
-  if (ctx.skinType === 'normal') findings.push('La base del perfil es relativamente estable, por lo que el enfoque se centra en mantener equilibrio.');
-  if (ctx.barrierReactivity === 'very_reactive') findings.push('La reactividad alta es compatible con una barrera alterada o una tolerancia cosmética reducida.');
-  if (ctx.barrierReactivity === 'reactive') findings.push('Hay señales de sensibilidad funcional: ardor, rojez o mala tolerancia a productos más intensos.');
-  if (ctx.postCleanseFeel === 'very_tight') findings.push('La tirantez intensa después del lavado orienta a deshidratación marcada o limpieza demasiado agresiva.');
-  if (ctx.postCleanseFeel === 'tight_but_oily') findings.push('El patrón tirantez + brillo posterior suele verse cuando la piel intenta compensar una falta de agua con más sebo.');
-  if (ctx.shinePattern === 'localized_with_pores') findings.push('El brillo acompañado de poros visibles suele correlacionarse con textura irregular y microcongestión.');
-  if (ctx.breakoutPattern === 'persistent') findings.push('La recurrencia de brotes indica que la rutina debe ser consistente, ligera y no comedogénica.');
-  findings.push(`Su indicador con mayor prioridad actual es ${metrics[0].label.toLowerCase()}, seguido por ${metrics[1].label.toLowerCase()}.`);
+  if (ctx.skinType === 'seca') findings.push('The overall behavior points to lower lipid levels and more risk of tightness.');
+  if (ctx.skinType === 'mixta') findings.push('The combination profile suggests a face with different needs depending on the area.');
+  if (ctx.skinType === 'grasa') findings.push('Sebum production seems to play a significant role in your skin behavior.');
+  if (ctx.skinType === 'normal') findings.push('The base profile is relatively stable, so the focus is on maintaining balance.');
+  if (ctx.barrierReactivity === 'very_reactive') findings.push('High reactivity is consistent with an impaired barrier or reduced cosmetic tolerance.');
+  if (ctx.barrierReactivity === 'reactive') findings.push('There are signs of functional sensitivity: burning, redness, or poor tolerance to stronger products.');
+  if (ctx.postCleanseFeel === 'very_tight') findings.push('Intense tightness after washing points to marked dehydration or overly aggressive cleansing.');
+  if (ctx.postCleanseFeel === 'tight_but_oily') findings.push('The tightness + subsequent shine pattern is often seen when skin tries to compensate for lack of water with more sebum.');
+  if (ctx.shinePattern === 'localized_with_pores') findings.push('Shine accompanied by visible pores often correlates with uneven texture and microcongestion.');
+  if (ctx.breakoutPattern === 'persistent') findings.push('Recurring breakouts indicate the routine should be consistent, light, and non-comedogenic.');
+  findings.push(`Your highest priority indicator is ${metrics[0].label.toLowerCase()}, followed by ${metrics[1].label.toLowerCase()}.`);
   return findings;
 }
 
@@ -732,12 +757,12 @@ function generateAnalysis() {
   if (photo.contrast < 28) { tone -= 0.3; texture -= 0.2; }
   if (age >= 28) lines -= 0.5; if (age >= 34) lines -= 0.6;
   const metrics = [
-    { key: 'barrera', label: 'Barrera cutánea', score: clamp(barrier) },
-    { key: 'deshidratacion', label: 'Hidratación', score: clamp(hydration) },
-    { key: 'poros', label: 'Sebo y poros', score: clamp(sebum) },
-    { key: 'textura', label: 'Textura y congestión', score: clamp(texture) },
-    { key: 'manchas', label: 'Uniformidad del tono', score: clamp(tone) },
-    { key: 'arrugas', label: 'Líneas tempranas', score: clamp(lines) },
+    { key: 'barrera', label: 'Skin barrier', score: clamp(barrier) },
+    { key: 'deshidratacion', label: 'Hydration', score: clamp(hydration) },
+    { key: 'poros', label: 'Sebum & pores', score: clamp(sebum) },
+    { key: 'textura', label: 'Texture & congestion', score: clamp(texture) },
+    { key: 'manchas', label: 'Even skin tone', score: clamp(tone) },
+    { key: 'arrugas', label: 'Early lines', score: clamp(lines) },
   ];
   const sorted = [...metrics].sort((a, b) => a.score - b.score);
   let primaryConcern = 'luminosidad';
@@ -752,7 +777,7 @@ function generateAnalysis() {
     profileTitle: buildProfileTitle(ctx),
     profileSummary: buildProfileSummary(fullCtx),
     detailedFindings: buildDetailedFindings(ctx, sorted),
-    routineFocus: ({ sensibilidad: 'La rutina debe ser corta, calmante y sin demasiados activos al mismo tiempo.', barrera: 'La rutina debe priorizar reparación de barrera y limpieza suave.', deshidratacion: 'La prioridad será limpiar sin barrer, aportar agua y reforzar la barrera.', poros: 'La rutina debe equilibrar brillo y congestión sin resecar en exceso.', manchas: 'La rutina se enfocará en uniformidad del tono junto a protección solar.', arrugas: 'La prioridad será prevención y apoyo antiedad con hidratación y protector solar.', luminosidad: 'La rutina se centrará en mantener el equilibrio general.' }[primaryConcern]),
+    routineFocus: ({ sensibilidad: 'The routine should be short, calming, and without too many actives at once.', barrera: 'The routine should prioritize barrier repair and gentle cleansing.', deshidratacion: 'The priority will be to cleanse gently, add water, and reinforce the barrier.', poros: 'The routine should balance shine and congestion without over-drying.', manchas: 'The routine will focus on skin tone evenness combined with sun protection.', arrugas: 'The priority will be prevention and anti-aging support with hydration and sun protection.', luminosidad: 'The routine will focus on maintaining overall balance.' }[primaryConcern]),
     summaryMetrics: sorted.slice(0, 3).map(m => ({ ...m, note: metricNote(m.score) })),
     fullMetrics: metrics.map(m => ({ ...m, note: metricNote(m.score) })),
     photoMeta: { ...photo },
@@ -896,19 +921,19 @@ async function saveQuizToSupabase(quizData) {
 
 async function generateAnalysisAndGoResults() {
   if (!capturedDataUrl.value) {
-    showToast('Por favor toma o carga una foto antes de continuar.');
+    showToast(t('quiz.photoRequired'));
     step.value = 'selfie_instructions';
     return;
   }
   const result = generateAnalysis();
   analysis.value = result;
   const builtRoutine = buildRoutine();
-  const sensitivityMap = { resilient: 'Ninguna sensibilidad', mild: 'Baja sensibilidad', reactive: 'Sensibilidad media', very_reactive: 'Sensibilidad alta' }
+  const sensitivityMap = { resilient: 'No sensitivity', mild: 'Low sensitivity', reactive: 'Medium sensitivity', very_reactive: 'High sensitivity' }
   const quizData = {
     completed: true,
     age: answers.age || null,
     skinType: answers.skinType || suggestedSkinType.value,
-    sensitivity: sensitivityMap[answers.barrierReactivity] || 'Baja sensibilidad',
+    sensitivity: sensitivityMap[answers.barrierReactivity] || 'Low sensitivity',
     concerns: result.primaryConcern ? [result.primaryConcern] : [],
     profileTitle: result.profileTitle,
     profileSummary: result.profileSummary,
@@ -962,10 +987,25 @@ function addProductAndGo(product) {
 function goToDiagnostics() {
   router.push('/diagnostics')
 }
+
+function goToRoutinePage() {
+  router.push('/routine')
+}
+
+function setChromeHidden(hidden) {
+  window.dispatchEvent(new CustomEvent('pd:chrome', { detail: { hidden } }))
+}
+
+watch(step, async (nextStep) => {
+  setChromeHidden(immersiveSteps.has(nextStep))
+  await nextTick()
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+}, { immediate: true })
+
 async function sendRoutineByEmail() {
   // FASE 10 — send routine via EmailJS (static import)
   if (!emailServiceConfigured) {
-    showToast('El servicio de correo no está configurado aún.')
+    showToast('The email service is not configured yet.')
     return
   }
   try {
@@ -975,7 +1015,7 @@ async function sendRoutineByEmail() {
       email = user?.email
     } catch { /* ignore */ }
     if (!email) email = auth.user?.value?.email || null
-    if (!email) { showToast('Inicia sesión para recibir tu rutina por correo.'); return }
+    if (!email) { showToast('Sign in to receive your routine by email.'); return }
     const r = routine.value
     const profileUser = auth.user?.value || auth.user
     const userName = profileUser?.first_name || profileUser?.firstName || profileUser?.name || 'Cliente'
@@ -986,24 +1026,24 @@ async function sendRoutineByEmail() {
       .filter((v, i, arr) => arr.indexOf(v) === i)
       .join(', ')
 
-    const result = await emailRoutine({
+    const result = await withTimeout(emailRoutine({
       to_email: email,
       to_name: userName,
       skin_type: answers.skinType || suggestedSkinType.value,
-      diagnosis: analysis.value.primaryConcern || '',
+      diagnosis: concernTitle(analysis.value.primaryConcern) || '',
       morning_routine: morning,
       night_routine: night,
       recommended_products: recommended,
       reply_to: 'soporte@pharmadermrd.com',
       routine_id: Date.now(),
-    }, 'es')
+    }, 'es'), 12000, 'Routine email')
     showToast(
       result.ok
-        ? 'Rutina enviada a tu correo.'
-        : result.message || (result.simulated ? 'El envío por correo no está configurado correctamente.' : 'No se pudo enviar el correo.')
+        ? 'Routine sent to your email.'
+        : result.message || (result.simulated ? 'Email delivery is not configured correctly.' : 'The email could not be sent.')
     )
   } catch {
-    showToast('No se pudo enviar el correo.')
+    showToast('The email could not be sent.')
   }
 }
 
@@ -1021,12 +1061,13 @@ onMounted(() => {
   }
 });
 
-onBeforeUnmount(() => { stopCamera(); clearInterval(countdownTimer); clearTimeout(toastTimer); });
+onBeforeUnmount(() => { setChromeHidden(false); stopCamera(); clearInterval(countdownTimer); clearTimeout(toastTimer); });
 </script>
 
 <style scoped>
 .progress-node { width: 28px; height: 28px; border-radius: 999px; border: 1px solid #16a6e2; color: #16a6e2; display: grid; place-items: center; font-size: 14px; background: white; }
 .progress-node.active { background: #16a6e2; color: white; }
+.quiz-home-btn { position: absolute; top: 14px; left: 14px; z-index: 10; min-height: 42px; border: 1px solid rgba(255,255,255,.7); background: rgba(255,255,255,.88); color: #005187; padding: 0 16px; font-weight: 800; letter-spacing: .02em; backdrop-filter: blur(8px); }
 .camera-chip { flex: 1; text-align: center; border: 1px solid #34d399; color: #34d399; background: rgba(0,0,0,.25); padding: 10px 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .face-guide { width: min(78vw, 420px); height: min(62vh, 560px); position: relative; }
 .corner { position: absolute; width: 62px; height: 62px; border: 6px solid rgba(255,255,255,.95); }
@@ -1059,6 +1100,8 @@ onBeforeUnmount(() => { stopCamera(); clearInterval(countdownTimer); clearTimeou
 .email-buy-bar { display: grid; grid-template-columns: 1fr 88px; gap: 14px; }
 .email-cta { min-height: 64px; border: 1px solid #475569; background: white; color: #0f172a; padding: 12px 16px; display: flex; align-items: center; gap: 12px; text-align: left; font-size: 15px; }
 .buy-lock-btn { min-height: 64px; background: #c6ecfb; color: white; display: flex; align-items: center; justify-content: center; }
+.quiz-confirm-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+.quiz-confirm-actions .btn-primary { min-height: 56px; border: 1px solid #16a6e2; background: #16a6e2; color: white; font-weight: 800; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .fade-enter-active, .fade-leave-active { transition: opacity .25s ease; }

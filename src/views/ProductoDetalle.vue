@@ -31,7 +31,8 @@
           <p class="subtitle">{{ product.subtitle }}</p>
 
           <div class="selected-price">
-            <strong>{{ fmtPrice(selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0) }}</strong>
+            <strong>{{ fmtPrice(convertPrice(discountedUSD(selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0), 'USD', 'DOP')) }}</strong>
+            <span v-if="purchaseMode === 'autoship'" class="discount-badge">-15% Replenish &amp; Save</span>
             <span v-if="selectedSizeObj.pricePer">{{ selectedSizeObj.pricePer }}</span>
           </div>
 
@@ -47,7 +48,7 @@
                 @click="size = s.label"
               >
                 <div>{{ s.label }}</div>
-                <small>{{ fmtPrice(s.priceUSD) }}</small>
+                <small>{{ fmtPrice(convertPrice(discountedUSD(s.priceUSD), 'USD', 'DOP')) }}</small>
               </button>
             </div>
           </div>
@@ -72,7 +73,7 @@
             </div>
 
             <button class="add-bag" @click="addToCart(product)">
-              {{ fmtPrice((selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0) * qty) }} — ADD TO BAG
+              {{ fmtPrice(convertPrice(discountedUSD(selectedSizeObj.priceUSD ?? product.priceUSD ?? product.priceFrom ?? 0) * qty, 'USD', 'DOP')) }} — ADD TO BAG
             </button>
           </div>
 
@@ -97,7 +98,7 @@
               <div class="pair-info">
                 <p>{{ pair.name }}</p>
                 <button @click="addToCart(pair)">
-                  ADD TO BAG • ${{ money(pair.priceFrom) }}
+                  ADD TO BAG • {{ fmtPrice(convertPrice(pair.priceFrom ?? pair.priceUSD ?? 0, 'USD', 'DOP')) }}
                 </button>
               </div>
             </div>
@@ -211,7 +212,7 @@
               <p>{{ item.subtitle }}</p>
 
               <div class="mini-actions">
-                <strong>${{ money(item.priceFrom) }}</strong>
+                <strong>{{ fmtPrice(convertPrice(item.priceFrom ?? item.priceUSD ?? 0, 'USD', 'DOP')) }}</strong>
                 <button @click="goTo(item.slug)">View</button>
               </div>
             </div>
@@ -232,14 +233,13 @@
 
   <div v-else class="not-found container">
     <h1>Producto no encontrado</h1>
-    <button @click="$router.push('/tienda')">Volver a Shop</button>
+    <button @click="$router.push('/tienda')">Back to Shop</button>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { money } from "../data/lrpCatalog";
 import { getProductBySlug, getProductById, relatedProductsFor } from "../data/productCatalog";
 import { useCartStore } from "../stores/useCartStore";
 import { useSettingsStore } from "../stores/useSettingsStore";
@@ -249,10 +249,13 @@ const cart = useCartStore();
 const settings = useSettingsStore();
 const userCurrency = settings.currency;
 
-// lrpCatalog prices are in USD; convert to user's currency for display
-function fmtPrice(usdAmount) {
-  const dop = convertPrice(Number(usdAmount) || 0, 'USD', 'DOP');
-  return priceIn(dop, 'DOP', userCurrency.value);
+function discountedUSD(usdAmount) {
+  const base = Number(usdAmount) || 0;
+  return purchaseMode.value === 'autoship' ? base * 0.85 : base;
+}
+
+function fmtPrice(dopAmount) {
+  return priceIn(Number(dopAmount) || 0, 'DOP', userCurrency.value);
 }
 
 const route = useRoute();
@@ -291,21 +294,23 @@ const decreaseQty = () => {
 };
 
 const addToCart = (item) => {
-  const activeSize =
-    item.id === product.value?.id
-      ? size.value
-      : item.defaultSize || item.sizes?.[0]?.label || "Default";
+  const isMain = item.id === product.value?.id;
+  const activeSize = isMain
+    ? size.value
+    : item.defaultSize || item.sizes?.[0]?.label || "Default";
 
-  const usd =
-    item.id === product.value?.id
-      ? (selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0)
-      : (item.priceFrom ?? item.priceUSD ?? 0);
+  const usdBase = isMain
+    ? (selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0)
+    : (item.priceFrom ?? item.priceUSD ?? 0);
+
+  const mode = isMain ? purchaseMode.value : "one-time";
+  const usd = mode === 'autoship' ? usdBase * 0.85 : usdBase;
 
   cart.addItem(item, {
     size: activeSize,
-    qty: item.id === product.value?.id ? qty.value : 1,
+    qty: isMain ? qty.value : 1,
     priceRD: Math.round(convertPrice(usd, 'USD', 'DOP')),
-    mode: item.id === product.value?.id ? purchaseMode.value : "one-time",
+    mode,
   });
 
   router.push("/carrito");
@@ -313,7 +318,8 @@ const addToCart = (item) => {
 
 const buyNow = (item) => {
   const activeSize = size.value || item.defaultSize || item.sizes?.[0]?.label || "Default";
-  const usd = selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0;
+  const usdBase = selectedSizeObj.value.priceUSD ?? item.priceUSD ?? item.priceFrom ?? 0;
+  const usd = purchaseMode.value === 'autoship' ? usdBase * 0.85 : usdBase;
   cart.addItem(item, {
     size: activeSize,
     qty: qty.value,
@@ -329,6 +335,18 @@ const goTo = (slug) => {
 </script>
 
 <style scoped>
+.discount-badge {
+  display: inline-block;
+  background: #16a34a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .pdp-page {
   min-height: 100vh;
   background: #fff;

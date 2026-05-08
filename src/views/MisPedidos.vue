@@ -5,26 +5,32 @@
         <button class="back-btn" @click="router.push('/perfil')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <h1>Mis Pedidos</h1>
+        <h1>My Orders</h1>
       </div>
 
       <div v-if="isLoading" class="loading-state">
         <div class="loading-spinner"></div>
-        <p>Cargando tus pedidos...</p>
+        <p>Loading your orders...</p>
       </div>
 
       <div v-else-if="orders.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">inventory_2</span>
-        <h2>Aún no tienes pedidos</h2>
-        <p>Cuando realices tu primera compra, podrás verla aquí.</p>
-        <button class="btn-primary" @click="router.push('/tienda')">Ir a la tienda</button>
+        <h2>You don't have any orders yet</h2>
+        <p>When you make your first purchase, you'll see it here.</p>
+        <button class="btn-primary" @click="router.push('/tienda')">Go to store</button>
       </div>
 
       <div v-else class="orders-list">
+        <div class="policy-hint">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">local_shipping</span>
+          Questions about delivery or returns?
+          <RouterLink to="/shipping-returns" class="policy-link">View Shipping &amp; Returns Policy →</RouterLink>
+        </div>
+
         <article v-for="order in orders" :key="order.id || order.order_number" class="order-card">
           <div class="order-card__header">
             <div>
-              <p class="order-number">Pedido #{{ order.order_number || order.id }}</p>
+              <p class="order-number">Order #{{ order.order_number || order.id }}</p>
               <p class="order-date">{{ formatDate(order.created_at || order.date) }}</p>
             </div>
             <span class="order-status" :class="statusClass(order.status)">
@@ -41,13 +47,13 @@
               </div>
             </div>
             <p v-if="(order.items || []).length > 3" class="more-items">
-              +{{ (order.items || []).length - 3 }} producto(s) más
+              +{{ (order.items || []).length - 3 }} more item(s)
             </p>
           </div>
 
           <div class="order-card__footer">
             <div class="order-totals">
-              <span>Método de pago: <strong>{{ paymentLabel(order.payment_method) }}</strong></span>
+              <span>Payment method: <strong>{{ paymentLabel(order.payment_method) }}</strong></span>
               <span class="order-total">Total: <strong>{{ fmtPrice(order.total) }}</strong></span>
             </div>
           </div>
@@ -58,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHistoryStore } from '../stores/useHistoryStore'
 import { useAuthStore } from '../stores/useAuthStore'
@@ -75,8 +81,10 @@ const settings = useSettingsStore()
 
 const orders = ref([])
 const isLoading = ref(true)
+const userId = computed(() => auth.user?.value?.id || null)
 const fallbackOrderImage = 'https://placehold.co/60x60/e5e7eb/475569?text=P'
 const productIndex = [...lrpCatalog, ...ceraveCatalog]
+let loadToken = 0
 
 function fmtPrice(dop) {
   const cur = settings.currency?.value || 'DOP'
@@ -85,15 +93,15 @@ function fmtPrice(dop) {
 
 function formatDate(iso) {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 function statusLabel(status) {
   const map = {
-    confirmed: 'Confirmado', pending: 'Pendiente', processing: 'En proceso',
-    shipped: 'Enviado', delivered: 'Entregado', cancelled: 'Cancelado',
+    confirmed: 'Confirmed', pending: 'Pending', processing: 'Processing',
+    shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
   }
-  return map[status] || status || 'Confirmado'
+  return map[status] || status || 'Confirmed'
 }
 
 function statusClass(status) {
@@ -105,7 +113,7 @@ function statusClass(status) {
 }
 
 function paymentLabel(method) {
-  const map = { card: 'Tarjeta', transfer: 'Transferencia', cash: 'Efectivo' }
+  const map = { card: 'Card', transfer: 'Bank transfer', cash: 'Cash' }
   return map[method] || method || 'N/A'
 }
 
@@ -137,30 +145,62 @@ function hydrateOrderImages(list) {
   }))
 }
 
-async function loadOrders() {
+function orderKey(order) {
+  return String(order?.order_number || order?.id || '')
+}
+
+function mergeOrders(remoteOrders = [], localOrders = []) {
+  const seen = new Set()
+  return [...remoteOrders, ...localOrders].filter((order) => {
+    const key = orderKey(order)
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+async function loadOrders({ scrollTop = false } = {}) {
+  const token = ++loadToken
   isLoading.value = true
   try {
-    const userId = auth.user?.value?.id
-    if (userId) {
-      const remoteOrders = await orderService.getUserOrdersFromSupabase(userId)
-      if (remoteOrders.length > 0) {
-        orders.value = hydrateOrderImages(remoteOrders)
-        return
-      }
+    const localOrders = history.getOrders?.() || []
+    let remoteOrders = []
+
+    if (userId.value) {
+      remoteOrders = await orderService.getUserOrdersFromSupabase(userId.value)
     }
 
-    // Fallback: historial local
-    const localOrders = history.getOrders?.() || []
-    orders.value = hydrateOrderImages(localOrders)
+    if (token !== loadToken) return
+    orders.value = hydrateOrderImages(mergeOrders(remoteOrders, localOrders))
   } catch (e) {
     console.warn('[MisPedidos] Error cargando pedidos:', e)
+    if (token !== loadToken) return
     orders.value = hydrateOrderImages(history.getOrders?.() || [])
   } finally {
-    isLoading.value = false
+    if (token === loadToken) {
+      isLoading.value = false
+      if (scrollTop) {
+        await nextTick()
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      }
+    }
   }
 }
 
-onMounted(loadOrders)
+function reloadWhenVisible() {
+  if (!document.hidden) loadOrders()
+}
+
+watch(userId, () => loadOrders({ scrollTop: true }), { immediate: true })
+watch(() => history.orders.value.length, loadOrders)
+
+window.addEventListener('focus', reloadWhenVisible)
+document.addEventListener('visibilitychange', reloadWhenVisible)
+
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', reloadWhenVisible)
+  document.removeEventListener('visibilitychange', reloadWhenVisible)
+})
 </script>
 
 <style scoped>
@@ -241,4 +281,8 @@ onMounted(loadOrders)
 
 .btn-primary { background: #16a6e2; color: white; border: none; padding: 0.85rem 1.75rem; font-weight: 800; cursor: pointer; border-radius: 999px; font-size: 0.95rem; }
 .btn-primary:hover { background: #0c8cc4; }
+
+.policy-hint { font-size: 0.83rem; color: #64748b; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.policy-link { color: #16a6e2; font-weight: 600; text-decoration: none; }
+.policy-link:hover { text-decoration: underline; }
 </style>

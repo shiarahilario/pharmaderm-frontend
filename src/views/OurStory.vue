@@ -1,28 +1,28 @@
-<template>
+﻿<template>
   <div class="story-page">
 
     <!-- Hero -->
     <section class="story-hero">
       <div class="container">
-        <p class="eyebrow">NUESTRA HISTORIA</p>
-        <h1>Cuidado dermatológico<br>confiable, accesible<br>y personalizado</h1>
-        <p class="hero-sub">PharmaDerm nació para acercar productos dermatológicos de calidad y orientación real a quienes los necesitan, sin complicaciones ni sobrecostos.</p>
+        <p class="eyebrow">OUR STORY</p>
+        <h1>Reliable, accessible<br>and personalized<br>dermatological care</h1>
+        <p class="hero-sub">PharmaDerm was created to bring quality dermatological products and real guidance closer to those who need them, without complications or unnecessary costs.</p>
         <div class="hero-actions">
-          <button class="hero-cta" @click="router.push('/quiz')">Analizar mi piel</button>
-          <button class="hero-ghost" @click="router.push('/tienda')">Ver productos</button>
+          <button class="hero-cta" @click="router.push('/quiz')">Analyze my skin</button>
+          <button class="hero-ghost" @click="router.push('/tienda')">View products</button>
         </div>
       </div>
     </section>
 
-    <!-- Quiénes somos -->
+    <!-- Who we are -->
     <section class="about-section">
       <div class="container about-grid">
         <div class="about-text">
-          <p class="eyebrow blue">QUIÉNES SOMOS</p>
-          <h2>Una microempresa dermatológica comprometida con tu piel</h2>
-          <p>PharmaDerm es una microempresa comercial privada dedicada a la venta y distribución de productos dermatológicos y de cuidado de la piel. Nuestro enfoque principal es ofrecer productos confiables, originales y de calidad, especialmente de marcas reconocidas como CeraVe y La Roche-Posay.</p>
-          <p>No nos limitamos a vender productos — también brindamos orientación básica, recomendaciones según tipo de piel y seguimiento postventa para que cada cliente encuentre lo que realmente necesita.</p>
-          <p>Operamos desde <strong>Santiago de los Caballeros</strong>, con proyección de expansión a nivel nacional a través de ventas digitales y envíos.</p>
+          <p class="eyebrow blue">WHO WE ARE</p>
+          <h2>A dermatology-focused small business committed to your skin</h2>
+          <p>PharmaDerm is a private small business dedicated to selling and distributing dermatological and skincare products. Our main focus is offering reliable, original and high-quality products, especially from recognized brands such as CeraVe and La Roche-Posay.</p>
+          <p>We do more than sell products. We also provide basic guidance, recommendations by skin type and post-purchase follow-up so every customer can find what they truly need.</p>
+          <p>We operate from <strong>Santiago de los Caballeros</strong>, with plans to expand nationwide through digital sales and shipping.</p>
         </div>
         <div class="about-highlights">
           <div v-for="h in highlights" :key="h.label" class="highlight-card">
@@ -36,31 +36,31 @@
       </div>
     </section>
 
-    <!-- Misión y Visión -->
+    <!-- Mission and Vision -->
     <section class="mission-section">
       <div class="container">
         <div class="mv-grid">
           <div class="mv-card mission">
-            <p class="mv-label">MISIÓN</p>
-            <h3>¿Por qué existimos?</h3>
-            <p>Ofrecer productos dermatológicos de calidad, accesibles y confiables, orientados al cuidado, salud y bienestar de la piel, mediante un servicio responsable, eficiente y personalizado, apoyado en herramientas digitales, orientación básica y una adecuada organización interna que permita satisfacer las necesidades de los clientes.</p>
+            <p class="mv-label">MISSION</p>
+            <h3>Why do we exist?</h3>
+            <p>To offer quality, accessible and reliable dermatological products focused on skin care, health and well-being through responsible, efficient and personalized service supported by digital tools, basic guidance and organized internal processes that meet customer needs.</p>
           </div>
           <div class="mv-card vision">
-            <p class="mv-label">VISIÓN</p>
-            <h3>¿A dónde vamos?</h3>
-            <p>Consolidar progresivamente a PharmaDerm como una microempresa especializada en dermatología, reconocida por la calidad de sus productos, la atención personalizada, la innovación en sus servicios y su compromiso con el cuidado integral de la piel, logrando una presencia estable y competitiva dentro del mercado local.</p>
+            <p class="mv-label">VISION</p>
+            <h3>Where are we going?</h3>
+            <p>To progressively establish PharmaDerm as a dermatology-focused small business recognized for product quality, personalized care, service innovation and commitment to complete skin care, building a stable and competitive presence in the local market.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Valores -->
+    <!-- Values -->
     <section class="values-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow blue">LO QUE NOS DEFINE</p>
-          <h2>Nuestros Valores</h2>
-          <p>Estos principios guían cada decisión, cada recomendación y cada interacción con nuestros clientes.</p>
+          <p class="eyebrow blue">WHAT DEFINES US</p>
+          <h2>Our Values</h2>
+          <p>These principles guide every decision, recommendation and interaction with our customers.</p>
         </div>
         <div class="values-grid">
           <div v-for="value in values" :key="value.title" class="value-card">
@@ -72,13 +72,13 @@
       </div>
     </section>
 
-    <!-- Qué nos diferencia -->
+    <!-- What makes us different -->
     <section class="diff-section">
       <div class="container diff-grid">
         <div>
-          <p class="eyebrow blue">QUÉ NOS DIFERENCIA</p>
-          <h2>Más que una tienda de productos</h2>
-          <p>PharmaDerm organiza su catálogo por necesidad de piel, no solo por marca. Esto hace la compra más fácil y evita confusión. Nuestro modelo incluye:</p>
+          <p class="eyebrow blue">WHAT MAKES US DIFFERENT</p>
+          <h2>More than a product store</h2>
+          <p>PharmaDerm organizes its catalog by skin need, not just by brand. This makes shopping easier and reduces confusion. Our model includes:</p>
         </div>
         <div class="diff-list">
           <div v-for="d in differentiators" :key="d" class="diff-item">
@@ -93,9 +93,9 @@
     <section class="model-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow blue">CÓMO TRABAJAMOS</p>
-          <h2>Nuestro Modelo Digital</h2>
-          <p>PharmaDerm inicia como tienda digital, acercando los productos directamente a los clientes.</p>
+          <p class="eyebrow blue">HOW WE WORK</p>
+          <h2>Our Digital Model</h2>
+          <p>PharmaDerm starts as a digital store, bringing products directly to customers.</p>
         </div>
         <div class="model-steps">
           <div v-for="(step, i) in modelSteps" :key="step.title" class="model-step">
@@ -110,13 +110,13 @@
       </div>
     </section>
 
-    <!-- A quién impactamos -->
+    <!-- Who we serve -->
     <section class="impact-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow blue">A QUIÉN SERVIMOS</p>
-          <h2>Nuestros Clientes</h2>
-          <p>PharmaDerm atiende a quienes desean cuidar su piel con productos confiables pero no siempre saben por dónde empezar.</p>
+          <p class="eyebrow blue">WHO WE SERVE</p>
+          <h2>Our Customers</h2>
+          <p>PharmaDerm serves people who want to care for their skin with reliable products but do not always know where to start.</p>
         </div>
         <div class="impact-grid">
           <div v-for="segment in segments" :key="segment.title" class="impact-card">
@@ -132,9 +132,9 @@
     <section class="brands-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow blue">MARCAS QUE TRABAJAMOS</p>
-          <h2>Calidad Dermatológica Reconocida</h2>
-          <p>Trabajamos exclusivamente con marcas con fórmulas validadas y respaldo dermatológico comprobado.</p>
+          <p class="eyebrow blue">BRANDS WE WORK WITH</p>
+          <h2>Recognized Dermatological Quality</h2>
+          <p>We work exclusively with brands that have validated formulas and proven dermatological backing.</p>
         </div>
         <div class="brands-grid">
           <div v-for="brand in brands" :key="brand.name" class="brand-card">
@@ -149,13 +149,13 @@
       </div>
     </section>
 
-    <!-- Proyección futura -->
+    <!-- Future outlook -->
     <section class="future-section">
       <div class="container future-grid">
         <div>
-          <p class="eyebrow light">PROYECCIÓN FUTURA</p>
-          <h2>Hacia Dónde Vamos</h2>
-          <p>PharmaDerm está en sus etapas iniciales y trabaja para crecer de manera sólida y sostenible. Nuestra proyección incluye:</p>
+          <p class="eyebrow light">FUTURE OUTLOOK</p>
+          <h2>Where We Are Headed</h2>
+          <p>PharmaDerm is in its early stages and is working to grow in a solid and sustainable way. Our outlook includes:</p>
         </div>
         <div class="future-list">
           <div v-for="f in futureGoals" :key="f" class="future-item">
@@ -169,12 +169,12 @@
     <!-- CTA -->
     <section class="story-cta">
       <div class="container">
-        <h2>Empieza Tu Rutina Hoy</h2>
-        <p>Realiza el análisis de piel, recibe tu rutina personalizada y accede a los productos correctos para ti.</p>
+        <h2>Start Your Routine Today</h2>
+        <p>Complete the skin analysis, receive your personalized routine and access the right products for you.</p>
         <div class="cta-buttons">
-          <button class="btn-primary" @click="router.push('/quiz')">Analizar mi piel</button>
-          <button class="btn-ghost" @click="router.push('/diagnostics')">Consultar especialista</button>
-          <button class="btn-ghost" @click="router.push('/tienda')">Ver productos</button>
+          <button class="btn-primary" @click="router.push('/quiz')">Analyze my skin</button>
+          <button class="btn-ghost" @click="router.push('/diagnostics')">Consult a specialist</button>
+          <button class="btn-ghost" @click="router.push('/tienda')">View products</button>
         </div>
       </div>
     </section>
@@ -191,48 +191,48 @@ const SVG_STAR  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
 const SVG_TRUCK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zm-.5 1.5l1.96 2.5H17V9.5h2.5zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.22-3c-.55-.61-1.33-1-2.22-1s-1.67.39-2.22 1H3V6h12v9H8.22zM18 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>'
 
 const highlights = [
-  { color: 'linear-gradient(135deg,#004e92,#5dbcd2)', svg: SVG_CHECK, label: 'Productos originales', desc: 'Solo marcas reconocidas con respaldo dermatológico comprobado.' },
-  { color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)', svg: SVG_HEART, label: 'Atención personalizada', desc: 'Orientación antes y después de la compra según tu tipo de piel.' },
-  { color: 'linear-gradient(135deg,#9b2226,#e9c46a)', svg: SVG_STAR, label: 'Calidad garantizada', desc: 'Seleccionamos productos seguros y confiables para cada necesidad.' },
-  { color: 'linear-gradient(135deg,#023e8a,#0096c7)', svg: SVG_TRUCK, label: 'Entrega a domicilio', desc: 'Enviamos a Santiago y con proyección de envíos a nivel nacional.' },
+  { color: 'linear-gradient(135deg,#004e92,#5dbcd2)', svg: SVG_CHECK, label: 'Original products', desc: 'Only recognized brands with proven dermatological backing.' },
+  { color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)', svg: SVG_HEART, label: 'Personalized service', desc: 'Guidance before and after purchase based on your skin type.' },
+  { color: 'linear-gradient(135deg,#9b2226,#e9c46a)', svg: SVG_STAR, label: 'Guaranteed quality', desc: 'We select safe and reliable products for each need.' },
+  { color: 'linear-gradient(135deg,#023e8a,#0096c7)', svg: SVG_TRUCK, label: 'Home delivery', desc: 'We deliver in Santiago and are working toward nationwide shipping.' },
 ]
 
 const values = [
-  { title: 'Responsabilidad', color: '#004e92', description: 'Actuamos con compromiso en la selección, venta y recomendación de productos, entendiendo que trabajamos con artículos relacionados al cuidado de la piel.' },
-  { title: 'Calidad', color: '#2d6a4f', description: 'Priorizamos productos seguros, originales y confiables, seleccionados de marcas reconocidas y enfocadas en el bienestar dermatológico.' },
-  { title: 'Ética', color: '#7b2d8b', description: 'Todas las operaciones se realizan con transparencia, honestidad y respeto hacia los clientes, proveedores y colaboradores.' },
-  { title: 'Compromiso con el cliente', color: '#9b2226', description: 'Brindamos una atención cercana, clara y personalizada, orientando al consumidor antes y después de la compra.' },
-  { title: 'Innovación', color: '#023e8a', description: 'Integramos herramientas digitales, estrategias de marketing educativo y recomendaciones personalizadas para mejorar la experiencia del cliente.' },
-  { title: 'Servicio', color: '#f77f00', description: 'Promovemos una atención amable, profesional y eficiente, creando confianza y fidelidad en los consumidores.' },
-  { title: 'Sostenibilidad', color: '#2b9348', description: 'Desarrollamos acciones responsables con la comunidad y el medio ambiente, especialmente mediante educación y consumo consciente.' },
+  { title: 'Responsibility', color: '#004e92', description: 'We act with care when selecting, selling and recommending products related to skin health.' },
+  { title: 'Quality', color: '#2d6a4f', description: 'We prioritize safe, original and reliable products from recognized dermatological brands.' },
+  { title: 'Ethics', color: '#7b2d8b', description: 'We operate with transparency, honesty and respect for customers, suppliers and collaborators.' },
+  { title: 'Customer commitment', color: '#9b2226', description: 'We provide close, clear and personalized attention before and after purchase.' },
+  { title: 'Innovation', color: '#023e8a', description: 'We integrate digital tools, educational marketing and personalized recommendations to improve the customer experience.' },
+  { title: 'Service', color: '#f77f00', description: 'We promote friendly, professional and efficient care that builds trust and loyalty.' },
+  { title: 'Sustainability', color: '#2b9348', description: 'We develop responsible actions for the community and environment through education and conscious consumption.' },
 ]
 
 const differentiators = [
-  'Catálogo organizado por necesidad de piel, no solo por marca',
-  'Análisis de piel personalizado para cada cliente',
-  'Orientación básica incluida: no vendes solo un producto, orientas',
-  'Seguimiento postventa para verificar resultados',
-  'Marketing educativo: publicaciones sobre cuidado real de la piel',
-  'Combos de rutinas armados según tipo de piel',
-  'Solo productos originales de marcas con respaldo dermatológico',
+  'Catalog organized by skin need, not only by brand',
+  'Personalized skin analysis for each customer',
+  'Basic guidance included: we do more than sell products',
+  'Post-purchase follow-up to support results',
+  'Educational marketing about real skin care',
+  'Routine bundles built by skin type',
+  'Only original products from dermatology-backed brands',
 ]
 
 const modelSteps = [
-  { title: 'Atracción digital', desc: 'Redes sociales, publicaciones educativas, testimonios y promociones en Instagram, TikTok y WhatsApp Business.' },
-  { title: 'Consulta inicial', desc: 'El cliente escribe por WhatsApp o mensaje directo. Recibe orientación básica según tipo de piel y necesidad.' },
-  { title: 'Recomendación y venta', desc: 'Se confirma disponibilidad, precio, método de pago y dirección. El pedido se prepara con empaque seguro.' },
-  { title: 'Entrega y seguimiento', desc: 'Entrega a domicilio con instrucciones básicas de uso. Seguimiento postventa para asegurar resultados.' },
+  { title: 'Digital attraction', desc: 'Social media, educational posts, testimonials and promotions on Instagram, TikTok and WhatsApp Business.' },
+  { title: 'Initial consultation', desc: 'The customer contacts us through WhatsApp or direct message and receives basic guidance by skin type and need.' },
+  { title: 'Recommendation and sale', desc: 'Availability, price, payment method and address are confirmed. The order is prepared with secure packaging.' },
+  { title: 'Delivery and follow-up', desc: 'Home delivery with basic usage instructions and post-purchase follow-up to support results.' },
 ]
 
-const channels = ['Instagram', 'TikTok', 'WhatsApp Business', 'Catálogo digital', 'Entrega a domicilio', 'Santiago de los Caballeros']
+const channels = ['Instagram', 'TikTok', 'WhatsApp Business', 'Digital catalog', 'Home delivery', 'Santiago de los Caballeros']
 
 const segments = [
-  { initial: 'J', color: 'linear-gradient(135deg,#004e92,#5dbcd2)', title: 'Jóvenes con acné', desc: 'Adolescentes y adultos jóvenes con exceso de grasa, comedones o dudas sobre rutinas básicas.' },
-  { initial: 'A', color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)', title: 'Adultos en prevención', desc: 'Personas interesadas en hidratación, protección solar y cuidado diario preventivo.' },
-  { initial: 'S', color: 'linear-gradient(135deg,#7b2d8b,#c77dff)', title: 'Piel sensible', desc: 'Clientes con piel irritada, barrera comprometida o reacciones frecuentes a productos genéricos.' },
-  { initial: 'M', color: 'linear-gradient(135deg,#9b2226,#e9c46a)', title: 'Manchas y tono desigual', desc: 'Adultos interesados en hiperpigmentación, manchas solares y fotoenvejecimiento.' },
-  { initial: 'H', color: 'linear-gradient(135deg,#f77f00,#fcbf49)', title: 'Cambios hormonales', desc: 'Mujeres en etapas hormonales como premenopausia o menopausia que buscan adaptación de rutina.' },
-  { initial: 'O', color: 'linear-gradient(135deg,#023e8a,#0096c7)', title: 'Originales y confiables', desc: 'Clientes que quieren productos dermatológicos originales sin depender exclusivamente de farmacias grandes.' },
+  { initial: 'Y', color: 'linear-gradient(135deg,#004e92,#5dbcd2)', title: 'Young people with acne', desc: 'Teens and young adults with excess oil, comedones or questions about basic routines.' },
+  { initial: 'A', color: 'linear-gradient(135deg,#2d6a4f,#95d5b2)', title: 'Adults focused on prevention', desc: 'People interested in hydration, sun protection and preventive daily care.' },
+  { initial: 'S', color: 'linear-gradient(135deg,#7b2d8b,#c77dff)', title: 'Sensitive skin', desc: 'Customers with irritated skin, a compromised barrier or frequent reactions to generic products.' },
+  { initial: 'D', color: 'linear-gradient(135deg,#9b2226,#e9c46a)', title: 'Dark spots and uneven tone', desc: 'Adults interested in hyperpigmentation, sun spots and photoaging.' },
+  { initial: 'H', color: 'linear-gradient(135deg,#f77f00,#fcbf49)', title: 'Hormonal changes', desc: 'Women in hormonal stages such as perimenopause or menopause who need routine adjustments.' },
+  { initial: 'O', color: 'linear-gradient(135deg,#023e8a,#0096c7)', title: 'Original and reliable products', desc: 'Customers who want original dermatological products without depending only on large pharmacies.' },
 ]
 
 const brands = [
@@ -240,35 +240,34 @@ const brands = [
     name: 'La Roche-Posay',
     initials: 'LRP',
     color: '#004e92',
-    description: 'Marca dermocosmética francesa desarrollada con más de 300 dermatólogos. Reconocida mundialmente por sus fórmulas para pieles sensibles, acné, manchas y protección solar.',
-    tags: ['SPF', 'Piel sensible', 'Acné', 'Manchas'],
+    description: 'A French dermocosmetic brand developed with dermatologists and recognized worldwide for formulas for sensitive skin, acne, dark spots and sun protection.',
+    tags: ['SPF', 'Sensitive skin', 'Acne', 'Dark spots'],
   },
   {
     name: 'CeraVe',
     initials: 'CV',
     color: '#2d6a4f',
-    description: 'Desarrollada con dermatólogos para restaurar y mantener la barrera natural de la piel usando ceramidas esenciales. Recomendada para pieles secas, sensibles y con barrera comprometida.',
-    tags: ['Reparación de barrera', 'Hidratación', 'Accesible', 'Suave'],
+    description: 'Developed with dermatologists to restore and maintain the skin barrier using essential ceramides. Recommended for dry, sensitive and compromised skin.',
+    tags: ['Barrier repair', 'Hydration', 'Accessible', 'Gentle'],
   },
 ]
 
 const futureGoals = [
-  'Ampliar el inventario con nuevas marcas dermatológicas reconocidas',
-  'Fortalecer la presencia digital y el marketing educativo',
-  'Establecer alianzas estratégicas con proveedores autorizados',
-  'Habilitar envíos nacionales a todas las provincias de la República Dominicana',
-  'Desarrollar un punto físico de atención cuando la clientela lo justifique',
-  'Ampliar los programas de responsabilidad social: educación sobre cuidado responsable de la piel',
+  'Expand inventory with new recognized dermatological brands',
+  'Strengthen digital presence and educational marketing',
+  'Build strategic partnerships with authorized suppliers',
+  'Enable nationwide shipping to all provinces in the Dominican Republic',
+  'Develop a physical service point when demand supports it',
+  'Expand social responsibility programs focused on responsible skin care education',
 ]
+
 </script>
 
 <style scoped>
 .story-page { background: #f8fafc; min-height: 100vh; }
-.dark .story-page { background: #0f172a; }
 .container { width: min(1280px, 92%); margin: 0 auto; }
 .eyebrow { font-size: 0.75rem; letter-spacing: 0.22em; font-weight: 700; text-transform: uppercase; margin: 0 0 0.8rem; }
 .eyebrow.blue { color: #004e92; }
-.dark .eyebrow.blue { color: #5dbcd2; }
 .eyebrow.light { color: rgba(255,255,255,0.75); }
 
 /* Hero */
@@ -283,22 +282,16 @@ const futureGoals = [
 
 /* About */
 .about-section { padding: 5rem 0; background: white; }
-.dark .about-section { background: #1e293b; }
 .about-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 4rem; align-items: start; }
 .about-text h2 { font-size: clamp(1.6rem, 2.8vw, 2.6rem); font-weight: 800; color: #0f172a; margin: 0.5rem 0 1.2rem; line-height: 1.2; }
-.dark .about-text h2 { color: #f1f5f9; }
 .about-text p { color: #475569; line-height: 1.75; margin-bottom: 1rem; }
-.dark .about-text p { color: #94a3b8; }
 .about-highlights { display: grid; gap: 1rem; }
 .highlight-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.dark .highlight-card { background: #0f172a; border-color: #334155; }
 .highlight-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 0.25rem; }
 .highlight-card strong { font-size: 0.95rem; font-weight: 800; color: #0f172a; }
-.dark .highlight-card strong { color: #f1f5f9; }
 .highlight-card p { font-size: 0.83rem; color: #64748b; line-height: 1.55; margin: 0; }
-.dark .highlight-card p { color: #94a3b8; }
 
-/* Misión / Visión */
+/* Mission / Vision */
 .mission-section { padding: 4rem 0; }
 .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .mv-card { border-radius: 24px; padding: 2.5rem; }
@@ -308,80 +301,58 @@ const futureGoals = [
 .mv-card h3 { font-size: 1.3rem; font-weight: 800; margin: 0 0 1rem; }
 .mv-card p { line-height: 1.75; opacity: 0.92; margin: 0; font-size: 0.95rem; }
 
-/* Valores */
+/* Values */
 .values-section { padding: 5rem 0; background: white; }
-.dark .values-section { background: #1e293b; }
 .section-heading { margin-bottom: 2rem; }
 .section-heading.center { text-align: center; max-width: 700px; margin: 0 auto 2.5rem; }
 .section-heading h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; color: #0f172a; margin: 0.3rem 0 0; }
-.dark .section-heading h2 { color: #f1f5f9; }
 .section-heading p { color: #64748b; margin: 0.6rem 0 0; line-height: 1.65; }
-.dark .section-heading p { color: #94a3b8; }
 .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
 .value-card { border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; }
-.dark .value-card { border-color: #334155; background: #0f172a; }
 .value-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,.08); }
 .value-dot { width: 12px; height: 12px; border-radius: 50%; margin-bottom: 1rem; }
 .value-card h3 { font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.5rem; }
-.dark .value-card h3 { color: #f1f5f9; }
 .value-card p { font-size: 0.86rem; color: #64748b; line-height: 1.65; margin: 0; }
-.dark .value-card p { color: #94a3b8; }
 
 /* Diferenciadores */
 .diff-section { padding: 5rem 0; }
 .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
 .diff-grid h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 800; color: #0f172a; margin: 0.5rem 0 1rem; }
-.dark .diff-grid h2 { color: #f1f5f9; }
 .diff-grid > div:first-child > p { color: #64748b; line-height: 1.7; margin: 0; }
-.dark .diff-grid > div:first-child > p { color: #94a3b8; }
 .diff-list { display: grid; gap: 0.75rem; }
 .diff-item { display: flex; align-items: flex-start; gap: 0.75rem; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.85rem 1rem; }
-.dark .diff-item { background: #1e293b; border-color: #334155; }
 .diff-item svg { flex-shrink: 0; margin-top: 2px; }
 .diff-item span { font-size: 0.9rem; color: #334155; line-height: 1.5; }
-.dark .diff-item span { color: #cbd5e1; }
 
 /* Modelo */
 .model-section { padding: 5rem 0; background: white; }
-.dark .model-section { background: #1e293b; }
 .model-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin-bottom: 2rem; }
 .model-step { text-align: center; padding: 1.5rem 1rem; }
 .step-number { width: 44px; height: 44px; background: #004e92; color: white; font-size: 1.2rem; font-weight: 800; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1rem; }
 .model-step h4 { font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 0.5rem; }
-.dark .model-step h4 { color: #f1f5f9; }
 .model-step p { font-size: 0.84rem; color: #64748b; line-height: 1.6; margin: 0; }
-.dark .model-step p { color: #94a3b8; }
 .channels-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
 .channel-chip { background: #eef6ff; color: #004e92; font-size: 0.82rem; font-weight: 700; padding: 0.4rem 0.9rem; border-radius: 999px; }
-.dark .channel-chip { background: #0f2d4d; color: #7dd3fc; }
 
 /* Impact */
 .impact-section { padding: 5rem 0; }
 .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 .impact-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.5rem; }
-.dark .impact-card { background: #1e293b; border-color: #334155; }
 .impact-badge { width: 48px; height: 48px; border-radius: 14px; color: white; font-size: 1.3rem; font-weight: 900; display: grid; place-items: center; margin-bottom: 0.75rem; }
 .impact-card h4 { font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem; }
-.dark .impact-card h4 { color: #f1f5f9; }
 .impact-card p { font-size: 0.84rem; color: #64748b; line-height: 1.6; margin: 0; }
-.dark .impact-card p { color: #94a3b8; }
 
 /* Brands */
 .brands-section { padding: 5rem 0; background: white; }
-.dark .brands-section { background: #1e293b; }
 .brands-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; max-width: 800px; margin: 0 auto; }
 .brand-card { border: 1px solid #e2e8f0; border-radius: 24px; padding: 2rem; text-align: center; }
-.dark .brand-card { border-color: #334155; background: #0f172a; }
 .brand-logo { width: 72px; height: 72px; color: white; font-size: 1.3rem; font-weight: 800; border-radius: 20px; display: grid; place-items: center; margin: 0 auto 1rem; }
 .brand-card h3 { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0 0 0.6rem; }
-.dark .brand-card h3 { color: #f1f5f9; }
 .brand-card p { font-size: 0.9rem; color: #64748b; line-height: 1.65; margin: 0 0 1rem; }
-.dark .brand-card p { color: #94a3b8; }
 .brand-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
 .brand-tag { font-size: 0.72rem; font-weight: 700; background: #eef6ff; color: #004e92; padding: 0.25rem 0.6rem; border-radius: 999px; }
-.dark .brand-tag { background: #0f2d4d; color: #7dd3fc; }
 
-/* Proyección */
+/* Future outlook */
 .future-section { padding: 5rem 0; background: linear-gradient(135deg,#004e92,#183a6b); color: white; }
 .future-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
 .future-grid h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; color: white; margin: 0.5rem 0 1.2rem; }
@@ -393,16 +364,12 @@ const futureGoals = [
 
 /* CTA */
 .story-cta { padding: 5rem 0; text-align: center; background: #f8fafc; }
-.dark .story-cta { background: #0f172a; }
 .story-cta h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: #0f172a; margin: 0 0 1rem; }
-.dark .story-cta h2 { color: #f1f5f9; }
 .story-cta p { color: #64748b; font-size: 1.1rem; margin: 0 0 2rem; }
-.dark .story-cta p { color: #94a3b8; }
 .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 .btn-primary { background: #004e92; color: white; border: none; padding: 1rem 2rem; font-weight: 800; cursor: pointer; border-radius: 999px; font-size: 1rem; }
 .btn-primary:hover { background: #003b71; }
 .btn-ghost { background: transparent; color: #004e92; border: 2px solid #004e92; padding: 1rem 2rem; font-weight: 800; cursor: pointer; border-radius: 999px; font-size: 1rem; }
-.dark .btn-ghost { color: #5dbcd2; border-color: #5dbcd2; }
 .btn-ghost:hover { background: #eef5fd; }
 
 /* Responsive */

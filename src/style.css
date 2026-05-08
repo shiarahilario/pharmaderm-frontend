@@ -1,6 +1,6 @@
+﻿
 
-
-/* ─── CSS Variables de Dark Mode ─────────────────────────────────────── */
+/* â”€â”€â”€ CSS Variables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   --pd-bg:           #ffffff;
   --pd-bg-subtle:    #f8fafc;
@@ -16,160 +16,7 @@
   --pd-input-border: #d1d5db;
   --pd-shadow:       rgba(15, 23, 42, 0.08);
 }
-
-html.dark {
-  --pd-bg:           #0a1220;
-  --pd-bg-subtle:    #0f1c30;
-  --pd-surface:      #131f35;
-  --pd-border:       #1e2f48;
-  --pd-text:         #e2e8f0;
-  --pd-text-muted:   #7a9ab8;
-  --pd-brand:        #4db8ff;
-  --pd-brand-light:  #66ccff;
-  --pd-navbar-bg:    rgba(10, 18, 32, 0.97);
-  --pd-card-bg:      #131f35;
-  --pd-input-bg:     #0f1c30;
-  --pd-input-border: #1e3250;
-  --pd-shadow:       rgba(0, 0, 0, 0.35);
-}
-
-/* ─── Dark mode hardening (force full app theme) ───────────────────────── */
-html.dark body {
-  background-color: var(--pd-bg) !important;
-  color: var(--pd-text) !important;
-}
-
-/* Tailwind utility fallbacks used across views */
-html.dark .bg-white,
-html.dark .bg-white\/60,
-html.dark .bg-white\/70,
-html.dark .bg-white\/80,
-html.dark .bg-white\/90 {
-  background-color: rgba(19, 31, 53, 0.86) !important;
-}
-html.dark .bg-background-light {
-  background-color: var(--pd-bg) !important;
-}
-html.dark .text-brand-dark-blue,
-html.dark .text-slate-700,
-html.dark .text-slate-800,
-html.dark .text-gray-900,
-html.dark .text-gray-800,
-html.dark .text-black {
-  color: var(--pd-text) !important;
-}
-html.dark .border-slate-200,
-html.dark .border-gray-200,
-html.dark .border-gray-300,
-html.dark .border-gray-100 {
-  border-color: var(--pd-border) !important;
-}
-
-/* Generic white backgrounds from scoped CSS in views/components */
-html.dark [style*="background: white"],
-html.dark [style*="background:white"],
-html.dark [style*="background: #fff"],
-html.dark [style*="background:#fff"],
-html.dark [style*="background: #ffffff"],
-html.dark [style*="background:#ffffff"] {
-  background: var(--pd-surface) !important;
-}
-
-/* Ensure inputs/selects are readable everywhere */
-html.dark input,
-html.dark select,
-html.dark textarea {
-  background: var(--pd-input-bg) !important;
-  color: var(--pd-text) !important;
-  border-color: var(--pd-input-border) !important;
-}
-html.dark ::placeholder {
-  color: rgba(226, 232, 240, 0.55) !important;
-}
-
-/* ─── Shop (Tienda) view overrides ───────────────────────────────────── */
-html.dark .shop-page {
-  background: var(--pd-bg) !important;
-  color: var(--pd-text) !important;
-}
-html.dark .shop-header {
-  background: var(--pd-navbar-bg) !important;
-  border-bottom-color: var(--pd-border) !important;
-}
-html.dark .sort-select,
-html.dark .brand-switch,
-html.dark .filter-box,
-html.dark .product-card {
-  background: var(--pd-surface) !important;
-  border-color: var(--pd-border) !important;
-  color: var(--pd-text) !important;
-}
-html.dark .card-image-wrap,
-html.dark .card-image,
-html.dark .shop-page img {
-  background: transparent !important;
-}
-html.dark .brand-line,
-html.dark .reviews,
-html.dark .product-subtitle {
-  color: var(--pd-text-muted) !important;
-}
-html.dark .stars {
-  color: var(--pd-text) !important;
-}
-
-/* ─── Routine view overrides ─────────────────────────────────────────── */
-html.dark .routine-page {
-  background: var(--pd-bg) !important;
-  color: var(--pd-text) !important;
-}
-html.dark .tab-bar,
-html.dark .step-card,
-html.dark .name-list-card {
-  background: var(--pd-surface) !important;
-  border-color: var(--pd-border) !important;
-}
-html.dark .empty-state h2,
-html.dark .step-name,
-html.dark .name-list-card h3 {
-  color: var(--pd-text) !important;
-}
-html.dark .empty-state p,
-html.dark .step-size,
-html.dark .step-desc,
-html.dark .name-list-card li,
-html.dark .tab {
-  color: var(--pd-text-muted) !important;
-}
-html.dark .btn-view {
-  background: var(--pd-bg-subtle) !important;
-  color: var(--pd-text) !important;
-}
-html.dark .btn-secondary {
-  background: var(--pd-surface) !important;
-  border-color: var(--pd-border) !important;
-  color: var(--pd-text) !important;
-}
-html.dark .step-img {
-  background: var(--pd-bg-subtle) !important;
-}
-
-/* ─── Diagnostics view overrides (uses CSS vars) ─────────────────────── */
-html.dark .diagnostics-page {
-  --bg: var(--pd-bg);
-  --text: var(--pd-text);
-  --muted: var(--pd-text-muted);
-  --surface: rgba(19, 31, 53, 0.92);
-  --card: var(--pd-card-bg);
-  --soft: var(--pd-bg-subtle);
-  --border: var(--pd-border);
-  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.25);
-}
-html.dark .quiz-gate h2 { color: var(--pd-text) !important; }
-html.dark .quiz-gate p { color: var(--pd-text-muted) !important; }
-
-/* ─── Reset base ──────────────────────────────────────────────────────── */
+/* --- Reset base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #app {
@@ -186,73 +33,12 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
   font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
-
-/* ─── Dark mode: paneles y superficies globales ──────────────────────── */
-html.dark .app-header,
-html.dark header {
-  background: var(--pd-navbar-bg) !important;
-  border-bottom-color: var(--pd-border) !important;
-}
-
-html.dark .profile-panel,
-html.dark .cart-panel,
-html.dark .products-hover-panel {
-  background: var(--pd-surface) !important;
-  border-color: var(--pd-border) !important;
-}
-
-html.dark .profile-panel button,
-html.dark .cart-panel button {
-  background: var(--pd-surface) !important;
-  color: var(--pd-text) !important;
-}
-
-html.dark .profile-panel button:hover,
-html.dark .cart-panel button:hover {
-  background: var(--pd-bg-subtle) !important;
-}
-
-html.dark .nav-link {
-  color: var(--pd-text) !important;
-}
-
-html.dark .nav-link:hover,
-html.dark .nav-link.active {
-  color: var(--pd-brand) !important;
-}
-
-html.dark .hover-col button {
-  color: var(--pd-text-muted) !important;
-}
-
-html.dark .hover-col h4 {
-  color: var(--pd-text) !important;
-}
-
-html.dark .top-promos {
-  background: #003d70 !important;
-}
-
-/* ─── Cards y formularios genéricos ──────────────────────────────────── */
-html.dark input,
-html.dark select,
-html.dark textarea {
-  background: var(--pd-input-bg) !important;
-  color: var(--pd-text) !important;
-  border-color: var(--pd-input-border) !important;
-}
-
-html.dark label {
-  color: var(--pd-text) !important;
-}
-
-/* ─── Scrollbar sutil ─────────────────────────────────────────────────── */
+/* â”€â”€â”€ Scrollbar sutil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
 
-/* ─── Keyframes ───────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes pd-fade-up {
   from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -270,7 +56,7 @@ html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ─── Scroll-reveal (toggled by v-reveal directive) ──────────────────── */
+/* â”€â”€â”€ Scroll-reveal (toggled by v-reveal directive) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .pd-reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -282,7 +68,7 @@ html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
   transform: translateY(0);
 }
 
-/* ─── Card hover lift (global utility) ───────────────────────────────── */
+/* â”€â”€â”€ Card hover lift (global utility) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .pd-card-hover {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -291,7 +77,7 @@ html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.11);
 }
 
-/* ─── Hero entrance ───────────────────────────────────────────────────── */
+/* â”€â”€â”€ Hero entrance â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .pd-hero-enter {
   animation: pd-fade-up 0.75s cubic-bezier(0.22,1,0.36,1) both;
 }
@@ -299,7 +85,7 @@ html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
   animation: pd-fade-up 0.75s cubic-bezier(0.22,1,0.36,1) 0.18s both;
 }
 
-/* ─── Vue step transition (Quiz.vue) ─────────────────────────────────── */
+/* â”€â”€â”€ Vue step transition (Quiz.vue) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .step-fade-enter-active {
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
@@ -317,7 +103,7 @@ html.dark ::-webkit-scrollbar-thumb { background: #2a3d58; }
   transform: translateX(-18px);
 }
 
-/* ─── Page route transition ───────────────────────────────────────────── */
+/* â”€â”€â”€ Page route transition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .page-enter-active {
   transition: opacity 0.28s ease, transform 0.28s ease;
 }

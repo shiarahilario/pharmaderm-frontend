@@ -6,57 +6,62 @@
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
         <div>
-          <h1>Agendar Cita</h1>
-          <p class="page-sub" v-if="diagnosisSummary">
-            Basado en tu diagnóstico: <em>{{ diagnosisSummary }}</em>
+          <h1>Book Appointment</h1>
+          <p class="page-sub" v-if="displayDiagnosisSummary">
+            Based on your diagnosis: <em>{{ displayDiagnosisSummary }}</em>
           </p>
         </div>
       </div>
 
       <div v-if="booked" class="confirm-box">
         <span class="material-symbols-outlined confirm-icon">check_circle</span>
-        <h2>Cita agendada</h2>
-        <p>Tu cita con <strong>{{ selectedDoctor?.name }}</strong> ha sido registrada.</p>
+        <h2>Appointment booked</h2>
+        <p>Your appointment with <strong>{{ selectedDoctor?.name }}</strong> has been registered.</p>
       </div>
 
       <template v-else>
         <section class="booking-section">
-          <h2><span class="step-num">1</span> Especialistas recomendados</h2>
-          <div class="doctors-grid" v-if="recommendedDoctors.length">
+          <div class="section-heading-row">
+            <h2><span class="step-num">1</span> {{ doctorSelectionLocked ? 'Selected specialist' : 'Recommended specialists' }}</h2>
+            <button v-if="doctorSelectionLocked" type="button" class="btn-change-doctor" @click="showAllDoctors">
+              Change specialist
+            </button>
+          </div>
+          <div class="doctors-grid" v-if="displayedRecommendedDoctors.length">
             <div
-              v-for="doc in recommendedDoctors"
+              v-for="doc in displayedRecommendedDoctors"
               :key="doc.id"
               class="doctor-card"
               :class="{ selected: selectedDoctor?.id === doc.id }"
-              @click="selectedDoctor = doc"
+              @click="selectDoctor(doc)"
             >
               <img :src="doc.photo_url || 'https://placehold.co/80x80/dbeafe/1e3a8a?text=Dr'" :alt="doc.name" class="doctor-photo" />
               <div class="doctor-info">
                 <p class="doctor-name">{{ doc.name }}</p>
-                <p class="doctor-specialty">{{ doc.specialty }}</p>
+                <p class="doctor-specialty">{{ specialtyLabel(doc.specialty) }}</p>
                 <p class="doctor-location">{{ doc.location }}</p>
                 <div class="doctor-rating"><span class="stars">{{ starText(doc.rating) }}</span></div>
                 <span class="modality-badge">{{ modalityLabel(doc.mode) }}</span>
-                <span class="recommend-badge">Recomendado para tu caso</span>
+                <span class="recommend-badge">Recommended for your case</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="booking-section" v-if="otherDoctors.length">
-          <h2>Otros especialistas</h2>
+        <section class="booking-section" v-if="!doctorSelectionLocked && otherDoctors.length">
+          <h2>Other specialists</h2>
           <div class="doctors-grid">
             <div
               v-for="doc in otherDoctors"
               :key="doc.id"
               class="doctor-card"
               :class="{ selected: selectedDoctor?.id === doc.id }"
-              @click="selectedDoctor = doc"
+              @click="selectDoctor(doc)"
             >
               <img :src="doc.photo_url || 'https://placehold.co/80x80/dbeafe/1e3a8a?text=Dr'" :alt="doc.name" class="doctor-photo" />
               <div class="doctor-info">
                 <p class="doctor-name">{{ doc.name }}</p>
-                <p class="doctor-specialty">{{ doc.specialty }}</p>
+                <p class="doctor-specialty">{{ specialtyLabel(doc.specialty) }}</p>
                 <p class="doctor-location">{{ doc.location }}</p>
                 <div class="doctor-rating"><span class="stars">{{ starText(doc.rating) }}</span></div>
                 <span class="modality-badge">{{ modalityLabel(doc.mode) }}</span>
@@ -66,7 +71,7 @@
         </section>
 
         <section class="booking-section" v-if="selectedDoctor">
-          <h2><span class="step-num">2</span> Tipo y modalidad</h2>
+          <h2><span class="step-num">2</span> Type and format</h2>
           <div class="options-row">
             <label v-for="t in appointmentTypes" :key="t.key" class="option-card" :class="{ selected: form.type === t.key }">
               <input type="radio" :value="t.key" v-model="form.type" />
@@ -74,10 +79,10 @@
             </label>
           </div>
 
-          <h3 style="margin-top:14px;">Modalidad</h3>
+          <h3 style="margin-top:14px;">Format</h3>
           <div class="options-row">
             <label class="option-card" :class="{ selected: form.mode === 'presencial', disabled: selectedDoctor.mode === 'virtual' }">
-              <input type="radio" value="presencial" v-model="form.mode" :disabled="selectedDoctor.mode === 'virtual'" />Presencial
+              <input type="radio" value="presencial" v-model="form.mode" :disabled="selectedDoctor.mode === 'virtual'" />In-person
             </label>
             <label class="option-card" :class="{ selected: form.mode === 'virtual', disabled: selectedDoctor.mode === 'presencial' }">
               <input type="radio" value="virtual" v-model="form.mode" :disabled="selectedDoctor.mode === 'presencial'" />Virtual
@@ -86,16 +91,16 @@
         </section>
 
         <section class="booking-section" v-if="selectedDoctor && form.type">
-          <h2><span class="step-num">3</span> Fecha y hora</h2>
+          <h2><span class="step-num">3</span> Date and time</h2>
           <div class="form-grid">
             <div class="form-field">
-              <label>Fecha</label>
+              <label>Date</label>
               <input type="date" v-model="form.date" :min="minDate" />
             </div>
             <div class="form-field">
-              <label>Hora preferida</label>
+              <label>Preferred time</label>
               <select v-model="form.time">
-                <option value="">Seleccionar hora</option>
+                <option value="">Select time</option>
                 <option v-for="t in timeSlots" :key="t" :value="t">{{ t }}</option>
               </select>
             </div>
@@ -103,14 +108,14 @@
         </section>
 
         <section class="booking-section" v-if="selectedDoctor && form.type && form.date">
-          <h2><span class="step-num">4</span> Motivo</h2>
-          <textarea v-model="form.reason" class="reason-input" rows="4" placeholder="Describe brevemente tu motivo"></textarea>
+          <h2><span class="step-num">4</span> Reason</h2>
+          <textarea v-model="form.reason" class="reason-input" rows="4" placeholder="Briefly describe your reason"></textarea>
         </section>
 
         <div v-if="errorMsg" class="form-error">{{ errorMsg }}</div>
 
         <div class="booking-footer" v-if="selectedDoctor">
-          <button class="btn-confirm" :disabled="isSubmitting" @click="bookAppointment">{{ isSubmitting ? 'Agendando...' : 'Confirmar cita' }}</button>
+          <button class="btn-confirm" :disabled="isSubmitting" @click="bookAppointment">{{ isSubmitting ? 'Booking...' : 'Confirm appointment' }}</button>
         </div>
       </template>
     </div>
@@ -123,6 +128,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import { useHistoryStore } from '../stores/useHistoryStore'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
+import { buildAppointmentConfirmationUrl, sendAppointmentConfirmationEmail } from '../services/emailService.js'
+import { withTimeout } from '../utils/async.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -133,17 +140,30 @@ const diagnosisSummary = computed(() => String(route.query.diagnosis || '').toLo
 const concernFromQuery = computed(() => String(route.query.concern || '').toLowerCase())
 const skinTypeFromQuery = computed(() => String(route.query.skin_type || route.query.skinType || '').toLowerCase())
 
+const concernLabels = {
+  acne: 'Acne',
+  manchas: 'Dark spots',
+  sensibilidad: 'Sensitivity',
+  barrera: 'Skin barrier',
+  deshidratacion: 'Hydration',
+  arrugas: 'Early lines',
+  rojez: 'Redness',
+  luminosidad: 'Radiance',
+  textura: 'Texture',
+  poros: 'Visible pores'
+}
+
 const concernAliases = {
   'acne': ['acne'],
-  'manchas': ['manchas', 'tono desigual'],
-  'sensibilidad': ['sensibilidad', 'piel sensible'],
-  'barrera': ['barrera'],
-  'deshidratacion': ['deshidratacion', 'deshidratación'],
-  'arrugas': ['arrugas', 'anti-aging', 'antiaging'],
-  'rojez': ['rojez'],
-  'luminosidad': ['luminosidad'],
-  'textura': ['textura'],
-  'poros': ['poros']
+  'manchas': ['manchas', 'tono desigual', 'dark spots', 'uneven tone', 'discoloration'],
+  'sensibilidad': ['sensibilidad', 'piel sensible', 'sensitivity', 'sensitive skin'],
+  'barrera': ['barrera', 'skin barrier', 'barrier'],
+  'deshidratacion': ['deshidratacion', 'deshidratación', 'hydration', 'dehydration', 'dehydrated'],
+  'arrugas': ['arrugas', 'anti-aging', 'antiaging', 'early lines', 'wrinkles'],
+  'rojez': ['rojez', 'redness'],
+  'luminosidad': ['luminosidad', 'radiance', 'glow'],
+  'textura': ['textura', 'texture'],
+  'poros': ['poros', 'pores', 'visible pores']
 }
 
 function normalizeConcern(raw) {
@@ -157,18 +177,24 @@ function normalizeConcern(raw) {
 
 function normalizeSkinType(raw) {
   const text = String(raw || '').toLowerCase()
-  if (text.includes('grasa')) return 'grasa'
-  if (text.includes('seca')) return 'seca'
-  if (text.includes('mixta')) return 'mixta'
+  if (text.includes('grasa') || text.includes('oily')) return 'grasa'
+  if (text.includes('seca') || text.includes('dry')) return 'seca'
+  if (text.includes('mixta') || text.includes('combination')) return 'mixta'
   if (text.includes('normal')) return 'normal'
   return ''
 }
 
 const selectedConcern = computed(() => normalizeConcern(concernFromQuery.value || diagnosisSummary.value))
 const selectedSkinType = computed(() => normalizeSkinType(skinTypeFromQuery.value || diagnosisSummary.value))
+const displayDiagnosisSummary = computed(() =>
+  String(route.query.reason || '').trim()
+  || concernLabels[selectedConcern.value]
+  || String(route.query.diagnosis || '').trim()
+)
 
 const doctors = ref([])
 const selectedDoctor = ref(null)
+const doctorSelectionLocked = ref(false)
 const booked = ref(false)
 const isSubmitting = ref(false)
 const errorMsg = ref('')
@@ -182,10 +208,10 @@ const form = ref({
 })
 
 const appointmentTypes = [
-  { key: 'consulta_general', label: 'Consulta general' },
-  { key: 'seguimiento', label: 'Seguimiento' },
-  { key: 'urgencia', label: 'Urgencia' },
-  { key: 'estetica', label: 'Estética' }
+  { key: 'consulta_general', label: 'General consultation' },
+  { key: 'seguimiento', label: 'Follow-up' },
+  { key: 'urgencia', label: 'Urgent care' },
+  { key: 'estetica', label: 'Aesthetic consultation' }
 ]
 
 const timeSlots = ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM']
@@ -220,24 +246,61 @@ const otherDoctors = computed(() => {
   return rankedDoctors.value.filter(d => !recIds.has(d.id))
 })
 
+const displayedRecommendedDoctors = computed(() => {
+  if (doctorSelectionLocked.value && selectedDoctor.value) return [selectedDoctor.value]
+  return recommendedDoctors.value
+})
+
+function applyDoctorMode(doc) {
+  if (doc?.mode === 'virtual') form.value.mode = 'virtual'
+  if (doc?.mode === 'presencial') form.value.mode = 'presencial'
+}
+
+function selectDoctor(doc) {
+  selectedDoctor.value = doc
+  doctorSelectionLocked.value = true
+  applyDoctorMode(doc)
+}
+
+function showAllDoctors() {
+  doctorSelectionLocked.value = false
+}
+
 function starText(rating) {
   const r = Math.round(rating || 0)
   return '★'.repeat(Math.max(0, Math.min(5, r))) + '☆'.repeat(Math.max(0, 5 - r))
 }
 
 function modalityLabel(mode) {
-  const map = { virtual: 'Virtual', presencial: 'Presencial', both: 'Virtual y Presencial', ambos: 'Virtual y Presencial' }
-  return map[mode] || mode || 'Ambas'
+  const map = { virtual: 'Virtual', presencial: 'In-person', both: 'Virtual and In-person', ambos: 'Virtual and In-person' }
+  return map[mode] || mode || 'Both'
+}
+
+function specialtyLabel(specialty) {
+  const value = String(specialty || '').trim()
+  const map = {
+    dermatologia: 'Dermatology',
+    dermatología: 'Dermatology',
+    'dermatología clínica': 'Clinical dermatology',
+    'dermatologia clinica': 'Clinical dermatology',
+    estetica: 'Aesthetic dermatology',
+    estética: 'Aesthetic dermatology'
+  }
+  return map[value.toLowerCase()] || value || 'Dermatology'
+}
+
+function appointmentTypeLabel(type) {
+  return appointmentTypes.find(t => t.key === type)?.label || type || 'General consultation'
 }
 
 async function loadDoctors() {
   if (!isSupabaseConfigured) return
 
-  const [docsRes, concernsRes, skinTypesRes] = await Promise.all([
+  const [docsRes, concernsRes, skinTypesRes] = await withTimeout(Promise.all([
     supabase.from('dermatologists').select('id,name,specialty,mode,location,availability_note,rating,photo_url,is_active').eq('is_active', true).order('rating', { ascending: false }),
     supabase.from('dermatologist_concerns').select('dermatologist_id,concern_code,priority_score'),
     supabase.from('dermatologist_skin_types').select('dermatologist_id,skin_type_code,priority_score')
-  ])
+  ]), 10000, 'Load specialists')
 
   if (docsRes.error) throw docsRes.error
 
@@ -265,14 +328,13 @@ async function loadDoctors() {
 
   if (!selectedDoctor.value && recommendedDoctors.value.length) {
     selectedDoctor.value = recommendedDoctors.value[0]
-    if (selectedDoctor.value.mode === 'virtual') form.value.mode = 'virtual'
-    if (selectedDoctor.value.mode === 'presencial') form.value.mode = 'presencial'
+    applyDoctorMode(selectedDoctor.value)
   }
 }
 
 async function bookAppointment() {
-  if (!selectedDoctor.value) return (errorMsg.value = 'Selecciona un especialista.')
-  if (!form.value.date) return (errorMsg.value = 'Selecciona una fecha.')
+  if (!selectedDoctor.value) return (errorMsg.value = 'Select a specialist.')
+  if (!form.value.date) return (errorMsg.value = 'Select a date.')
 
   isSubmitting.value = true
   errorMsg.value = ''
@@ -288,7 +350,7 @@ async function bookAppointment() {
     scheduled_date: form.value.date,
     scheduled_time: form.value.time || null,
     reason: form.value.reason || null,
-    notes: diagnosisSummary.value || null,
+    notes: displayDiagnosisSummary.value || null,
     urgency: form.value.type === 'urgencia' ? 'high' : 'normal',
     status: 'pending',
     confirmation_code: confirmationCode,
@@ -296,18 +358,92 @@ async function bookAppointment() {
   }
 
   try {
+    let savedAppointment = aptData
+
     if (isSupabaseConfigured) {
       if (!userId) {
-        throw new Error('No hay usuario autenticado. Inicia sesión para guardar la cita en la base de datos.')
+        throw new Error('No authenticated user found. Sign in to save the appointment to the database.')
       }
-      const { error } = await supabase.from('appointments').insert(aptData)
+      const { data: insertedAppointment, error } = await withTimeout(supabase
+        .from('appointments')
+        .insert([aptData])
+        .select(`
+          id,
+          user_id,
+          dermatologist_id,
+          appointment_type,
+          mode,
+          scheduled_date,
+          scheduled_time,
+          reason,
+          notes,
+          urgency,
+          status,
+          confirmation_code,
+          analysis_id,
+          created_at
+        `)
+        .single(), 4000, 'Save appointment')
       if (error) throw error
+      savedAppointment = insertedAppointment || aptData
     }
-    history.saveAppointment?.({ ...aptData, doctor_name: selectedDoctor.value.name })
+
+    history.saveAppointment?.({ ...savedAppointment, doctor_name: selectedDoctor.value.name })
+    const confirmationUrl = buildAppointmentConfirmationUrl(savedAppointment)
+
+    const currentUser = auth.user?.value || {}
+    const userEmail = currentUser.email || ''
+    const userName =
+      currentUser.first_name ||
+      currentUser.firstName ||
+      currentUser.name ||
+      'Patient'
+
+    try {
+      if (userEmail) {
+        withTimeout(sendAppointmentConfirmationEmail({
+          to_email: userEmail,
+          to_name: userName,
+          appointment_id: savedAppointment.id || aptData.confirmation_code,
+          confirmation_code: savedAppointment.confirmation_code || aptData.confirmation_code,
+          appointment_date: savedAppointment.scheduled_date || aptData.scheduled_date,
+          appointment_time: savedAppointment.scheduled_time || aptData.scheduled_time || 'Pending confirmation',
+          appointment_type: appointmentTypeLabel(savedAppointment.appointment_type || aptData.appointment_type),
+          appointment_mode: savedAppointment.mode || aptData.mode,
+          appointment_reason: savedAppointment.reason || aptData.reason || 'Dermatology consultation',
+          appointment_notes: savedAppointment.notes || aptData.notes || '',
+          appointment_urgency: savedAppointment.urgency || aptData.urgency || 'normal',
+          appointment_status: savedAppointment.status || aptData.status || 'pending',
+          dermatologist_id: savedAppointment.dermatologist_id || aptData.dermatologist_id,
+          doctor_name: selectedDoctor.value?.name || '',
+          doctor_specialty: specialtyLabel(selectedDoctor.value?.specialty) || '',
+          doctor_location: selectedDoctor.value?.location || '',
+          analysis_id: savedAppointment.analysis_id || aptData.analysis_id || '',
+          support_email: 'soporte@pharmadermrd.com',
+          reply_to: 'soporte@pharmadermrd.com',
+          confirmation_url: confirmationUrl,
+        }, 'en'), 4000, 'Appointment confirmation email')
+          .then((emailResult) => {
+            if (!emailResult?.ok) {
+              console.warn('[AppointmentBooking] Appointment email was not sent:', emailResult?.message || emailResult)
+            }
+          })
+          .catch((emailError) => {
+            console.warn('[AppointmentBooking] Appointment email failed:', emailError?.message || emailError)
+          })
+      } else {
+        console.warn('[AppointmentBooking] No appointment email was sent because the user has no email.')
+      }
+    } catch (emailError) {
+      console.warn('[AppointmentBooking] Appointment email failed:', emailError?.message || emailError)
+    }
+
     booked.value = true
+    await nextTick()
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   } catch (e) {
     console.warn('[AppointmentBooking] Save failed:', e)
-    errorMsg.value = e?.message || 'No se pudo guardar la cita en este momento.'
+    errorMsg.value = e?.message || 'The appointment could not be saved right now.'
   } finally {
     isSubmitting.value = false
   }
@@ -316,7 +452,7 @@ async function bookAppointment() {
 onMounted(async () => {
   nextTick(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }))
   if (!form.value.reason) {
-    form.value.reason = String(route.query.reason || route.query.diagnosis || route.query.concern || '').trim()
+    form.value.reason = displayDiagnosisSummary.value
   }
   try {
     await loadDoctors()
@@ -335,6 +471,10 @@ onMounted(async () => {
 .page-sub { font-size: 0.85rem; color: #64748b; margin: 0; }
 .booking-section { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
 .booking-section h2 { font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+.section-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.section-heading-row h2 { margin: 0; }
+.btn-change-doctor { border: 1px solid #bae6fd; background: #f0f9ff; color: #0369a1; border-radius: 999px; padding: 8px 12px; font-size: 0.78rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.btn-change-doctor:hover { background: #e0f2fe; }
 .step-num { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: #16a6e2; color: white; font-size: 0.8rem; align-items: center; justify-content: center; }
 .doctors-grid { display: grid; gap: 12px; }
 .doctor-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px; cursor: pointer; }

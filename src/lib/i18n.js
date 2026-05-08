@@ -8,15 +8,31 @@
  *   t('nav.ourProducts')  →  "OUR PRODUCTS" | "NUESTROS PRODUCTOS"
  */
 
-import { ref, computed } from 'vue'
-import storageService from '../services/storageService.js'
+import { ref } from 'vue'
 
-const _lang = ref(storageService.get('settings', {})?.language || 'es')
+const DEFAULT_LANG = 'en'
+const STORAGE_KEY = 'pharmaderm_lang'
+
+function readSavedLang() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    return saved === 'es' || saved === 'en' ? saved : DEFAULT_LANG
+  } catch {
+    return DEFAULT_LANG
+  }
+}
+
+const _lang = ref(readSavedLang())
 
 export const translations = {
   es: {
     // Navbar
     nav: {
+      home:           'INICIO',
+      shop:           'TIENDA',
+      quiz:           'QUIZ DE PIEL',
+      diagnostics:    'DIAGNOSTICO',
+      routine:        'RUTINA',
       ourProducts:    'NUESTROS PRODUCTOS',
       analyzeSkin:    'ANALIZA TU PIEL',
       expertAdvice:   'CONSEJOS EXPERTOS',
@@ -25,6 +41,19 @@ export const translations = {
       search:         'Buscar',
       cart:           'Carrito',
       profile:        'Perfil',
+      close:          'CERRAR',
+      popularSearches:'BUSQUEDAS POPULARES',
+      categories:     'CATEGORIAS',
+      lookingFor:     'Estoy buscando...',
+      emptyCart:      'Tu carrito esta vacio',
+      goToShop:       'Ir a la tienda',
+      viewCart:       'Ver carrito',
+      checkout:       'Finalizar compra',
+      total:          'Total',
+      hi:             'Hola',
+      myHistory:      'Mi historial',
+      signOut:        'Cerrar sesion',
+      signIn:         'Iniciar sesion',
     },
     // Mega menú
     menu: {
@@ -74,6 +103,17 @@ export const translations = {
     // Tienda
     shop: {
       title:          'Nuestra tienda',
+      subtitle:       'Skincare recomendado por dermatologos. Explora',
+      products:       'productos',
+      filterBy:       'FILTRAR POR',
+      reset:          'Restablecer',
+      type:           'TIPO',
+      keyIngredients: 'INGREDIENTES CLAVE',
+      size:           'Tamano',
+      sortAZ:         'Alfabeticamente (A-Z)',
+      sortZA:         'Alfabeticamente (Z-A)',
+      priceLowHigh:   'Precio (menor a mayor)',
+      priceHighLow:   'Precio (mayor a menor)',
       searchPlaceholder: 'Buscar productos...',
       filters:        'Filtros',
       allProducts:    'Todos',
@@ -85,7 +125,10 @@ export const translations = {
     // Quiz
     quiz: {
       takeSelfie:      'TOMAR UN SELFIE',
-      uploadPhoto:     'CARGAR UNA FOTOGRAFÍA',
+      uploadPhoto:     'CARGAR UNA FOTOGRAFIA',
+      loadingDetector: 'CARGANDO DETECTOR...',
+      retakeSelfie:    'REPETIR SELFIE',
+      continue:        'CONTINUAR',
       photoRequired:   'Debes subir o tomar una foto para generar tu análisis de piel.',
       skinProfile:     'PERFIL DE LA PIEL',
       aboutYou:        'Acerca de usted',
@@ -102,15 +145,39 @@ export const translations = {
     // Diagnóstico
     diagnostics: {
       title:          'Diagnóstico dermatológico',
-      noQuiz:         'Para generar tu diagnóstico personalizado primero debes completar el quiz de piel.',
+      completeQuizFirst: 'Completa el quiz primero',
+      noQuiz:         'Para generar tu diagnostico personalizado primero debes completar el quiz de piel.',
+      takeQuizContinue: 'Haz el quiz para continuar.',
       doQuiz:         'Hacer quiz',
       bookAppt:       'Reservar cita',
+      continueDiagnosis: 'Continuar diagnostico',
+      skinType: 'Tipo de piel',
+      sensitivity: 'Sensibilidad',
+      priorityConcern: 'Preocupacion principal',
+      suggestedConsultation: 'Consulta sugerida',
+      progressTitle: 'Del quiz al soporte dermatologico',
+      chooseSpecialist: 'Elige un especialista y reserva tu consulta.',
+      initialProfile: 'Tu perfil inicial de piel',
+      mainConcern: 'Preocupacion principal',
+      bookWithSpecialist: 'Reservar cita con especialista',
       viewRoutine:    'Ver rutina',
       saveResult:     'Guardar diagnóstico',
     },
     // Rutina
     routine: {
       title:          'Mi rutina personalizada',
+      eyebrow:        'MI RUTINA PERSONALIZADA',
+      emptyTitle:     'Aun no hay rutina personalizada',
+      emptyText:      'Completa el quiz o un diagnostico para generar tu rutina personalizada.',
+      loading:        'Cargando tu rutina personalizada...',
+      fallbackTitle:  'Mi rutina de piel',
+      generated:      'Generada',
+      noProducts:     'No se encontraron productos para esta rutina.',
+      step:           'Paso',
+      recommendedProducts: 'Productos recomendados',
+      email:          'Enviar mi rutina por correo',
+      viewStore:      'Ver tienda',
+      goDiagnostics:  'Ir a diagnostico',
       noQuiz:         'Completa el quiz para generar tu rutina personalizada.',
       doQuiz:         'Hacer quiz',
       morning:        'Rutina matutina',
@@ -157,7 +224,6 @@ export const translations = {
       routine:     'Mi rutina',
       diagnostics: 'Mi diagnóstico',
       settings:    'Configuración',
-      darkMode:    'Modo oscuro',
       language:    'Idioma',
       country:     'País',
       currency:    'Moneda',
@@ -165,6 +231,62 @@ export const translations = {
       logout:      'Cerrar sesión',
       editInfo:    'Editar información',
       cancelEdit:  'Cancelar edición',
+      viewUpdateRoutine: 'Ver o actualizar rutina',
+      createRoutine: 'Crear rutina',
+      viewUpdateDiagnostic: 'Ver o actualizar diagnostico',
+      startDiagnostic: 'Iniciar diagnostico',
+    },
+    footer: {
+      ourProducts: 'NUESTROS PRODUCTOS',
+      customerService: 'ATENCION AL CLIENTE',
+      aboutUs: 'SOBRE NOSOTROS',
+      skincareAdvice: 'CONSEJOS DE SKINCARE',
+      contactUs: 'CONTACTANOS',
+      followUs: 'SIGUENOS',
+      required: 'Los campos obligatorios estan marcados con un asterisco. (*)',
+      emailAddress: 'Correo electronico',
+      phone: 'Telefono',
+      consent: 'Al enviar este formulario, acepto recibir recomendaciones de skincare, novedades de productos, recordatorios de citas y mensajes promocionales de PharmaDerm. Entiendo que puedo cancelar mi suscripcion en cualquier momento.',
+      submit: 'ENVIAR',
+      subscribed: 'Gracias por suscribirte.',
+      emailRequired: 'Ingresa tu correo electronico.',
+      contactDesc: 'No dudes en contactarnos para orientacion de skincare, soporte de productos o asistencia con citas.',
+      hours: 'Lunes a sabado, 9:00 AM - 6:00 PM',
+      personalizedRoutine: 'OBTEN TU RUTINA PERSONALIZADA',
+      bookAppointment: 'Book Appointment',
+      trackOrder: 'RASTREA TU PEDIDO',
+      legal: 'Este sitio ofrece recomendaciones de skincare, informacion de productos dermatologicos y soporte para citas. La informacion proporcionada no reemplaza la orientacion medica profesional.',
+      terms: 'Terminos y condiciones',
+      privacy: 'Politica de privacidad',
+      accessibility: 'Accesibilidad',
+      orderStatus: 'Estado del pedido',
+      myAppointments: 'Mis citas',
+      cart: 'Carrito',
+      checkout: 'Finalizar compra',
+      myProfile: 'Mi perfil',
+      shippingReturns: 'Envios y devoluciones',
+      contactUsLink: 'Contactanos',
+      ourStory: 'Nuestra historia',
+      expertAdvice: 'Consejos expertos',
+      skinAnalysisTool: 'Analisis de piel',
+      diagnostics: 'Diagnostico',
+      recommendedRoutine: 'Rutina recomendada',
+      collection: 'Coleccion',
+      face: 'Rostro',
+      antiAging: 'Anti-aging',
+      acneOily: 'Acne y piel grasa',
+      sun: 'Sol',
+      drySkin: 'Piel seca',
+      sensitiveSkin: 'Piel sensible',
+      sunProtection: 'Proteccion solar',
+      skinBarrier: 'Barrera de piel',
+    },
+    language: {
+      label: 'Idioma',
+      english: 'English',
+      spanish: 'Espanol',
+      current: 'ES',
+      toggle: 'Cambiar idioma',
     },
     // General
     general: {
@@ -185,6 +307,11 @@ export const translations = {
 
   en: {
     nav: {
+      home:         'HOME',
+      shop:         'SHOP',
+      quiz:         'SKIN QUIZ',
+      diagnostics:  'DIAGNOSTICS',
+      routine:      'ROUTINE',
       ourProducts:  'OUR PRODUCTS',
       analyzeSkin:  'ANALYZE YOUR SKIN',
       expertAdvice: 'EXPERT ADVICE',
@@ -193,6 +320,19 @@ export const translations = {
       search:       'Search',
       cart:         'Cart',
       profile:      'Profile',
+      close:        'CLOSE',
+      popularSearches:'POPULAR SEARCHES',
+      categories:   'CATEGORIES',
+      lookingFor:   "I'm looking for...",
+      emptyCart:    'Your cart is empty',
+      goToShop:     'Go to shop',
+      viewCart:     'View cart',
+      checkout:     'Checkout',
+      total:        'Total',
+      hi:           'Hi',
+      myHistory:    'My history',
+      signOut:      'Sign out',
+      signIn:       'Sign in',
     },
     menu: {
       face:        'FACE',
@@ -237,6 +377,17 @@ export const translations = {
     },
     shop: {
       title:          'Our store',
+      subtitle:       'Dermatologist recommended skincare. Browse',
+      products:       'products',
+      filterBy:       'FILTER BY',
+      reset:          'Reset',
+      type:           'TYPE',
+      keyIngredients: 'PRODUCT KEY INGREDIENTS',
+      size:           'Size',
+      sortAZ:         'Alphabetically (A-Z)',
+      sortZA:         'Alphabetically (Z-A)',
+      priceLowHigh:   'Price (Low to High)',
+      priceHighLow:   'Price (High to Low)',
       searchPlaceholder: 'Search products...',
       filters:        'Filters',
       allProducts:    'All',
@@ -248,6 +399,9 @@ export const translations = {
     quiz: {
       takeSelfie:    'TAKE A SELFIE',
       uploadPhoto:   'UPLOAD A PHOTO',
+      loadingDetector: 'LOADING DETECTOR...',
+      retakeSelfie:  'RETAKE SELFIE',
+      continue:      'CONTINUE',
       photoRequired: 'You must upload or take a photo to generate your skin analysis.',
       skinProfile:   'SKIN PROFILE',
       aboutYou:      'About you',
@@ -263,14 +417,38 @@ export const translations = {
     },
     diagnostics: {
       title:       'Dermatological Diagnosis',
+      completeQuizFirst: 'Complete the quiz first',
       noQuiz:      'To generate your personalized diagnosis you must first complete the skin quiz.',
+      takeQuizContinue: 'Take the quiz to continue.',
       doQuiz:      'Take quiz',
       bookAppt:    'Book appointment',
+      continueDiagnosis: 'Continue diagnosis',
+      skinType: 'Skin type',
+      sensitivity: 'Sensitivity',
+      priorityConcern: 'Priority concern',
+      suggestedConsultation: 'Suggested consultation',
+      progressTitle: 'From quiz to dermatologist support',
+      chooseSpecialist: 'Choose a specialist and book your consultation.',
+      initialProfile: 'Your initial skin profile',
+      mainConcern: 'Main Concern',
+      bookWithSpecialist: 'Book appointment with a specialist',
       viewRoutine: 'View routine',
       saveResult:  'Save diagnosis',
     },
     routine: {
       title:          'My personalized routine',
+      eyebrow:        'MY PERSONALIZED ROUTINE',
+      emptyTitle:     'No personalized routine yet',
+      emptyText:      'Complete the quiz or a diagnosis to generate your personalized routine.',
+      loading:        'Loading your personalized routine...',
+      fallbackTitle:  'My skin routine',
+      generated:      'Generated',
+      noProducts:     'No products found for this routine.',
+      step:           'Step',
+      recommendedProducts: 'Recommended products',
+      email:          'Email my routine',
+      viewStore:      'View store',
+      goDiagnostics:  'Go to diagnostics',
       noQuiz:         'Complete the quiz to generate your personalized routine.',
       doQuiz:         'Take quiz',
       morning:        'Morning routine',
@@ -315,7 +493,6 @@ export const translations = {
       routine:     'My routine',
       diagnostics: 'My diagnosis',
       settings:    'Settings',
-      darkMode:    'Dark mode',
       language:    'Language',
       country:     'Country',
       currency:    'Currency',
@@ -323,6 +500,62 @@ export const translations = {
       logout:      'Log out',
       editInfo:    'Edit information',
       cancelEdit:  'Cancel editing',
+      viewUpdateRoutine: 'View or update routine',
+      createRoutine: 'Create routine',
+      viewUpdateDiagnostic: 'View or update diagnostic',
+      startDiagnostic: 'Start diagnostic',
+    },
+    footer: {
+      ourProducts: 'OUR PRODUCTS',
+      customerService: 'CUSTOMER SERVICE',
+      aboutUs: 'ABOUT US',
+      skincareAdvice: 'SKINCARE ADVICE',
+      contactUs: 'CONTACT US',
+      followUs: 'FOLLOW US',
+      required: 'Required fields are marked with an asterisk. (*)',
+      emailAddress: 'Email address',
+      phone: 'Phone',
+      consent: 'By submitting this form, I agree to receive skincare recommendations, product updates, appointment reminders and promotional messages from PharmaDerm. I understand I can unsubscribe at any time.',
+      submit: 'SUBMIT',
+      subscribed: 'Thank you for subscribing.',
+      emailRequired: 'Please enter your email address.',
+      contactDesc: 'Please feel free to contact us for skincare guidance, product support or appointment assistance.',
+      hours: 'Monday to Saturday, 9:00 AM - 6:00 PM',
+      personalizedRoutine: 'GET YOUR PERSONALIZED ROUTINE',
+      bookAppointment: 'Book Appointment',
+      trackOrder: 'TRACK YOUR ORDER',
+      legal: 'This site provides skincare recommendations, dermatological product information and appointment support. The information provided does not replace professional medical advice.',
+      terms: 'Terms & Conditions',
+      privacy: 'Privacy Policy',
+      accessibility: 'Accessibility',
+      orderStatus: 'Order Status',
+      myAppointments: 'My Appointments',
+      cart: 'Cart',
+      checkout: 'Checkout',
+      myProfile: 'My Profile',
+      shippingReturns: 'Shipping and Returns',
+      contactUsLink: 'Contact Us',
+      ourStory: 'Our Story',
+      expertAdvice: 'Expert Advice',
+      skinAnalysisTool: 'Skin Analysis Tool',
+      diagnostics: 'Diagnostics',
+      recommendedRoutine: 'Recommended Routine',
+      collection: 'Collection',
+      face: 'Face',
+      antiAging: 'Anti-Aging',
+      acneOily: 'Acne & Oily Skin',
+      sun: 'Sun',
+      drySkin: 'Dry Skin',
+      sensitiveSkin: 'Sensitive Skin',
+      sunProtection: 'Sun Protection',
+      skinBarrier: 'Skin Barrier',
+    },
+    language: {
+      label: 'Language',
+      english: 'English',
+      spanish: 'Espanol',
+      current: 'EN',
+      toggle: 'Change language',
     },
     general: {
       loading:   'Loading...',
@@ -347,7 +580,7 @@ export function useI18n() {
 
   function t(path) {
     const keys = path.split('.')
-    let obj = translations[lang.value] || translations.es
+    let obj = translations[lang.value] || translations.en
     for (const k of keys) {
       if (obj == null) return path
       obj = obj[k]
@@ -358,6 +591,9 @@ export function useI18n() {
   function setLang(newLang) {
     if (translations[newLang]) {
       _lang.value = newLang
+      try {
+        localStorage.setItem(STORAGE_KEY, newLang)
+      } catch {}
     }
   }
 
@@ -366,7 +602,15 @@ export function useI18n() {
 
 /** Actualiza el idioma global (llamar desde useSettingsStore) */
 export function setGlobalLang(lang) {
-  if (translations[lang]) _lang.value = lang
+  if (translations[lang]) {
+    _lang.value = lang
+    try {
+      localStorage.setItem(STORAGE_KEY, lang)
+    } catch {}
+  }
 }
+
+export const defaultLanguage = DEFAULT_LANG
+export const languageStorageKey = STORAGE_KEY
 
 export default useI18n

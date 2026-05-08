@@ -3,9 +3,9 @@
     <main class="container shop-layout">
       <section class="breadcrumb-row">
         <div class="crumbs">
-          <span class="crumb" @click="$router.push('/inicio')">Home</span>
+          <span class="crumb" @click="$router.push('/inicio')">{{ t('bottomNav.home') }}</span>
           <span>›</span>
-          <span class="crumb active">Our Products</span>
+          <span class="crumb active">{{ t('nav.ourProducts') }}</span>
           <span>›</span>
           <span class="crumb active">{{ activeBrandLabel }}</span>
         </div>
@@ -14,21 +14,21 @@
       <section class="hero-title">
         <div>
           <h1>{{ activeBrandLabel.toUpperCase() }}</h1>
-          <p>Dermatologist recommended skincare. Browse</p>
+          <p>{{ t('shop.subtitle') }}</p>
         </div>
 
         <div class="title-actions">
           <div class="product-count">
             <strong>{{ sortedProducts.length }}</strong>
-            <span>products</span>
+            <span>{{ t('shop.products') }}</span>
           </div>
 
           <select v-model="sortBy" class="sort-select">
-            <option value="best">Best Sellers</option>
-            <option value="az">Alphabetically (A-Z)</option>
-            <option value="za">Alphabetically (Z-A)</option>
-            <option value="priceAsc">Price (Low to High)</option>
-            <option value="priceDesc">Price (High to Low)</option>
+            <option value="best">{{ t('home.bestSellers') }}</option>
+            <option value="az">{{ t('shop.sortAZ') }}</option>
+            <option value="za">{{ t('shop.sortZA') }}</option>
+            <option value="priceAsc">{{ t('shop.priceLowHigh') }}</option>
+            <option value="priceDesc">{{ t('shop.priceHighLow') }}</option>
           </select>
         </div>
       </section>
@@ -54,64 +54,77 @@
       <section class="content-grid">
         <aside class="filters">
           <div class="filters-header">
-            <h3>FILTER BY</h3>
-            <button @click="resetFilters">Reset</button>
+            <h3>{{ t('shop.filterBy') }}</h3>
+            <button @click="resetFilters">{{ t('shop.reset') }}</button>
           </div>
 
           <div class="filter-box">
-            <h4>SEARCH</h4>
-            <input v-model.trim="search" type="text" placeholder="Search products..." />
+            <button class="filter-heading" @click="filterOpen.search = !filterOpen.search">
+              <span>{{ t('nav.search') }}</span>
+              <span class="filter-chevron" :class="{ open: filterOpen.search }">›</span>
+            </button>
+            <div v-show="filterOpen.search" class="filter-body">
+              <input v-model.trim="search" type="text" :placeholder="t('shop.searchPlaceholder')" />
+            </div>
           </div>
 
           <div v-if="activeBrand === 'larocheposay'" class="filter-box">
-            <h4>PRODUCT LINE</h4>
-            <div class="scroll-checks">
-              <label v-for="line in availableLines" :key="line" class="check-row">
-                <input type="checkbox" :value="line" v-model="selectedLines" />
-                <span>{{ line }}</span>
-              </label>
+            <button class="filter-heading" @click="filterOpen.line = !filterOpen.line">
+              <span>{{ t('menu.productLine') }}</span>
+              <span class="filter-chevron" :class="{ open: filterOpen.line }">›</span>
+            </button>
+            <div v-show="filterOpen.line" class="filter-body">
+              <div class="scroll-checks">
+                <label v-for="line in availableLines" :key="line" class="check-row">
+                  <input type="checkbox" :value="line" v-model="selectedLines" />
+                  <span>{{ line }}</span>
+                </label>
+              </div>
             </div>
           </div>
 
           <div class="filter-box">
-            <h4>SKIN CONCERN</h4>
-            <div class="scroll-checks">
-              <label
-                v-for="concern in availableConcerns"
-                :key="concern"
-                class="check-row"
-              >
-                <input type="checkbox" :value="concern" v-model="selectedConcerns" />
-                <span>{{ normalizeConcernLabel(concern) }}</span>
-              </label>
+            <button class="filter-heading" @click="filterOpen.concern = !filterOpen.concern">
+              <span>{{ t('menu.skinConcern') }}</span>
+              <span class="filter-chevron" :class="{ open: filterOpen.concern }">›</span>
+            </button>
+            <div v-show="filterOpen.concern" class="filter-body">
+              <div class="scroll-checks">
+                <label v-for="concern in availableConcerns" :key="concern" class="check-row">
+                  <input type="checkbox" :value="concern" v-model="selectedConcerns" />
+                  <span>{{ normalizeConcernLabel(concern) }}</span>
+                </label>
+              </div>
             </div>
           </div>
 
           <div class="filter-box">
-            <h4>TYPE</h4>
-            <div class="scroll-checks">
-              <label v-for="type in availableTypes" :key="type" class="check-row">
-                <input type="checkbox" :value="type" v-model="selectedTypes" />
-                <span>{{ type }}</span>
-              </label>
+            <button class="filter-heading" @click="filterOpen.type = !filterOpen.type">
+              <span>{{ t('shop.type') }}</span>
+              <span class="filter-chevron" :class="{ open: filterOpen.type }">›</span>
+            </button>
+            <div v-show="filterOpen.type" class="filter-body">
+              <div class="scroll-checks">
+                <label v-for="type in availableTypes" :key="type" class="check-row">
+                  <input type="checkbox" :value="type" v-model="selectedTypes" />
+                  <span>{{ type }}</span>
+                </label>
+              </div>
             </div>
           </div>
 
           <div v-if="activeBrand === 'cerave'" class="filter-box">
-            <h4>PRODUCT KEY INGREDIENTS</h4>
-            <div class="scroll-checks">
-              <label
-                v-for="ingredient in availableKeyIngredients"
-                :key="ingredient.name"
-                class="check-row"
-              >
-                <input
-                  type="checkbox"
-                  :value="ingredient.name"
-                  v-model="selectedIngredients"
-                />
-                <span>{{ ingredient.name }} ({{ ingredient.count }})</span>
-              </label>
+            <button class="filter-heading" @click="filterOpen.ingredients = !filterOpen.ingredients">
+              <span>{{ t('shop.keyIngredients') }}</span>
+              <span class="filter-chevron" :class="{ open: filterOpen.ingredients }">›</span>
+            </button>
+            <div v-show="filterOpen.ingredients" class="filter-body">
+              <div class="scroll-checks">
+                <label v-for="ingredient in availableKeyIngredients" :key="ingredient.name" class="check-row">
+                  <input type="checkbox" :value="ingredient.name" v-model="selectedIngredients" />
+                  <span>{{ ingredient.name }} ({{ ingredient.count }})</span>
+                </label>
+              </div>
             </div>
           </div>
         </aside>
@@ -145,7 +158,7 @@
                 </div>
 
                 <div v-if="product.sizes?.length" class="size-row">
-                  <label>Size</label>
+                  <label>{{ t('shop.size') }}</label>
                   <select v-model="selectedSize[product.id]">
                     <option
                       v-for="size in product.sizes"
@@ -162,10 +175,10 @@
 
                   <div class="action-row">
                     <button class="outline-btn" @click="openProduct(product.slug)">
-                      View
+                      {{ t('general.view') }}
                     </button>
                     <button class="primary-btn" @click="addToCart(product)">
-                      Add to Bag
+                      {{ t('quiz.addToBag') }}
                     </button>
                   </div>
                 </div>
@@ -173,7 +186,7 @@
             </article>
 
             <div v-if="!sortedProducts.length" class="empty-state">
-              No products match your filters.
+              {{ t('shop.noResults') }}
             </div>
           </div>
         </section>
@@ -197,11 +210,13 @@ import { ceraveCatalog } from "../data/ceraveCatalog";
 import { useCartStore } from "../stores/useCartStore";
 import { useSettingsStore } from "../stores/useSettingsStore";
 import { priceIn, convertPrice } from "../utils/currency";
+import { useI18n } from "../lib/i18n.js";
 
 const router = useRouter();
 const route = useRoute();
 const cart = useCartStore();
 const settings = useSettingsStore();
+const { t } = useI18n();
 const userCurrency = settings.currency;
 
 // Todos los precios ahora están en USD (lrpCatalog y ceraveCatalog) → convertir a DOP
@@ -233,6 +248,7 @@ const selectedConcerns = ref([]);
 const selectedTypes = ref([]);
 const selectedIngredients = ref([]);
 const selectedSize = reactive({});
+const filterOpen = reactive({ search: false, line: false, concern: false, type: false, ingredients: false });
 
 const CERAVE_KEY_INGREDIENTS = [
   "Benzoyl Peroxide",
@@ -1018,15 +1034,44 @@ watch(() => route.query, applyQueryParams);
 
 .filter-box {
   border: 1px solid #e5e7eb;
-  padding: 16px;
   margin-bottom: 14px;
   background: #fff;
+  overflow: hidden;
 }
 
-.filter-box h4 {
-  margin: 0 0 12px;
+.filter-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 12px 16px;
   font-size: 13px;
+  font-weight: 700;
   letter-spacing: .04em;
+  text-align: left;
+  color: inherit;
+}
+
+.filter-heading:hover {
+  background: #f8fafc;
+}
+
+.filter-chevron {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  transform: rotate(90deg);
+}
+
+.filter-chevron.open {
+  transform: rotate(-90deg);
+}
+
+.filter-body {
+  padding: 0 16px 14px;
 }
 
 .filter-box input[type="text"] {

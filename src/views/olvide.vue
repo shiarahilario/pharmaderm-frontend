@@ -1,8 +1,8 @@
 ﻿<template>
   <div
-    class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden"
+    class="relative flex min-h-screen w-full flex-col bg-background-light group/design-root overflow-x-hidden"
   >
-    <!-- Fondo -->
+    <!-- Background -->
     <div class="absolute inset-0 h-full w-full">
       <div
         class="w-full h-full bg-center bg-no-repeat bg-cover aspect-auto"
@@ -16,7 +16,7 @@
         <!-- Logo -->
         <div class="mb-4 flex justify-center">
           <svg
-            class="h-12 text-brand-dark-blue dark:text-brand-light-blue"
+            class="h-12 text-brand-dark-blue"
             fill="currentColor"
             viewBox="0 0 200 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,38 +33,37 @@
           </svg>
         </div>
 
-        <h1 class="text-brand-dark-blue dark:text-white tracking-tight text-3xl font-bold text-center pb-4 pt-2">
-          Recuperar contraseña
+        <h1 class="text-brand-dark-blue tracking-tight text-3xl font-bold text-center pb-4 pt-2">
+          Recover password
         </h1>
 
-        <p class="text-neutral-text dark:text-gray-400 text-sm text-center mb-6">
-          Escribe tu correo y te enviaremos instrucciones para restablecer tu contraseña.
+        <p class="text-neutral-text text-sm text-center mb-6">
+          Enter your email and we will send instructions to reset your password.
         </p>
 
         <!-- Email -->
         <label class="flex flex-col w-full">
-          <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-            Correo electrónico
+          <p class="text-brand-dark-blue text-sm font-medium pb-2">
+            Email address
           </p>
           <input
             v-model="email"
             type="email"
-            placeholder="tucorreo@ejemplo.com"
-            class="form-input flex w-full rounded-lg text-brand-dark-blue dark:text-white
-                   dark:bg-background-dark/50 focus:ring-2 focus:ring-brand-light-blue/50
-                   border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50
+            placeholder="you@example.com"
+            class="form-input flex w-full rounded-lg text-brand-dark-blue focus:ring-2 focus:ring-brand-light-blue/50
+                   border border-gray-300 bg-brand-soft-grey/50
                    h-14 p-4 text-base"
           />
         </label>
 
-        <!-- Botones -->
+        <!-- Buttons -->
         <div class="w-full flex flex-col gap-4 mt-8">
           <button
             @click="enviar"
             :disabled="loading"
             class="w-full h-14 rounded-lg bg-brand-light-blue text-white font-bold disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {{ loading ? "Enviando..." : "Enviar enlace" }}
+            {{ loading ? "Sending..." : "Send link" }}
           </button>
 
           <button
@@ -72,7 +71,7 @@
             :disabled="loading"
             class="w-full h-14 rounded-lg border border-brand-dark-blue text-brand-dark-blue font-bold disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Volver a iniciar sesión
+            Back to sign in
           </button>
         </div>
       </div>
@@ -97,8 +96,8 @@ const enviar = async () => {
   if (!e) {
     await Swal.fire({
       icon: "warning",
-      title: "Falta el correo",
-      text: "Por favor escribe tu correo electrónico.",
+      title: "Email required",
+      text: "Please enter your email address.",
       confirmButtonColor: "#5DBCD2",
     });
     return;
@@ -117,13 +116,13 @@ const enviar = async () => {
       const { error } = await supabase.auth.resetPasswordForEmail(e, { redirectTo });
       if (error) throw error;
     } else {
-      throw new Error("Esta función requiere modo 'backend' o 'supabase'.");
+      throw new Error("This feature requires 'backend' or 'supabase' mode.");
     }
 
     await Swal.fire({
       icon: "success",
-      title: "Listo",
-      text: "Si el correo existe, te enviaremos un enlace de recuperación.",
+      title: "Done",
+      text: "If the email exists, we will send a recovery link.",
       confirmButtonColor: "#5DBCD2",
     });
     go("/login");
@@ -131,7 +130,7 @@ const enviar = async () => {
     await Swal.fire({
       icon: "error",
       title: "Error",
-      text: err?.message || "No se pudo enviar el enlace. Intenta de nuevo.",
+      text: err?.message || "Could not send the link. Please try again.",
       confirmButtonColor: "#5DBCD2",
     });
   } finally {

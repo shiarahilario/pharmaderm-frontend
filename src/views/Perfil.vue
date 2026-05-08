@@ -1,25 +1,26 @@
 <template>
-  <div
-    class="min-h-screen"
-    :class="[{ 'pd-dark': isDark }, 'pd-root']"
-  >
+  <div class="min-h-screen pd-root">
     <!-- MAIN -->
     <main class="max-w-[1200px] mx-auto px-6 py-8">
       <!-- HERO PERFIL -->
-      <section class="pd-hero rounded-[28px] overflow-hidden shadow-xl relative">
-        <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 px-6 sm:px-10 py-8 sm:py-10 text-white">
+      <section
+        class="pd-hero rounded-[28px] overflow-hidden shadow-xl relative"
+        :style="{ backgroundImage: `url(${perfilBannerSrc})`, backgroundSize: 'cover', backgroundPosition: 'center top' }"
+      >
+        <div class="pd-hero-overlay rounded-[28px]"></div>
+        <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 px-6 sm:px-10 py-8 sm:py-10 text-white relative z-10">
           <div class="flex flex-col justify-center">
             <span class="text-xs uppercase tracking-[0.25em] opacity-80">
               Welcome back
             </span>
 
             <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 leading-tight">
-              Hola, {{ auth.displayName.value }}
+              Hi, {{ auth.displayName.value }}
             </h2>
 
             <p class="mt-4 text-white/90 text-sm sm:text-base max-w-2xl">
-              Administra tu cuenta, revisa tus pedidos, consulta tus citas dermatológicas
-              y accede rápidamente a tu rutina personalizada.
+              Manage your account, review your orders, check your dermatology appointments,
+              and quickly access your personalized routine.
             </p>
 
             <div class="mt-7 flex flex-wrap gap-3">
@@ -28,7 +29,7 @@
                 class="pd-cta px-6 py-3 rounded-full font-bold shadow-lg transition"
                 @click="router.push('/diagnostics')"
               >
-                Reservar cita
+                {{ t('diagnostics.bookAppt') }}
               </button>
 
               <button
@@ -36,7 +37,7 @@
                 class="pd-ghost-white px-6 py-3 rounded-full font-bold transition"
                 @click="router.push('/tienda')"
               >
-                Ver tienda
+                {{ t('routine.viewStore') }}
               </button>
             </div>
           </div>
@@ -57,17 +58,17 @@
 
               <div class="min-w-0 flex-1">
                 <p class="text-xs uppercase tracking-[0.2em] pd-muted font-bold">
-                  Cuenta principal
+                  Main Account
                 </p>
                 <h3 class="text-xl font-extrabold mt-1 text-slate-900">
                   {{ auth.displayName.value }}
                 </h3>
                 <p class="text-sm text-slate-500 break-all mt-1">
-                  {{ currentUser?.email || "Sin correo registrado" }}
+                  {{ currentUser?.email || "No email registered" }}
                 </p>
 
                 <div class="mt-4 flex flex-wrap gap-2">
-                  <span class="pd-chip-inline">Perfil activo</span>
+                  <span class="pd-chip-inline">Active profile</span>
                   <span class="pd-chip-inline">Skin Care Member</span>
                 </div>
               </div>
@@ -76,22 +77,22 @@
             <div class="grid grid-cols-2 gap-3 mt-6">
               <button type="button" class="pd-soft-btn" @click="router.push('/citas')">
                 <span class="material-symbols-outlined">clinical_notes</span>
-                <span>Mis citas</span>
+                <span>My appointments</span>
               </button>
 
               <button type="button" class="pd-soft-btn" @click="router.push('/routine')">
                 <span class="material-symbols-outlined">dermatology</span>
-                <span>Mi rutina</span>
+                <span>My routine</span>
               </button>
 
               <button type="button" class="pd-soft-btn" @click="router.push('/pedidos')">
                 <span class="material-symbols-outlined">inventory_2</span>
-                <span>Pedidos</span>
+                <span>Orders</span>
               </button>
 
               <button type="button" class="pd-soft-btn" @click="toggleEditMode">
                 <span class="material-symbols-outlined">edit</span>
-                <span>{{ editMode ? "Cerrar edición" : "Editar" }}</span>
+                <span>{{ editMode ? "Close editing" : "Edit" }}</span>
               </button>
             </div>
           </div>
@@ -104,7 +105,7 @@
           <article class="pd-card pd-border rounded-2xl p-5 shadow-sm">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Pedidos</p>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Orders</p>
                 <h3 class="text-2xl font-extrabold mt-2">{{ history.orders.value.length }}</h3>
               </div>
               <div class="pd-stat-icon">
@@ -116,7 +117,7 @@
           <article class="pd-card pd-border rounded-2xl p-5 shadow-sm">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Citas</p>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Appointments</p>
                 <h3 class="text-2xl font-extrabold mt-2">{{ history.appointments.value.length }}</h3>
               </div>
               <div class="pd-stat-icon">
@@ -128,7 +129,7 @@
           <article class="pd-card pd-border rounded-2xl p-5 shadow-sm">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Rutinas</p>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Routines</p>
                 <h3 class="text-2xl font-extrabold mt-2">{{ history.routines.value.length || history.quizHistory.value.length }}</h3>
               </div>
               <div class="pd-stat-icon">
@@ -140,7 +141,7 @@
           <article class="pd-card pd-border rounded-2xl p-5 shadow-sm">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Diagnósticos</p>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Diagnostics</p>
                 <h3 class="text-2xl font-extrabold mt-2">{{ history.diagnostics.value.length }}</h3>
               </div>
               <div class="pd-stat-icon">
@@ -154,7 +155,7 @@
       <!-- TABS -->
       <div class="mt-8 flex gap-2 flex-wrap">
         <button
-          v-for="tab in [{key:'cuenta', label:'Mi cuenta'}, {key:'historial', label:'Historial'}, {key:'settings', label:'Configuración'}]"
+          v-for="tab in [{key:'cuenta', label:'My account'}, {key:'historial', label:'History'}, {key:'settings', label:'Settings'}]"
           :key="tab.key"
           type="button"
           class="pd-tab-btn"
@@ -163,16 +164,16 @@
         >{{ tab.label }}</button>
       </div>
 
-      <!-- CONTENIDO: Mi cuenta -->
+      <!-- CONTENT: My account -->
       <section v-if="activeTab === 'cuenta'" class="mt-6 grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6">
-        <!-- COLUMNA IZQUIERDA -->
+        <!-- LEFT COLUMN -->
         <div class="space-y-6">
-          <!-- DATOS PERSONALES -->
+          <!-- PERSONAL DETAILS -->
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
             <div class="flex items-center justify-between gap-4 mb-5 flex-wrap">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Perfil</p>
-                <h3 class="font-bold text-xl mt-1">Mis datos</h3>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Profile</p>
+                <h3 class="font-bold text-xl mt-1">My details</h3>
               </div>
 
               <button
@@ -185,27 +186,27 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label class="pd-field">
-                <span>Nombre completo</span>
+                <span>Full name</span>
                 <input
                   v-model="editableUser.name"
                   type="text"
                   :disabled="!editMode"
-                  placeholder="Tu nombre"
+                  placeholder="Your name"
                 />
               </label>
 
               <label class="pd-field">
-                <span>Correo electrónico</span>
+                <span>Email</span>
                 <input
                   v-model="editableUser.email"
                   type="email"
                   :disabled="!editMode"
-                  placeholder="correo@ejemplo.com"
+                  placeholder="email@example.com"
                 />
               </label>
 
               <label class="pd-field">
-                <span>Teléfono</span>
+                <span>Phone</span>
                 <input
                   v-model="editableUser.phone"
                   type="text"
@@ -215,7 +216,7 @@
               </label>
 
               <label class="pd-field">
-                <span>Fecha de nacimiento</span>
+                <span>Date of birth</span>
                 <input
                   v-model="editableUser.birth_date"
                   type="date"
@@ -225,30 +226,47 @@
               </label>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <label class="pd-field">
-                <span>Dirección</span>
+                <span>Address</span>
                 <input
                   v-model="editableUser.address"
                   type="text"
                   :disabled="!editMode"
-                  placeholder="Dirección"
+                  placeholder="Street, number, neighborhood"
+                />
+              </label>
+
+              <label class="pd-field">
+                <span>City</span>
+                <input
+                  v-model="editableUser.city"
+                  type="text"
+                  :disabled="!editMode"
+                  placeholder="City"
                 />
               </label>
             </div>
 
+            <div v-if="saveMsg" class="mt-3 px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-semibold">
+              {{ saveMsg }}
+            </div>
+            <div v-if="saveError" class="mt-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
+              {{ saveError }}
+            </div>
+
             <div v-if="editMode" class="flex flex-wrap gap-3 mt-5">
               <label class="pd-secondary-btn cursor-pointer inline-flex items-center justify-center">
-                Cambiar foto
+                Change photo
                 <input type="file" accept="image/*" class="hidden" @change="handleAvatarUpload" />
               </label>
 
-              <button type="button" class="pd-primary-btn" @click="saveProfile">
-                Guardar cambios
+              <button type="button" class="pd-primary-btn" :disabled="isSaving" @click="saveProfile">
+                {{ isSaving ? 'Saving...' : t('profile.saveChanges') }}
               </button>
 
               <button type="button" class="pd-secondary-btn" @click="resetEditableUser">
-                Restablecer
+                Reset
               </button>
             </div>
           </article>
@@ -257,12 +275,12 @@
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
             <div class="flex items-center justify-between gap-4 mb-5">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Compras</p>
-                <h3 class="font-bold text-xl mt-1">Pedidos recientes</h3>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Purchases</p>
+                <h3 class="font-bold text-xl mt-1">Orders recientes</h3>
               </div>
 
               <button type="button" class="pd-outline-btn" @click="router.push('/tienda')">
-                Ir a tienda
+                Go to store
               </button>
             </div>
 
@@ -273,18 +291,18 @@
                 class="pd-list-row"
               >
                 <div>
-                  <h4 class="font-semibold">Pedido {{ order.code || `#${order.id}` }}</h4>
+                  <h4 class="font-semibold">Order {{ order.code || `#${order.id}` }}</h4>
                   <p class="text-sm pd-muted">{{ fmtDate(order.date) }}</p>
                 </div>
 
                 <div class="text-right">
                   <p class="font-bold pd-price">{{ formatPrice(order.total) }}</p>
-                  <p class="text-sm text-emerald-600 font-semibold">Confirmado</p>
+                  <p class="text-sm text-emerald-600 font-semibold">Confirmed</p>
                 </div>
               </div>
 
               <div v-if="history.orders.value.length === 0" class="pd-empty-box">
-                Aún no tienes pedidos. <button class="pd-link underline ml-1" @click="router.push('/tienda')">Ir a tienda</button>
+                You do not have any orders yet. <button class="pd-link underline ml-1" @click="router.push('/tienda')">Go to store</button>
               </div>
             </div>
           </article>
@@ -293,12 +311,12 @@
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
             <div class="flex items-center justify-between gap-4 mb-5">
               <div>
-                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Dermatología</p>
-                <h3 class="font-bold text-xl mt-1">Mis citas</h3>
+                <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Dermatology</p>
+                <h3 class="font-bold text-xl mt-1">My appointments</h3>
               </div>
 
               <button type="button" class="pd-outline-btn" @click="router.push('/citas')">
-                Agendar
+                {{ t('diagnostics.bookAppt') }}
               </button>
             </div>
 
@@ -309,18 +327,18 @@
                 class="pd-list-row"
               >
                 <div>
-                  <h4 class="font-semibold">{{ apt.appointment_type || apt.service || "Consulta dermatológica" }}</h4>
+                  <h4 class="font-semibold">{{ appointmentTypeLabel(apt.appointment_type || apt.service) }}</h4>
                   <p class="text-sm pd-muted">{{ fmtDate(apt.scheduled_date || apt.date) }} {{ apt.scheduled_time ? `· ${apt.scheduled_time}` : '' }}</p>
                 </div>
 
                 <div class="text-right">
-                  <p class="font-semibold">{{ apt.mode || "Presencial" }}</p>
-                  <p class="text-sm pd-link font-semibold">{{ apt.doctor_name || apt.doctor || "Especialista" }}</p>
+                  <p class="font-semibold">{{ modalityLabel(apt.mode) }}</p>
+                  <p class="text-sm pd-link font-semibold">{{ apt.doctor_name || apt.doctor || "Specialist" }}</p>
                 </div>
               </div>
 
               <div v-if="history.appointments.value.length === 0" class="pd-empty-box">
-                No hay citas programadas por ahora.
+                There are no scheduled appointments right now.
               </div>
             </div>
           </article>
@@ -331,7 +349,7 @@
           <!-- RUTINA -->
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
             <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Skin profile</p>
-            <h3 class="font-bold text-xl mt-1">Mi rutina</h3>
+            <h3 class="font-bold text-xl mt-1">My routine</h3>
 
             <div v-if="routineSource && latestRoutineSteps.length" class="mt-5 space-y-3">
               <div
@@ -351,7 +369,7 @@
             </div>
 
             <div v-else class="pd-empty-box mt-5">
-              Aún no has realizado tu rutina personalizada.
+              You have not completed your personalized routine yet.
             </div>
 
             <button
@@ -359,19 +377,19 @@
               class="mt-5 w-full py-3 rounded-xl pd-primary text-white font-bold shadow-lg"
               @click="router.push(routineSource ? '/routine' : '/quiz')"
             >
-              {{ routineSource ? "Ver o actualizar rutina" : "Hacer rutina" }}
+              {{ routineSource ? t('profile.viewUpdateRoutine') : t('profile.createRoutine') }}
             </button>
           </article>
 
           <!-- DIAGNOSTICO -->
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
             <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Diagnostics</p>
-            <h3 class="font-bold text-xl mt-1">Mi diagnóstico</h3>
+            <h3 class="font-bold text-xl mt-1">My diagnostic</h3>
 
             <div v-if="latestDiagnostic" class="mt-5 pd-list-row">
               <div>
                 <h4 class="font-semibold">
-                  {{ latestDiagnostic.title || "Diagnóstico realizado" }}
+                  {{ latestDiagnostic.title || "Diagnostic completed" }}
                 </h4>
                 <p class="text-sm pd-muted">
                   {{ latestDiagnostic.summary || fmtDate(latestDiagnostic.date) }}
@@ -380,7 +398,7 @@
             </div>
 
             <div v-else class="pd-empty-box mt-5">
-              Aún no has realizado un diagnóstico.
+              You have not completed a diagnostic yet.
             </div>
 
             <button
@@ -388,7 +406,7 @@
               class="mt-5 w-full py-3 rounded-xl pd-primary text-white font-bold shadow-lg"
               @click="router.push('/diagnostics')"
             >
-              {{ latestDiagnostic ? "Ver o actualizar diagnóstico" : "Hacer diagnóstico" }}
+              {{ latestDiagnostic ? t('profile.viewUpdateDiagnostic') : t('profile.startDiagnostic') }}
             </button>
           </article>
 
@@ -396,142 +414,248 @@
 
           <!-- ATAJOS -->
           <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-            <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Accesos rápidos</p>
-            <h3 class="font-bold text-xl mt-1">Tu panel</h3>
+            <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Quick access</p>
+            <h3 class="font-bold text-xl mt-1">Your dashboard</h3>
 
             <div class="grid grid-cols-1 gap-3 mt-5">
               <button type="button" class="pd-shortcut" @click="router.push('/carrito')">
                 <span class="material-symbols-outlined">shopping_cart</span>
-                <span>Ir al carrito</span>
+                <span>Go to cart</span>
               </button>
 
               <button type="button" class="pd-shortcut" @click="router.push('/diagnostics')">
                 <span class="material-symbols-outlined">stethoscope</span>
-                <span>Consultar especialista</span>
+                <span>Consult a specialist</span>
               </button>
 
               <button type="button" class="pd-shortcut" @click="doLogout">
                 <span class="material-symbols-outlined">logout</span>
-                <span>Cerrar sesión</span>
+                <span>Sign out</span>
               </button>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- CONTENIDO: Historial -->
+      <!-- CONTENT: History -->
       <section v-if="activeTab === 'historial'" class="mt-6 space-y-6">
         <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Análisis de piel</p>
-          <h3 class="font-bold text-xl mt-1">Historial de quizzes</h3>
+          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Skin analysis</p>
+          <h3 class="font-bold text-xl mt-1">Quiz history</h3>
           <div class="mt-4 space-y-3">
             <div v-for="q in history.quizHistory.value" :key="q.id" class="pd-list-row">
               <div>
-                <h4 class="font-semibold">Análisis de piel</h4>
-                <p class="text-sm pd-muted">{{ fmtDate(q.date) }} · {{ q.skinType || 'Tipo desconocido' }}</p>
+                <h4 class="font-semibold">Skin analysis</h4>
+                <p class="text-sm pd-muted">{{ fmtDate(q.date) }} · {{ q.skinType || 'Unknown type' }}</p>
               </div>
-              <button class="pd-outline-btn text-sm" @click="router.push('/routine')">Ver rutina</button>
+              <div class="flex gap-2 flex-wrap">
+                <button class="pd-outline-btn text-sm" @click="openDetailModal(q, 'quiz')">View Details</button>
+                <button class="pd-outline-btn text-sm" @click="router.push('/routine')">View routine</button>
+              </div>
             </div>
             <div v-if="!history.quizHistory.value.length" class="pd-empty-box">
-              No has realizado ningún análisis aún. <button class="pd-link underline ml-1" @click="router.push('/quiz')">Empezar quiz</button>
+              You have not completed any analysis yet. <button class="pd-link underline ml-1" @click="router.push('/quiz')">Start quiz</button>
             </div>
           </div>
         </article>
 
         <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Diagnósticos</p>
-          <h3 class="font-bold text-xl mt-1">Historial de diagnósticos</h3>
+          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Diagnostics</p>
+          <h3 class="font-bold text-xl mt-1">Diagnostic history</h3>
           <div class="mt-4 space-y-3">
             <div v-for="d in history.diagnostics.value" :key="d.id" class="pd-list-row">
               <div>
-                <h4 class="font-semibold">{{ d.title || 'Diagnóstico' }}</h4>
-                <p class="text-sm pd-muted">{{ fmtDate(d.date) }}</p>
+                <h4 class="font-semibold">{{ d.title || 'Diagnostic' }}</h4>
+                <p class="text-sm pd-muted">{{ fmtDate(d.date) }} · <span class="capitalize">{{ d.status || 'saved' }}</span></p>
               </div>
-              <span class="text-sm pd-muted capitalize">{{ d.status || 'guardado' }}</span>
+              <button class="pd-outline-btn text-sm" @click="openDetailModal(d, 'diagnostic')">View Details</button>
             </div>
             <div v-if="!history.diagnostics.value.length" class="pd-empty-box">
-              No hay diagnósticos guardados.
+              There are no saved diagnostics.
             </div>
           </div>
         </article>
 
         <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Citas</p>
-          <h3 class="font-bold text-xl mt-1">Historial de citas</h3>
+          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Appointments</p>
+          <h3 class="font-bold text-xl mt-1">Appointment history</h3>
           <div class="mt-4 space-y-3">
             <div v-for="apt in history.appointments.value" :key="apt.id" class="pd-list-row">
               <div>
-                  <h4 class="font-semibold">{{ apt.appointment_type || apt.service || 'Consulta dermatológica' }}</h4>
+                  <h4 class="font-semibold">{{ appointmentTypeLabel(apt.appointment_type || apt.service) }}</h4>
                   <p class="text-sm pd-muted">{{ fmtDate(apt.scheduled_date || apt.date) }} {{ apt.scheduled_time ? `· ${apt.scheduled_time}` : '' }}</p>
               </div>
               <div class="text-right">
-                <p class="text-sm font-semibold">{{ apt.mode || 'Presencial' }}</p>
-                <p class="text-sm pd-link">{{ apt.doctor_name || apt.doctor || 'Especialista' }}</p>
+                <p class="text-sm font-semibold">{{ modalityLabel(apt.mode) }}</p>
+                <p class="text-sm pd-link">{{ apt.doctor_name || apt.doctor || 'Specialist' }}</p>
               </div>
             </div>
             <div v-if="!history.appointments.value.length" class="pd-empty-box">
-              No hay citas en el historial.
+              There are no appointments in your history.
             </div>
           </div>
         </article>
 
         <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Compras</p>
-          <h3 class="font-bold text-xl mt-1">Historial de pedidos</h3>
+          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Purchases</p>
+          <h3 class="font-bold text-xl mt-1">Order history</h3>
           <div class="mt-4 space-y-3">
             <div v-for="order in history.orders.value" :key="order.id" class="pd-list-row">
               <div>
-                <h4 class="font-semibold">Pedido {{ order.code || `#${order.id}` }}</h4>
+                <h4 class="font-semibold">Order {{ order.code || `#${order.id}` }}</h4>
                 <p class="text-sm pd-muted">{{ fmtDate(order.date) }}</p>
               </div>
               <div class="text-right">
                 <p class="font-bold pd-price">{{ formatPrice(order.total) }}</p>
-                <p class="text-sm text-emerald-600 font-semibold capitalize">{{ order.status || 'confirmado' }}</p>
+                <p class="text-sm text-emerald-600 font-semibold capitalize">{{ order.status || 'confirmed' }}</p>
               </div>
             </div>
             <div v-if="!history.orders.value.length" class="pd-empty-box">
-              No hay pedidos aún. <button class="pd-link underline ml-1" @click="router.push('/tienda')">Ir a tienda</button>
+              There are no orders yet. <button class="pd-link underline ml-1" @click="router.push('/tienda')">Go to store</button>
             </div>
           </div>
         </article>
       </section>
 
-      <!-- CONTENIDO: Configuración -->
-      <section v-if="activeTab === 'settings'" class="mt-6 max-w-lg">
-        <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
-          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Preferencias</p>
-          <h3 class="font-bold text-xl mt-1 mb-6">Configuración</h3>
-
-          <div class="space-y-5">
-            <!-- Dark mode -->
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined pd-icon">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
-                <div>
-                  <p class="font-semibold">Modo oscuro</p>
-                  <p class="text-sm pd-muted">Cambia la apariencia de la app</p>
-                </div>
-              </div>
-              <button type="button" class="pd-toggle" :class="{ 'pd-toggle--on': isDark }" @click="settings.toggleDark()">
-                <span class="pd-toggle-thumb"></span>
+      <!-- MODAL: View Details -->
+      <teleport to="body">
+        <div v-if="showDetailModal && selectedDetail" class="pd-modal-overlay" @click.self="closeDetailModal">
+          <div class="pd-modal" role="dialog" aria-modal="true">
+            <div class="pd-modal-header">
+              <h3>{{ selectedDetailType === 'quiz' ? 'Saved Analysis' : 'Saved Diagnostic' }}</h3>
+              <button type="button" class="pd-modal-close" @click="closeDetailModal">
+                <span class="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <hr class="border-[var(--border)]" />
+            <div class="pd-modal-body">
+              <p class="pd-modal-date">{{ fmtDate(selectedDetail.date || selectedDetail.savedAt) }}</p>
 
+              <!-- QUIZ details -->
+              <template v-if="selectedDetailType === 'quiz'">
+                <div v-if="selectedDetail.skinType" class="pd-detail-row">
+                  <span>Skin Type</span>
+                  <strong>{{ selectedDetail.skinType }}</strong>
+                </div>
+                <div v-if="selectedDetail.sensitivity" class="pd-detail-row">
+                  <span>Sensitivity</span>
+                  <strong>{{ selectedDetail.sensitivity }}</strong>
+                </div>
+                <div v-if="selectedDetail.primaryConcern || (selectedDetail.concerns && selectedDetail.concerns.length)" class="pd-detail-row">
+                  <span>Main Concern</span>
+                  <strong>{{ selectedDetail.primaryConcern || (selectedDetail.concerns && selectedDetail.concerns[0]) || 'Not specified' }}</strong>
+                </div>
+                <div v-if="selectedDetail.profileTitle" class="pd-detail-section">
+                  <h4>Profile</h4>
+                  <p>{{ selectedDetail.profileTitle }}</p>
+                </div>
+                <div v-if="selectedDetail.routineFocus" class="pd-detail-row">
+                  <span>Routine Focus</span>
+                  <strong>{{ selectedDetail.routineFocus }}</strong>
+                </div>
+                <div v-if="selectedDetail.morningSteps && selectedDetail.morningSteps.length" class="pd-detail-section">
+                  <h4>Morning Routine</h4>
+                  <ul>
+                    <li v-for="(step, i) in selectedDetail.morningSteps.slice(0, 6)" :key="'m' + i">
+                      {{ step.name || step.title || step }}
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="selectedDetail.nightSteps && selectedDetail.nightSteps.length" class="pd-detail-section">
+                  <h4>Night Routine</h4>
+                  <ul>
+                    <li v-for="(step, i) in selectedDetail.nightSteps.slice(0, 6)" :key="'n' + i">
+                      {{ step.name || step.title || step }}
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="selectedDetail.fullMetrics && selectedDetail.fullMetrics.length" class="pd-detail-section">
+                  <h4>Analysis Metrics</h4>
+                  <ul>
+                    <li v-for="metric in selectedDetail.fullMetrics.slice(0, 5)" :key="metric.key || metric.label">
+                      {{ metric.label }}: {{ Number(metric.score).toFixed(1) }}/10
+                    </li>
+                  </ul>
+                </div>
+              </template>
+
+              <!-- DIAGNOSTIC details -->
+              <template v-else-if="selectedDetailType === 'diagnostic'">
+                <div v-if="selectedDetail.quizSummary && selectedDetail.quizSummary.skinType" class="pd-detail-row">
+                  <span>Skin Type</span>
+                  <strong>{{ selectedDetail.quizSummary.skinType }}</strong>
+                </div>
+                <div v-if="selectedDetail.quizSummary && selectedDetail.quizSummary.sensitivity" class="pd-detail-row">
+                  <span>Sensitivity</span>
+                  <strong>{{ selectedDetail.quizSummary.sensitivity }}</strong>
+                </div>
+                <div v-if="selectedDetail.quizSummary && selectedDetail.quizSummary.concerns && selectedDetail.quizSummary.concerns.length" class="pd-detail-row">
+                  <span>Main Concerns</span>
+                  <strong>{{ selectedDetail.quizSummary.concerns.join(', ') }}</strong>
+                </div>
+                <div v-if="selectedDetail.insight && selectedDetail.insight.title" class="pd-detail-section">
+                  <h4>Diagnosis</h4>
+                  <strong>{{ selectedDetail.insight.title }}</strong>
+                  <p>{{ selectedDetail.insight.text }}</p>
+                </div>
+                <div v-if="selectedDetail.insight && selectedDetail.insight.nextStep" class="pd-detail-row">
+                  <span>Recommendations</span>
+                  <strong>{{ selectedDetail.insight.nextStep }}</strong>
+                </div>
+                <div v-if="selectedDetail.insight && selectedDetail.insight.priority" class="pd-detail-row">
+                  <span>Care Priority</span>
+                  <strong>{{ selectedDetail.insight.priority }}</strong>
+                </div>
+                <div v-if="selectedDetail.form && selectedDetail.form.symptoms && selectedDetail.form.symptoms.length" class="pd-detail-row">
+                  <span>Symptoms</span>
+                  <strong>{{ selectedDetail.form.symptoms.join(', ') }}</strong>
+                </div>
+                <div v-if="selectedDetail.form && selectedDetail.form.areas && selectedDetail.form.areas.length" class="pd-detail-row">
+                  <span>Affected Areas</span>
+                  <strong>{{ selectedDetail.form.areas.join(', ') }}</strong>
+                </div>
+                <div v-if="selectedDetail.form && selectedDetail.form.priorities && selectedDetail.form.priorities.length" class="pd-detail-row">
+                  <span>Top Priorities</span>
+                  <strong>{{ selectedDetail.form.priorities.join(', ') }}</strong>
+                </div>
+                <div v-if="selectedDetail.form && selectedDetail.form.description" class="pd-detail-section">
+                  <h4>Description</h4>
+                  <p>{{ selectedDetail.form.description }}</p>
+                </div>
+                <div class="pd-detail-row">
+                  <span>Status</span>
+                  <strong class="capitalize">{{ selectedDetail.status || 'Saved' }}</strong>
+                </div>
+              </template>
+            </div>
+
+            <div class="pd-modal-footer">
+              <button type="button" class="pd-primary-btn" @click="closeDetailModal">Close</button>
+            </div>
+          </div>
+        </div>
+      </teleport>
+
+      <!-- CONTENT: Settings -->
+      <section v-if="activeTab === 'settings'" class="mt-6 max-w-lg">
+        <article class="pd-card pd-border rounded-2xl p-6 shadow-sm">
+          <p class="text-[11px] uppercase tracking-widest pd-muted font-bold">Preferences</p>
+          <h3 class="font-bold text-xl mt-1 mb-6">Settings</h3>
+
+          <div class="space-y-5">
             <!-- Idioma -->
             <div class="pd-field">
-              <span>Idioma de la aplicación</span>
-              <select :value="language" @change="settings.setLanguage($event.target.value)">
-                <option value="es">Español</option>
+              <span>App language</span>
+              <select :value="language" @change="setProfileLanguage($event.target.value)">
+                <option value="es">Spanish</option>
                 <option value="en">English</option>
               </select>
             </div>
 
-            <!-- País -->
+            <!-- Country -->
             <div class="pd-field">
-              <span>País</span>
-              <select :value="country" @change="settings.setCountry($event.target.value)">
+              <span>Country</span>
+              <select :value="country" @change="setProfileCountry($event.target.value)">
                 <option v-for="c in settings.countryList" :key="c.code" :value="c.code">{{ c.name }}</option>
               </select>
             </div>
@@ -539,16 +663,16 @@
             <!-- Moneda -->
             <div class="pd-field">
               <span>Moneda preferida</span>
-              <select :value="currency" @change="settings.setCurrency($event.target.value)">
+              <select :value="currency" @change="setProfileCurrency($event.target.value)">
                 <option v-for="m in settings.currencyList" :key="m.code" :value="m.code">{{ m.symbol }} — {{ m.name }}</option>
               </select>
             </div>
 
             <hr class="border-[var(--border)]" />
 
-            <!-- Cerrar sesión -->
+            <!-- Sign out -->
             <button type="button" class="w-full py-3 rounded-xl border border-red-200 text-red-600 font-bold hover:bg-red-50 transition" @click="doLogout">
-              Cerrar sesión
+              {{ t('nav.signOut') }}
             </button>
           </div>
         </article>
@@ -558,26 +682,60 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, nextTick, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "../stores/useAuthStore";
+import perfilImg1 from '../assets/fondo/perfil.png';
 import { useSettingsStore } from "../stores/useSettingsStore";
 import { useHistoryStore } from "../stores/useHistoryStore";
 import userService from "../services/userService.js";
 import { priceIn } from "../utils/currency";
 import { getProductsByQuizResult } from "../data/productCatalog.js";
+import { useI18n } from "../lib/i18n.js";
 
 const router = useRouter();
 const route  = useRoute();
 const auth = useAuthStore();
+const { t } = useI18n();
+
+const perfilBannerSrc = perfilImg1;
 const settings = useSettingsStore();
 const history = useHistoryStore();
 
-const { isDark, language, country, currency } = settings;
+const { language, country, currency } = settings;
 
 // Tab activo: 'cuenta' | 'settings' | 'historial'
 const activeTab = computed(() => route.query.tab || 'cuenta');
-function goTab(tab) { router.replace({ query: { tab } }); }
+function restoreProfileScroll(top = window.scrollY, left = window.scrollX) {
+  nextTick(() => {
+    requestAnimationFrame(() => window.scrollTo(left, top))
+  })
+}
+
+function keepProfilePosition(action) {
+  const top = window.scrollY
+  const left = window.scrollX
+  action()
+  restoreProfileScroll(top, left)
+}
+
+function goTab(tab) {
+  const top = window.scrollY
+  const left = window.scrollX
+  router.replace({ query: { ...route.query, tab } }).then(() => restoreProfileScroll(top, left))
+}
+
+function setProfileLanguage(value) {
+  keepProfilePosition(() => settings.setLanguage(value))
+}
+
+function setProfileCountry(value) {
+  keepProfilePosition(() => settings.setCountry(value))
+}
+
+function setProfileCurrency(value) {
+  keepProfilePosition(() => settings.setCurrency(value))
+}
 
 const currentUser = auth.user;
 const editMode = ref(false);
@@ -590,17 +748,53 @@ const maxBirthDate = computed(() => {
 
 function _buildEditable(u) {
   const src = u || {}
+  let address = src.address || ''
+  let city = src.city || ''
+  if (!address) {
+    try {
+      const saved = userService.getAddresses()
+      if (saved && saved.length > 0) {
+        const first = saved[0]
+        address = first.address_line_1 || first.address || ''
+        city = first.city || ''
+      }
+    } catch { /* ignore */ }
+  }
   return {
     name: `${src.first_name || ''} ${src.last_name || ''}`.trim() || src.name || '',
     email: src.email || '',
     phone: src.phone || '',
     birth_date: src.birth_date || '',
-    address: src.address || '',
+    address,
+    city,
     avatar: src.avatar || '',
   }
 }
 
 const editableUser = ref(_buildEditable(currentUser.value));
+
+const saveMsg = ref('');
+const saveError = ref('');
+const isSaving = ref(false);
+
+const showDetailModal = ref(false);
+const selectedDetail = ref(null);
+const selectedDetailType = ref('diagnostic');
+
+function openDetailModal(item, type) {
+  selectedDetail.value = item;
+  selectedDetailType.value = type;
+  showDetailModal.value = true;
+}
+
+function closeDetailModal() {
+  showDetailModal.value = false;
+  selectedDetail.value = null;
+}
+
+onMounted(async () => {
+  await loadAddressFromDatabase();
+});
 
 const currentInitial = computed(() => {
   return (auth.displayName.value || "U").charAt(0).toUpperCase();
@@ -620,7 +814,7 @@ const latestRoutineSteps = computed(() => {
   let night = routine.nightSteps || routine.nightRoutine || [];
   let generic = routine.routineSteps || routine.steps || [];
   
-  // Respaldo: Si es un resultado de quiz sin pasos explícitos, generarlos
+  // Fallback: if this is a quiz result without explicit steps, generate them.
   if (!morning.length && !night.length && !generic.length && (routine.skinType || routine.skin_type)) {
     try {
       const quizPayload = {
@@ -631,7 +825,7 @@ const latestRoutineSteps = computed(() => {
       morning = getProductsByQuizResult(quizPayload, 'morning');
       night = getProductsByQuizResult(quizPayload, 'night');
     } catch (e) {
-      console.warn('[Perfil] Fallback step generation failed:', e);
+      console.warn('[Profile] Fallback step generation failed:', e);
     }
   }
 
@@ -669,18 +863,18 @@ async function loadAddressFromDatabase() {
     if (addresses && addresses.length > 0) {
       const defaultAddress = addresses[0]
       editableUser.value.address = defaultAddress.address_line_1 || defaultAddress.address || ''
-      console.log('[Perfil] Address loaded from localStorage:', editableUser.value.address)
+      console.log('[Profile] Address loaded from localStorage:', editableUser.value.address)
       return
     }
   } catch (error) {
-    console.warn('[Perfil] localStorage address load failed:', error)
+    console.warn('[Profile] localStorage address load failed:', error)
   }
 
   // Fallback: load from Supabase
   try {
     const userId = auth.user?.value?.id
     if (!userId) {
-      console.warn('[Perfil] No user ID available')
+      console.warn('[Profile] No user ID available')
       return
     }
     
@@ -694,19 +888,19 @@ async function loadAddressFromDatabase() {
       .limit(1)
     
     if (error) {
-      console.warn('[Perfil] Supabase address query error:', error.message)
+      console.warn('[Profile] Supabase address query error:', error.message)
       return
     }
     
     if (data && data.length > 0) {
       const address = data[0]
       editableUser.value.address = address.address_line_1 || address.address || ''
-      console.log('[Perfil] Address loaded from Supabase:', editableUser.value.address)
+      console.log('[Profile] Address loaded from Supabase:', editableUser.value.address)
     } else {
-      console.log('[Perfil] No address found in Supabase for user:', userId)
+      console.log('[Profile] No address found in Supabase for user:', userId)
     }
   } catch (error) {
-    console.warn('[Perfil] Supabase address load exception:', error)
+    console.warn('[Profile] Supabase address load exception:', error)
   }
 }
 
@@ -729,35 +923,47 @@ function handleAvatarUpload(event) {
 }
 
 async function saveProfile() {
-  const nameParts = (editableUser.value.name || '').trim().split(/\s+/)
-  const firstName = nameParts[0] || ''
-  const lastName  = nameParts.slice(1).join(' ') || ''
-  
-  // Update user profile (name, phone, birth_date)
-  await auth.updateProfile({
-    firstName,
-    lastName,
-    phone: editableUser.value.phone || null,
-    birth_date: editableUser.value.birth_date || null,
-  })
+  saveMsg.value = '';
+  saveError.value = '';
+  isSaving.value = true;
 
-  // Save address to Supabase if user is authenticated
   try {
-    const userId = auth.user?.value?.id
-    if (userId && editableUser.value.address) {
-      await userService.saveAddress({
-        address: editableUser.value.address,
-        city: editableUser.value.city || null,
-        label: 'Mi dirección',
-        address_line_1: editableUser.value.address,
-        is_default: true,
-      }, userId)
-    }
-  } catch (error) {
-    console.warn('[Perfil] Address save failed:', error)
-  }
+    const nameParts = (editableUser.value.name || '').trim().split(/\s+/)
+    const firstName = nameParts[0] || ''
+    const lastName  = nameParts.slice(1).join(' ') || ''
 
-  editMode.value = false;
+    await auth.updateProfile({
+      firstName,
+      lastName,
+      phone: editableUser.value.phone ? editableUser.value.phone.trim() : null,
+      birth_date: editableUser.value.birth_date || null,
+    })
+
+    const addressText = (editableUser.value.address || '').trim()
+    const cityText = (editableUser.value.city || '').trim()
+    if (addressText) {
+      try {
+        const userId = auth.user?.value?.id || null
+        await userService.saveAddress({
+          address: addressText,
+          city: cityText,
+          label: 'My address',
+          address_line_1: addressText,
+          is_default: true,
+        }, userId)
+      } catch (addrErr) {
+        console.warn('[Profile] Address save failed:', addrErr)
+      }
+    }
+
+    saveMsg.value = 'Profile updated successfully.';
+    editMode.value = false;
+  } catch (err) {
+    console.error('[Profile] Save failed:', err);
+    saveError.value = 'We could not update your profile. Please try again.';
+  } finally {
+    isSaving.value = false;
+  }
 }
 
 function doLogout() {
@@ -768,13 +974,34 @@ function doLogout() {
 function fmtDate(iso) {
   if (!iso) return "";
   try {
-    return new Date(iso).toLocaleDateString('es-DO', { year: 'numeric', month: 'short', day: 'numeric' });
+    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   } catch { return iso; }
+}
+
+function appointmentTypeLabel(type) {
+  const map = {
+    consulta_general: 'General consultation',
+    seguimiento: 'Follow-up',
+    urgencia: 'Urgent care',
+    estetica: 'Aesthetic consultation',
+  }
+  return map[type] || type || 'Dermatology consultation';
+}
+
+function modalityLabel(mode) {
+  const map = {
+    presencial: 'In-person',
+    virtual: 'Virtual',
+    both: 'Virtual and In-person',
+    ambos: 'Virtual and In-person',
+  };
+  return map[String(mode || '').toLowerCase()] || mode || 'In-person';
 }
 
 function formatPrice(n) {
   return priceIn(Number(n) || 0, 'DOP', currency.value);
 }
+
 </script>
 
 <style scoped>
@@ -795,23 +1022,6 @@ function formatPrice(n) {
   --primary: #004e92;
 }
 
-.pd-dark.pd-root {
-  --bg: #0b1220;
-  --text: #e5e7eb;
-  --muted: #9aa7ba;
-  --surface: rgba(10, 18, 32, 0.92);
-  --card: #0f1a2e;
-  --soft: #0a162a;
-  --border: #1c2b44;
-  --brand: #8cc7ff;
-  --link: #66d6ff;
-  --accent: #9be15d;
-  --price: #cfe9ff;
-  --cta-bg: #0f1a2e;
-  --cta-text: #cfe9ff;
-  --primary: #183a6b;
-}
-
 .pd-root {
   background: var(--bg);
   color: var(--text);
@@ -828,9 +1038,14 @@ function formatPrice(n) {
 .pd-price { color: var(--price); }
 .pd-primary { background: var(--primary); }
 
-.pd-hero { background: linear-gradient(135deg, var(--brand), var(--link)); }
-.pd-dark .pd-hero { background: linear-gradient(135deg, #102a4d, #0f3a57); }
+.pd-hero { position: relative; overflow: hidden; }
 
+.pd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,78,146,0.72) 0%, rgba(0,78,146,0.55) 100%);
+  z-index: 1;
+}
 .pd-cta { background: var(--cta-bg); color: var(--cta-text); }
 .pd-cta:hover { filter: brightness(0.98); }
 
@@ -871,11 +1086,6 @@ function formatPrice(n) {
   font-weight: 700;
 }
 
-.pd-dark .pd-chip-inline {
-  background: rgba(102, 214, 255, 0.14);
-  color: #b7ebff;
-}
-
 .pd-soft-btn {
   border: 1px solid var(--border);
   background: var(--soft);
@@ -897,11 +1107,6 @@ function formatPrice(n) {
   place-items: center;
   background: color-mix(in srgb, var(--link) 10%, white);
   color: var(--brand);
-}
-
-.pd-dark .pd-stat-icon {
-  background: rgba(102, 214, 255, 0.12);
-  color: #9adbff;
 }
 
 .pd-outline-btn {
@@ -967,10 +1172,6 @@ function formatPrice(n) {
   background: color-mix(in srgb, var(--soft) 85%, white);
 }
 
-.pd-dark .pd-list-row {
-  background: color-mix(in srgb, var(--soft) 80%, transparent);
-}
-
 .pd-empty-box {
   padding: 24px;
   border: 1px dashed var(--border);
@@ -1014,35 +1215,6 @@ function formatPrice(n) {
   font-weight: 700;
 }
 
-/* Toggle switch */
-.pd-toggle {
-  width: 48px;
-  height: 26px;
-  border-radius: 999px;
-  background: var(--border);
-  border: none;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s;
-  flex-shrink: 0;
-}
-
-.pd-toggle--on { background: var(--primary); }
-
-.pd-toggle-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: white;
-  transition: transform 0.2s;
-  pointer-events: none;
-}
-
-.pd-toggle--on .pd-toggle-thumb { transform: translateX(22px); }
-
 /* Tabs */
 .pd-tab-btn {
   padding: 0.6rem 1.4rem;
@@ -1061,8 +1233,6 @@ function formatPrice(n) {
   color: white;
   border-color: var(--brand);
 }
-.pd-dark .pd-tab-btn--active { background: #183a6b; border-color: var(--link); }
-
 @media (max-width: 900px) {
   .pd-list-row {
     flex-direction: column;
@@ -1075,5 +1245,126 @@ function formatPrice(n) {
     width: 78px;
     height: 78px;
   }
+}
+
+/* Modal */
+.pd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pd-modal {
+  background: #fff;
+  border-radius: 24px;
+  width: min(640px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+}
+
+.pd-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.pd-modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0;
+}
+
+.pd-modal-close {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.pd-modal-body {
+  padding: 1.2rem 1.5rem;
+}
+
+.pd-modal-footer {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pd-modal-date {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.pd-detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.pd-detail-row span {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.pd-detail-row strong {
+  text-align: right;
+  color: var(--text);
+}
+
+.pd-detail-section {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pd-detail-section h4 {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.pd-detail-section p {
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0.25rem 0 0;
+}
+
+.pd-detail-section strong {
+  display: block;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.pd-detail-section ul {
+  list-style: disc;
+  padding-left: 1.2rem;
+  margin: 0.3rem 0 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.7;
 }
 </style>

@@ -2,31 +2,33 @@
   <header class="app-header" @click="closeAll">
     <!-- Promo bar -->
     <div class="top-promos">
-      <div>{{ promoText }}</div>
+      <span>{{ promoLead }}</span>
+      <span aria-hidden="true">•</span>
+      <button type="button" class="promo-shop-link" @click.stop="go('/tienda')">SHOP NOW</button>
     </div>
 
     <!-- Main nav -->
     <div class="header-main container">
       <!-- Logo -->
       <div class="brand" @click.stop="router.push('/inicio')">
-        <img :src="logoplainSrc" alt="" class="logo-icon" />
-        <img :src="logofullSrc" alt="PharmaDerm" class="logo-full" />
+        <img
+          :src="activeLogoSrc"
+          alt="PharmaDerm"
+          :class="isInicio ? 'logo-wordmark' : 'logo-icon'"
+        />
       </div>
 
       <!-- Center nav links -->
       <nav class="desktop-nav" @click.stop>
         <!-- OUR PRODUCTS with mega menu -->
-        <div
-          class="nav-hover-wrap"
-          @mouseenter="productsMenuOpen = true"
-          @mouseleave="productsMenuOpen = false"
-        >
+        <div class="nav-hover-wrap">
           <button
             class="nav-link"
             :class="{ active: productsMenuOpen }"
+            :aria-expanded="productsMenuOpen"
             @click.stop="productsMenuOpen = !productsMenuOpen"
           >
-            OUR PRODUCTS
+            {{ t('nav.ourProducts') }}
           </button>
 
           <transition name="fade">
@@ -37,23 +39,23 @@
             >
               <div class="hover-grid">
                 <div class="hover-col">
-                  <h4>FACE</h4>
+                  <h4>{{ t('menu.face') }}</h4>
                   <button v-for="item in hoverFace" :key="item" @click="goShop({ search: item })">{{ item }}</button>
                 </div>
                 <div class="hover-col">
-                  <h4>SUNSCREEN</h4>
+                  <h4>{{ t('menu.sunscreen') }}</h4>
                   <button v-for="item in hoverSunscreen" :key="item" @click="goShop({ search: item })">{{ item }}</button>
                 </div>
                 <div class="hover-col">
-                  <h4>BODY</h4>
+                  <h4>{{ t('menu.body') }}</h4>
                   <button v-for="item in hoverBody" :key="item" @click="goShop({ search: item })">{{ item }}</button>
                 </div>
                 <div class="hover-col">
-                  <h4>SKIN CONCERN</h4>
+                  <h4>{{ t('menu.skinConcern') }}</h4>
                   <button v-for="item in hoverConcerns" :key="item" @click="goShop({ concern: item })">{{ item }}</button>
                 </div>
                 <div class="hover-col">
-                  <h4>PRODUCT LINE</h4>
+                  <h4>{{ t('menu.productLine') }}</h4>
                   <button v-for="item in hoverLines" :key="item" @click="goShop({ line: item })">{{ item }}</button>
                 </div>
               </div>
@@ -61,21 +63,21 @@
           </transition>
         </div>
 
-        <button class="nav-link" @click="router.push('/quiz')">ANALYZE YOUR SKIN</button>
-        <button class="nav-link" @click="router.push('/expert-advice')">EXPERT ADVICE</button>
-        <button class="nav-link" @click="router.push('/our-story')">OUR STORY</button>
+        <button class="nav-link" @click="router.push('/quiz')">{{ t('nav.analyzeSkin') }}</button>
+        <button class="nav-link" @click="router.push('/expert-advice')">{{ t('nav.expertAdvice') }}</button>
+        <button class="nav-link" @click="router.push('/our-story')">{{ t('nav.ourStory') }}</button>
       </nav>
 
       <!-- Right actions -->
       <div class="header-actions" @click.stop>
         <!-- Search -->
-        <button class="icon-btn" aria-label="Search" @click.stop="openSearch">
+        <button class="icon-btn" :aria-label="t('nav.search')" @click.stop="openSearch">
           <span class="material-symbols-outlined">search</span>
         </button>
 
         <!-- Cart icon + dropdown -->
         <div class="cart-wrap">
-          <button class="icon-btn cart-btn" aria-label="Cart" @click.stop="cartOpen = !cartOpen; profileOpen = false">
+          <button class="icon-btn cart-btn" :aria-label="t('nav.cart')" @click.stop="cartOpen = !cartOpen; profileOpen = false">
             <span class="material-symbols-outlined">shopping_bag</span>
             <span v-if="cartCount > 0" class="cart-badge" :class="{ 'cart-badge--pop': badgePop }">{{ cartCount }}</span>
           </button>
@@ -83,13 +85,13 @@
           <transition name="fade">
             <div v-if="cartOpen" class="cart-panel" @click.stop>
               <div class="cart-panel-header">
-                <strong>Mi carrito</strong>
+                <strong>{{ t('auth.myCart') }}</strong>
                 <button @click="cartOpen = false"><span class="material-symbols-outlined" style="font-size:20px">close</span></button>
               </div>
 
               <div v-if="cartItems.length === 0" class="cart-empty">
-                <p>Tu carrito está vacío</p>
-                <button class="cart-btn-shop" @click="go('/tienda')">Ir a la tienda</button>
+                <p>{{ t('nav.emptyCart') }}</p>
+                <button class="cart-btn-shop" @click="go('/tienda')">{{ t('nav.goToShop') }}</button>
               </div>
 
               <div v-else class="cart-items-list">
@@ -115,11 +117,11 @@
 
               <div v-if="cartItems.length > 0" class="cart-panel-footer">
                 <div class="cart-total-row">
-                  <span>Total</span>
+                  <span>{{ t('nav.total') }}</span>
                   <strong>{{ fmtPrice(cartSubtotal) }}</strong>
                 </div>
-                <button class="cart-btn-full" @click="go('/carrito')">Ver carrito</button>
-                <button class="cart-btn-primary" @click="go('/checkout')">Finalizar compra</button>
+                <button class="cart-btn-full" @click="go('/carrito')">{{ t('nav.viewCart') }}</button>
+                <button class="cart-btn-primary" @click="go('/checkout')">{{ t('nav.checkout') }}</button>
               </div>
             </div>
           </transition>
@@ -127,7 +129,7 @@
 
         <!-- Profile icon + dropdown -->
         <div class="profile-wrap">
-          <button class="icon-btn" aria-label="Profile" @click.stop="profileOpen = !profileOpen; cartOpen = false">
+          <button class="icon-btn" :aria-label="t('nav.profile')" @click.stop="profileOpen = !profileOpen; cartOpen = false">
             <span class="material-symbols-outlined">person</span>
           </button>
 
@@ -135,17 +137,17 @@
             <div v-if="profileOpen" class="profile-panel" @click.stop>
               <!-- Logged in state -->
               <template v-if="isLoggedIn">
-                <div class="profile-greeting">Hola, {{ displayName }}</div>
-                <button @click="go('/perfil?tab=cuenta')">Mi cuenta</button>
-                <button @click="go('/perfil?tab=historial')">Mi historial</button>
-                <button @click="go('/perfil?tab=settings')">Configuración</button>
-                <button @click="doLogout" class="logout-btn">Cerrar sesión</button>
+                <div class="profile-greeting">{{ t('nav.hi') }}, {{ displayName }}</div>
+                <button @click="go('/perfil?tab=cuenta')">{{ t('auth.myAccount') }}</button>
+                <button @click="go('/perfil?tab=historial')">{{ t('nav.myHistory') }}</button>
+                <button @click="go('/perfil?tab=settings')">{{ t('auth.settings') }}</button>
+                <button @click="doLogout" class="logout-btn">{{ t('nav.signOut') }}</button>
               </template>
               <!-- Logged out state -->
               <template v-else>
-                <button @click="go('/login')">Iniciar sesión</button>
-                <button @click="go('/registro')">Crear cuenta</button>
-                <button @click="go('/carrito')">Mi carrito</button>
+                <button @click="go('/login')">{{ t('nav.signIn') }}</button>
+                <button @click="go('/registro')">{{ t('auth.createAccount') }}</button>
+                <button @click="go('/carrito')">{{ t('auth.myCart') }}</button>
               </template>
             </div>
           </transition>
@@ -164,19 +166,19 @@
       <div class="search-overlay__box" @click.stop>
         <div class="search-overlay__top">
           <div class="search-tabs">
-            <button class="nav-link active" @click="goShop({})">OUR PRODUCTS</button>
-            <button class="nav-link" @click="router.push('/quiz'); searchOpen = false">ANALYZE YOUR SKIN</button>
-            <button class="nav-link" @click="router.push('/expert-advice'); searchOpen = false">EXPERT ADVICE</button>
-            <button class="nav-link" @click="router.push('/our-story'); searchOpen = false">OUR STORY</button>
+            <button class="nav-link active" @click="goShop({})">{{ t('nav.ourProducts') }}</button>
+            <button class="nav-link" @click="router.push('/quiz'); searchOpen = false">{{ t('nav.analyzeSkin') }}</button>
+            <button class="nav-link" @click="router.push('/expert-advice'); searchOpen = false">{{ t('nav.expertAdvice') }}</button>
+            <button class="nav-link" @click="router.push('/our-story'); searchOpen = false">{{ t('nav.ourStory') }}</button>
           </div>
           <button class="close-search" @click="searchOpen = false">
             <span class="material-symbols-outlined">close</span>
-            <span>CLOSE</span>
+            <span>{{ t('nav.close') }}</span>
           </button>
         </div>
 
         <div class="search-overlay__input-row">
-          <span class="search-title">I'm looking for...</span>
+          <span class="search-title">{{ t('nav.lookingFor') }}</span>
           <input
             ref="searchInputRef"
             v-model.trim="searchQ"
@@ -190,13 +192,13 @@
         <div class="search-overlay__content">
           <div class="search-left">
             <div class="search-left__header">
-              <h3>POPULAR SEARCHES</h3>
+              <h3>{{ t('nav.popularSearches') }}</h3>
             </div>
             <div class="search-side-box">
               <button v-for="term in popularSearches" :key="term" @click="goShop({ search: term })">{{ term }}</button>
             </div>
             <div class="search-left__header" style="margin-top:18px">
-              <h3>CATEGORIES</h3>
+              <h3>{{ t('nav.categories') }}</h3>
             </div>
             <div class="search-side-box">
               <button v-for="term in searchCategories" :key="term" @click="goShop({ search: term })">{{ term }}</button>
@@ -204,11 +206,11 @@
           </div>
           <div class="search-right">
             <div class="search-side-box">
-              <h4>SKIN CONCERN</h4>
+              <h4>{{ t('menu.skinConcern') }}</h4>
               <button v-for="item in hoverConcerns" :key="item" @click="goShop({ concern: item })">{{ item }}</button>
             </div>
             <div class="search-side-box">
-              <h4>PRODUCT LINE</h4>
+              <h4>{{ t('menu.productLine') }}</h4>
               <button v-for="item in hoverLines" :key="item" @click="goShop({ line: item })">{{ item }}</button>
             </div>
           </div>
@@ -220,27 +222,34 @@
 
 <script setup>
 import { ref, computed, nextTick, onMounted, onBeforeUnmount, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import { useCartStore } from '../stores/useCartStore'
 import { useSettingsStore } from '../stores/useSettingsStore'
-import logoplainSrc from '../assets/img/logoplain.jpeg'
-import logofullSrc from '../assets/img/logofull.jpeg'
+import { useI18n } from '../lib/i18n.js'
+import logoIconSrc from '../assets/logo -Photoroom.png'
+import logoWordmarkSrc from '../assets/logo marca-Photoroom.png'
 import { priceIn } from '../utils/currency'
 
 const router = useRouter()
+const route = useRoute()
+const isInicio = computed(() => route.path === '/inicio')
+const activeLogoSrc = computed(() => isInicio.value ? logoWordmarkSrc : logoIconSrc)
 const auth = useAuthStore()
 const cart = useCartStore()
 const settings = useSettingsStore()
+const { t } = useI18n()
 
 const { isLoggedIn, displayName } = auth
 const { items: cartItems, count: cartCount, subtotal: cartSubtotal, removeItem: _removeItem, updateQty } = cart
 const userCurrency = settings.currency
-
+
 const promoText = computed(() => {
   const threshold = priceIn(3000, 'DOP', userCurrency.value)
-  return `FREE SHIPPING ON ORDERS OVER ${threshold} • SHOP NOW`
+  return t('nav.freeShipping').replace('RD$3,000', threshold)
 })
+
+const promoLead = computed(() => promoText.value.split('•')[0]?.trim() || promoText.value)
 
 function fmtPrice(dopAmount) {
   return priceIn(Number(dopAmount) || 0, 'DOP', userCurrency.value)
@@ -268,7 +277,6 @@ function fmt(n) {
 }
 
 function closeAll() {
-  productsMenuOpen.value = false
   profileOpen.value = false
   cartOpen.value = false
 }
@@ -329,12 +337,27 @@ function onStorage() {
   }, 300)
 }
 
+function onVisibilityChange() {
+  if (document.hidden) return
+
+  productsMenuOpen.value = false
+  profileOpen.value = false
+  cartOpen.value = false
+  searchOpen.value = false
+  cart.refresh()
+  auth.refresh()
+}
+
 onMounted(() => {
   window.addEventListener('storage', onStorage)
+  document.addEventListener('visibilitychange', onVisibilityChange)
+  window.addEventListener('focus', onVisibilityChange)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('storage', onStorage)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  window.removeEventListener('focus', onVisibilityChange)
   if (storageDebounceTimer) clearTimeout(storageDebounceTimer)
   if (badgePopTimer) clearTimeout(badgePopTimer)
 })
@@ -380,6 +403,24 @@ watch(cartCount, (next, prev) => {
   letter-spacing: .08em;
   text-align: center;
   font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.promo-shop-link {
+  border: none;
+  background: transparent;
+  color: white;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .header-main {
@@ -408,11 +449,12 @@ watch(cartCount, (next, prev) => {
   flex-shrink: 0;
 }
 
-.logo-full {
-  height: 36px;
+.logo-wordmark {
+  height: 46px;
   width: auto;
   object-fit: contain;
-  max-width: 160px;
+  max-width: 210px;
+  border-radius: 8px;
 }
 
 .desktop-nav {

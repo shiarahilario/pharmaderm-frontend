@@ -54,7 +54,7 @@
 
         <div class="summary-row">
           <span>Estimated shipping</span>
-          <strong>{{ subtotal >= 3000 ? "Free" : fmtPrice(250) }}</strong>
+          <strong>{{ shipping === 0 ? 'Free' : fmtPrice(shipping) + ' (est.)' }}</strong>
         </div>
 
         <div class="summary-row total">
@@ -75,6 +75,7 @@ import { useRouter } from "vue-router";
 import { useCartStore } from "../stores/useCartStore";
 import { useSettingsStore } from "../stores/useSettingsStore";
 import { priceIn } from "../utils/currency";
+import { getShippingCost } from "../utils/delivery";
 
 const router = useRouter();
 const cart = useCartStore();
@@ -87,7 +88,7 @@ function fmtPrice(dopAmount) {
 }
 
 const subtotal  = computed(() => cartSubtotal.value);
-const shipping  = computed(() => (subtotal.value >= 3000 ? 0 : 250));
+const shipping  = computed(() => getShippingCost(subtotal.value, ''));
 const total     = computed(() => subtotal.value + shipping.value);
 </script>
 

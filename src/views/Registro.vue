@@ -1,6 +1,6 @@
 ﻿<template>
   <div
-    class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden"
+    class="relative flex min-h-screen w-full flex-col bg-background-light group/design-root overflow-x-hidden"
   >
     <!-- Fondo -->
     <div class="absolute inset-0 h-full w-full">
@@ -17,7 +17,7 @@
         <!-- Logo -->
         <div class="mb-4 flex justify-center">
           <svg
-            class="h-12 text-brand-dark-blue dark:text-brand-light-blue"
+            class="h-12 text-brand-dark-blue"
             fill="currentColor"
             viewBox="0 0 200 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -42,18 +42,18 @@
 
         <!-- Headline -->
         <h1
-          class="text-brand-dark-blue dark:text-white tracking-tight text-3xl font-bold text-center pb-6 pt-2"
+          class="text-brand-dark-blue tracking-tight text-3xl font-bold text-center pb-6 pt-2"
         >
-          Crear cuenta
+          Create account
         </h1>
 
         <!-- Error -->
-        <div v-if="errorMsg" class="w-full mb-2 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+        <div v-if="errorMsg" class="w-full mb-2 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
           {{ errorMsg }}
         </div>
 
         <!-- Éxito (confirmación de email) -->
-        <div v-if="successMsg" class="w-full mb-2 px-4 py-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 text-sm">
+        <div v-if="successMsg" class="w-full mb-2 px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm">
           {{ successMsg }}
         </div>
 
@@ -61,51 +61,51 @@
         <div class="w-full flex flex-col gap-4">
           <!-- Nombre -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Nombre
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              First name
             </p>
             <input
               v-model="nombre"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
-              placeholder="Tu nombre"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+              placeholder="Your first name"
               type="text"
             />
           </label>
 
           <!-- Apellido -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Apellido
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Last name
             </p>
             <input
               v-model="apellido"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
-              placeholder="Tu apellido"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+              placeholder="Your last name"
               type="text"
             />
           </label>
 
-          <!-- Correo -->
+          <!-- Email -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Correo electrónico
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Email address
             </p>
             <input
               v-model="email"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
-              placeholder="tucorreo@ejemplo.com"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+              placeholder="you@example.com"
               type="email"
             />
           </label>
 
           <!-- Teléfono -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Teléfono
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Phone number
             </p>
             <input
               v-model="telefono"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
               placeholder="Ej: 8091234567"
               type="tel"
             />
@@ -113,12 +113,12 @@
 
           <!-- Fecha de nacimiento -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Fecha de nacimiento
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Date of birth
             </p>
             <input
               v-model="birthDate"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
               type="date"
               :max="maxBirthDate"
             />
@@ -126,20 +126,20 @@
 
           <!-- Contraseña -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Contraseña
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Password
             </p>
             <div class="flex w-full flex-1 items-stretch">
               <input
                 v-model="password"
-                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 border-r-0 pr-2 text-base font-normal leading-normal"
-                placeholder="Crea una contraseña"
+                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 border-r-0 pr-2 text-base font-normal leading-normal"
+                placeholder="Create a password"
                 :type="showPassword ? 'text' : 'password'"
               />
 
               <button
                 type="button"
-                class="text-gray-500 flex border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 dark:bg-background-dark/50 items-center justify-center pr-4 rounded-r-lg border-l-0"
+                class="text-gray-500 flex border border-gray-300 bg-brand-soft-grey/50 items-center justify-center pr-4 rounded-r-lg border-l-0"
                 @click="showPassword = !showPassword"
               >
                 <svg
@@ -161,15 +161,15 @@
             </div>
           </label>
 
-          <!-- Confirmar contraseña -->
+          <!-- Confirm password -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Confirmar contraseña
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Confirm password
             </p>
             <input
               v-model="confirmPassword"
-              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue dark:text-white dark:bg-background-dark/50 focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal"
-              placeholder="Repite tu contraseña"
+              class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-dark-blue focus:outline-0 focus:ring-2 focus:ring-brand-light-blue/50 border border-gray-300 bg-brand-soft-grey/50 focus:border-brand-light-blue h-14 placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+              placeholder="Repeat your password"
               :type="showPassword ? 'text' : 'password'"
             />
           </label>
@@ -182,21 +182,21 @@
             type="button"
             @click="registrar"
           >
-            Crear cuenta
+            Create account
           </button>
 
           <button
-            class="flex w-full items-center justify-center rounded-lg border border-brand-dark-blue bg-transparent h-14 text-center text-base font-bold text-brand-dark-blue dark:text-white dark:border-brand-light-blue hover:bg-brand-dark-blue/5 dark:hover:bg-brand-light-blue/10 transition-colors"
+            class="flex w-full items-center justify-center rounded-lg border border-brand-dark-blue bg-transparent h-14 text-center text-base font-bold text-brand-dark-blue hover:bg-brand-dark-blue/5 transition-colors"
             type="button"
             @click="go('/login')"
           >
-            Ya tengo cuenta
+            I already have an account
           </button>
         </div>
 
         <!-- Texto final -->
-        <p class="text-neutral-text dark:text-gray-400 text-xs text-center mt-6">
-          Al registrarte, aceptas nuestros términos y políticas.
+        <p class="text-neutral-text text-xs text-center mt-6">
+          By signing up, you accept our terms and policies.
         </p>
       </div>
     </div>
@@ -238,15 +238,15 @@ async function registrar() {
 
   if (!nombre.value.trim() || !apellido.value.trim() || !email.value.trim() ||
       !telefono.value.trim() || !birthDate.value || !password.value || !confirmPassword.value) {
-    errorMsg.value = 'Por favor, completa todos los campos.'
+    errorMsg.value = 'Please fill in all fields.'
     return
   }
   if (password.value.length < 6) {
-    errorMsg.value = 'La contraseña debe tener al menos 6 caracteres.'
+    errorMsg.value = 'Password must be at least 6 characters.'
     return
   }
   if (password.value !== confirmPassword.value) {
-    errorMsg.value = 'Las contraseñas no coinciden.'
+    errorMsg.value = 'Passwords do not match.'
     return
   }
 
@@ -264,17 +264,17 @@ async function registrar() {
     if (result.needsEmailConfirmation) {
       await Swal.fire({
         icon: 'info',
-        title: 'Usuario registrado',
-        text: 'Cuenta creada. Revisa tu correo y confirma tu cuenta antes de iniciar sesión.',
-        confirmButtonText: 'Ir a login',
+        title: 'Account created',
+        text: 'Check your email and confirm your account before signing in.',
+        confirmButtonText: 'Go to login',
         confirmButtonColor: '#5DBCD2',
       })
       router.push('/login')
     } else {
       await Swal.fire({
         icon: 'success',
-        title: 'Usuario registrado',
-        text: 'Ahora puedes iniciar sesión.',
+        title: 'Account created',
+        text: 'You can now sign in.',
         timer: 1800,
         showConfirmButton: false,
       })
@@ -283,15 +283,15 @@ async function registrar() {
   } catch (err) {
     const msg = err?.message || ''
     if (msg.includes('already registered') || msg.includes('already been registered') || msg.includes('User already registered')) {
-      errorMsg.value = 'Ya existe una cuenta con ese correo electrónico. Inicia sesión.'
+      errorMsg.value = 'An account with that email already exists. Please sign in.'
     } else if (msg.includes('weak') || msg.includes('password')) {
-      errorMsg.value = 'La contraseña es muy débil. Usa al menos 6 caracteres.'
+      errorMsg.value = 'Password is too weak. Use at least 6 characters.'
     } else if (msg.includes('valid email') || msg.includes('invalid email')) {
-      errorMsg.value = 'El correo electrónico no es válido.'
+      errorMsg.value = 'Email address is not valid.'
     } else if (msg.includes('network') || msg.includes('fetch')) {
-      errorMsg.value = 'Error de conexión. Verifica tu internet e intenta de nuevo.'
+      errorMsg.value = 'Connection error. Check your internet and try again.'
     } else {
-      errorMsg.value = msg || 'Error al crear la cuenta. Intenta de nuevo.'
+      errorMsg.value = msg || 'Error creating account. Please try again.'
     }
   } finally {
     loading.value = false

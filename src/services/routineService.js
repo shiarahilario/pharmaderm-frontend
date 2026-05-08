@@ -1,5 +1,6 @@
 import storageService from './storageService.js'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js'
+import { withTimeout } from '../utils/async.js'
 
 export const routineService = {
   hasRenderableSteps(routine) {
@@ -12,9 +13,9 @@ export const routineService = {
     // Try Supabase first
     if (isSupabaseConfigured) {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user } } = await withTimeout(supabase.auth.getUser(), 5000, 'Load routine user')
         if (user) {
-          const { data, error } = await supabase
+          const { data, error } = await withTimeout(supabase
             .from('routines')
             .select(`
               *,
@@ -31,7 +32,7 @@ export const routineService = {
             .eq('is_active', true)
             .order('created_at', { ascending: false })
             .limit(1)
-            .maybeSingle()
+            .maybeSingle(), 8000, 'Load latest routine')
 
           if (!error && data) {
             const formatted = this.formatRoutineFromDB(data)
@@ -54,9 +55,9 @@ export const routineService = {
     // Try Supabase first
     if (isSupabaseConfigured) {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user } } = await withTimeout(supabase.auth.getUser(), 5000, 'Load routines user')
         if (user) {
-          const { data, error } = await supabase
+          const { data, error } = await withTimeout(supabase
             .from('routines')
             .select(`
               *,
@@ -66,7 +67,7 @@ export const routineService = {
               )
             `)
             .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
+            .order('created_at', { ascending: false }), 8000, 'Load routines')
 
           if (!error && data) {
             return data.map(r => this.formatRoutineFromDB(r))
@@ -101,21 +102,21 @@ export const routineService = {
     // Try Supabase
     if (isSupabaseConfigured) {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user } } = await withTimeout(supabase.auth.getUser(), 5000, 'Save routine user')
         if (user) {
           // Insert routine
-          const { data: routineResult, error: routineError } = await supabase
+          const { data: routineResult, error: routineError } = await withTimeout(supabase
             .from('routines')
             .insert({
               user_id: user.id,
               analysis_id: routineData.analysisId || null,
-              name: routineData.name || 'Mi rutina personalizada',
+              name: routineData.name || 'My personalized routine',
               primary_concern: routineData.primaryConcern,
               skin_type_code: routineData.skinType,
               is_active: true
             })
             .select('id')
-            .single()
+            .single(), 8000, 'Save routine')
 
           if (routineError) {
             console.warn('[RoutineService] Routine insert failed:', routineError)
@@ -157,9 +158,9 @@ export const routineService = {
             }
 
             if (stepsToInsert.length > 0) {
-              const { error: stepsError } = await supabase
+              const { error: stepsError } = await withTimeout(supabase
                 .from('routine_steps')
-                .insert(stepsToInsert)
+                .insert(stepsToInsert), 8000, 'Save routine steps')
 
               if (stepsError) {
                 console.warn('[RoutineService] Steps insert failed:', stepsError)

@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <div
-    class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden"
+    class="relative flex min-h-screen w-full flex-col bg-background-light group/design-root overflow-x-hidden"
   >
     <!-- Fondo -->
     <div class="absolute inset-0 h-full w-full">
@@ -18,12 +18,12 @@
           <img :src="logofullSrc" alt="PharmaDerm" class="h-14 object-contain" />
         </div>
 
-        <h1 class="text-brand-dark-blue dark:text-white tracking-tight text-3xl font-bold text-center pb-6 pt-2">
-          Bienvenido de nuevo
+        <h1 class="text-brand-dark-blue tracking-tight text-3xl font-bold text-center pb-6 pt-2">
+          Welcome back
         </h1>
 
         <!-- Error -->
-        <div v-if="errorMsg" class="w-full mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+        <div v-if="errorMsg" class="w-full mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
           {{ errorMsg }}
         </div>
 
@@ -31,45 +31,43 @@
         <div class="w-full flex flex-col gap-4">
           <!-- Email -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Correo electrónico
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Email address
             </p>
             <input
               v-model="email"
               type="email"
-              placeholder="tucorreo@ejemplo.com"
+              placeholder="you@example.com"
               autocomplete="email"
               @keyup.enter="handleLogin"
-              class="form-input flex w-full rounded-lg text-brand-dark-blue dark:text-white
-                     dark:bg-background-dark/50 focus:ring-2 focus:ring-brand-light-blue/50
-                     border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50
+              class="form-input flex w-full rounded-lg text-brand-dark-blue focus:ring-2 focus:ring-brand-light-blue/50
+                     border border-gray-300 bg-brand-soft-grey/50
                      h-14 p-4 text-base"
             />
           </label>
 
           <!-- Password -->
           <label class="flex flex-col w-full">
-            <p class="text-brand-dark-blue dark:text-gray-300 text-sm font-medium pb-2">
-              Contraseña
+            <p class="text-brand-dark-blue text-sm font-medium pb-2">
+              Password
             </p>
             <div class="flex w-full items-stretch">
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Introduce tu contraseña"
+                placeholder="Enter your password"
                 autocomplete="current-password"
                 @keyup.enter="handleLogin"
-                class="form-input flex w-full rounded-l-lg text-brand-dark-blue dark:text-white
-                       dark:bg-background-dark/50 focus:ring-2 focus:ring-brand-light-blue/50
-                       border border-gray-300 dark:border-gray-600 bg-brand-soft-grey/50
+                class="form-input flex w-full rounded-l-lg text-brand-dark-blue focus:ring-2 focus:ring-brand-light-blue/50
+                       border border-gray-300 bg-brand-soft-grey/50
                        h-14 p-4 text-base border-r-0"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
                 class="flex items-center justify-center px-4 border border-l-0
-                       border-gray-300 dark:border-gray-600
-                       bg-brand-soft-grey/50 dark:bg-background-dark/50 rounded-r-lg"
+                       border-gray-300
+                       bg-brand-soft-grey/50 rounded-r-lg"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -82,14 +80,14 @@
           </label>
         </div>
 
-        <!-- Olvidé -->
+        <!-- OlvidÃ© -->
         <div class="w-full text-right mt-2">
           <button
             type="button"
             @click="go('/olvide')"
-            class="text-brand-dark-blue dark:text-brand-light-blue/80 text-sm underline hover:text-brand-light-blue"
+            class="text-brand-dark-blue text-sm underline hover:text-brand-light-blue"
           >
-            ¿Olvidaste tu contraseña?
+            Forgot your password?
           </button>
         </div>
 
@@ -104,14 +102,14 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-            {{ loading ? 'Iniciando sesión…' : 'Iniciar sesión' }}
+            {{ loading ? 'Logging in...' : 'Log in' }}
           </button>
 
           <button
             @click="go('/registro')"
-            class="w-full h-14 rounded-lg border border-brand-dark-blue text-brand-dark-blue dark:text-white dark:border-white font-bold"
+            class="w-full h-14 rounded-lg border border-brand-dark-blue text-brand-dark-blue font-bold"
           >
-            Registrarse
+            Sign up
           </button>
         </div>
       </div>
@@ -124,7 +122,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore.js'
 import Swal from 'sweetalert2'
-import logofullSrc from '../assets/img/logofull.jpeg'
+import logofullSrc from '../assets/logo -Photoroom.png'
 
 const router   = useRouter()
 const auth     = useAuthStore()
@@ -140,11 +138,11 @@ async function handleLogin() {
   errorMsg.value = ''
 
   if (!email.value.trim()) {
-    errorMsg.value = 'Por favor ingresa tu correo electrónico.'
+    errorMsg.value = 'Please enter your email address.'
     return
   }
   if (!password.value) {
-    errorMsg.value = 'Por favor ingresa tu contraseña.'
+    errorMsg.value = 'Please enter your password.'
     return
   }
 
@@ -155,7 +153,7 @@ async function handleLogin() {
       toast: true,
       position: 'top',
       icon: 'success',
-      title: 'Sesión iniciada',
+      title: 'Logged in',
       timer: 1600,
       timerProgressBar: true,
       showConfirmButton: false,
@@ -174,15 +172,15 @@ async function handleLogin() {
   } catch (err) {
     const msg = err?.message || ''
     if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials')) {
-      errorMsg.value = 'Correo o contraseña incorrectos.'
+      errorMsg.value = 'Incorrect email or password.'
     } else if (msg.includes('Email not confirmed')) {
-      errorMsg.value = 'Debes confirmar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.'
+      errorMsg.value = 'Please confirm your email before signing in. Check your inbox.'
     } else if (msg.includes('Too many requests')) {
-      errorMsg.value = 'Demasiados intentos. Espera unos minutos e intenta de nuevo.'
+      errorMsg.value = 'Too many attempts. Please wait a few minutes and try again.'
     } else if (msg.includes('network') || msg.includes('fetch')) {
-      errorMsg.value = 'Error de conexión. Verifica tu internet e intenta de nuevo.'
+      errorMsg.value = 'Connection error. Check your internet and try again.'
     } else {
-      errorMsg.value = msg || 'Error al iniciar sesión. Intenta de nuevo.'
+      errorMsg.value = msg || 'Sign-in error. Please try again.'
     }
   } finally {
     loading.value = false

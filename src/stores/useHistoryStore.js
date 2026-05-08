@@ -237,7 +237,7 @@ async function _syncWithSupabase(userId) {
 
         if (dData?.length > 0) {
           const reconstructedDiags = dData.map(d => ({
-            id: d.id, date: d.created_at, title: d.insight_title || 'Diagnóstico',
+            id: d.id, date: d.created_at, title: d.insight_title || 'Diagnostic',
             summary: d.insight_text || '', form: { description: d.description || '', symptoms: d.symptoms || [] },
             status: d.status || 'saved',
           }))
@@ -274,9 +274,9 @@ async function _syncWithSupabase(userId) {
         if (aData?.length > 0) {
           const reconstructedApts = aData.map(a => ({
             id: a.id,
-            doctor: a.dermatologists?.name || 'Dermatólogo Especialista',
-            doctor_name: a.dermatologists?.name || 'Dermatólogo Especialista',
-            doctor_specialty: a.dermatologists?.specialty || 'Dermatología',
+            doctor: a.dermatologists?.name || 'Specialist Dermatologist',
+            doctor_name: a.dermatologists?.name || 'Specialist Dermatologist',
+            doctor_specialty: a.dermatologists?.specialty || 'Dermatology',
             doctor_photo: a.dermatologists?.photo_url || null,
             date: a.scheduled_date,
             scheduled_date: a.scheduled_date,
@@ -327,7 +327,7 @@ async function _syncWithSupabase(userId) {
       } catch { /* ignore */ }
     }
   } catch (e) {
-    console.warn('[HistoryStore] Sync falló:', e?.message)
+    console.warn('[HistoryStore] Sync failed:', e?.message)
   }
 
   // Reload memory from the newly synced localStorage
@@ -356,14 +356,16 @@ export function useHistoryStore() {
     if (result.morningSteps || result.nightSteps) {
       try {
         const routineData = {
-          name: result.profileTitle || 'Mi rutina personalizada',
+          name: result.profileTitle || 'My personalized routine',
           primaryConcern: result.primaryConcern,
           skinType: result.skinType,
           morningSteps: result.morningSteps || [],
           nightSteps: result.nightSteps || [],
           generatedFromQuiz: true
         }
-        await saveRoutine(routineData)
+        saveRoutine(routineData).catch(e => {
+          console.warn('[HistoryStore] Failed to save routine:', e)
+        })
       } catch (e) {
         console.warn('[HistoryStore] Failed to save routine:', e)
       }
@@ -393,7 +395,7 @@ export function useHistoryStore() {
       routines.value.unshift(entry)
       return entry
     } catch (e) {
-      console.warn('[HistoryStore] Error al guardar rutina:', e)
+      console.warn('[HistoryStore] Error saving routine:', e)
       const entry = { ...routine, id: Date.now(), date: new Date().toISOString() }
       routines.value.unshift(entry)
       return entry
@@ -420,7 +422,7 @@ export function useHistoryStore() {
       orders.value.unshift(entry)
       return entry
     } catch (e) {
-      console.warn('[HistoryStore] Error al guardar orden:', e)
+      console.warn('[HistoryStore] Error saving order:', e)
       const entry = { ...order, id: Date.now(), date: new Date().toISOString(), status: 'confirmed' }
       orders.value.unshift(entry)
       const k = _key('orders')
@@ -430,12 +432,14 @@ export function useHistoryStore() {
   }
 
   function getLatestQuizResult() {
+    if (quizHistory.value?.[0]) return quizHistory.value[0]
     const key = _key('quiz_result')
     if (!key) return null
     try { return JSON.parse(localStorage.getItem(key) || 'null') } catch { return null }
   }
 
   function getLatestDiagnostic() {
+    if (diagnostics.value?.[0]) return diagnostics.value[0]
     const key = _key('diagnostic_result')
     if (!key) return null
     try { return JSON.parse(localStorage.getItem(key) || 'null') } catch { return null }

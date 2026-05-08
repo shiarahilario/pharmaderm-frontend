@@ -1,7 +1,6 @@
 import storageService from './storageService.js'
 
 const DEFAULTS = {
-  isDark: false,
   language: 'es',
   country: 'DO',
   currency: 'DOP',

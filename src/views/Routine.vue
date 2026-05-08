@@ -3,30 +3,30 @@
     <!-- No quiz yet -->
     <div v-if="!hasRoutine && !isLoadingRoutine" class="empty-state">
       <span class="material-symbols-outlined empty-icon">auto_fix_high</span>
-      <h2>No hay rutina personalizada</h2>
-      <p>Completa el quiz o un diagnóstico para generar tu rutina personalizada.</p>
-      <button class="btn-primary" @click="router.push('/quiz')">Hacer quiz</button>
-      <button class="btn-secondary" @click="router.push('/diagnostics')" style="margin-top: 1rem;">Ir a diagnóstico</button>
+      <h2>{{ t('routine.emptyTitle') }}</h2>
+      <p>{{ t('routine.emptyText') }}</p>
+      <button class="btn-primary" @click="router.push('/quiz')">{{ t('routine.doQuiz') }}</button>
+      <button class="btn-secondary" @click="router.push('/diagnostics')" style="margin-top: 1rem;">{{ t('routine.goDiagnostics') }}</button>
     </div>
 
     <!-- Loading -->
     <div v-else-if="isLoadingRoutine" class="loading-state">
       <div class="loading-spinner"></div>
-      <p>Cargando tu rutina personalizada...</p>
+      <p>{{ t('routine.loading') }}</p>
     </div>
 
     <!-- Routine view -->
     <div v-else>
-      <!-- Header -->
-      <div class="routine-header">
+      <!-- Header with banner background -->
+      <div class="routine-header" :style="{ backgroundImage: `url(${routineBannerImg})` }">
         <div class="container">
-          <p class="routine-eyebrow">MI RUTINA PERSONALIZADA</p>
-          <h1>{{ currentRoutine.profileTitle || currentRoutine.name || quizResult.value?.profileTitle || diagnosticResult.value?.title || 'Mi rutina de piel' }}</h1>
+          <p class="routine-eyebrow">{{ t('routine.eyebrow') }}</p>
+          <h1>{{ currentRoutine.profileTitle || currentRoutine.name || quizResult.value?.profileTitle || diagnosticResult.value?.title || t('routine.fallbackTitle') }}</h1>
           <p v-if="routineDescription" class="routine-sub">{{ routineDescription }}</p>
           <div class="routine-meta-pills">
             <span class="meta-pill">{{ skinTypeLabel }}</span>
             <span class="meta-pill concern">{{ concernLabel }}</span>
-            <span class="meta-pill date">Generada {{ formattedDate }}</span>
+            <span class="meta-pill date">{{ t('routine.generated') }} {{ formattedDate }}</span>
           </div>
         </div>
       </div>
@@ -36,10 +36,10 @@
         <div class="container">
           <div class="tabs">
             <button class="tab" :class="{ active: activeTab === 'morning' }" @click="activeTab = 'morning'">
-              <span class="material-symbols-outlined">wb_sunny</span> MAÑANA
+              <span class="material-symbols-outlined">wb_sunny</span> {{ t('quiz.morning') }}
             </button>
             <button class="tab" :class="{ active: activeTab === 'night' }" @click="activeTab = 'night'">
-              <span class="material-symbols-outlined">bedtime</span> NOCHE
+              <span class="material-symbols-outlined">bedtime</span> {{ t('quiz.night') }}
             </button>
           </div>
         </div>
@@ -47,17 +47,19 @@
 
       <!-- Steps -->
       <div class="container">
+        <Transition name="tab-slide" mode="out-in">
+        <div :key="activeTab">
         <div v-if="currentSteps.length === 0" class="no-steps">
-          <p>No se encontraron productos para esta rutina.</p>
+          <p>{{ t('routine.noProducts') }}</p>
         </div>
 
         <div v-else class="steps-grid">
           <div v-for="step in currentSteps" :key="step.slug || step.step" class="step-card">
-            <div class="step-number">Paso {{ step.step }}</div>
+            <div class="step-number">{{ t('routine.step') }} {{ step.step }}</div>
             <div class="step-category">{{ step.category }}</div>
 
             <div class="step-body">
-              <TransparentImg :src="step.image" :alt="step.name" class="step-img" @error="$event.target.src='https://placehold.co/300x400/e5e7eb/475569?text=PRODUCTO'" />
+              <TransparentImg :src="step.image" :alt="step.name" class="step-img" @error="$event.target.src='https://placehold.co/300x400/e5e7eb/475569?text=PRODUCT'" />
               <div class="step-info">
                 <p class="step-brand">{{ step.brand }}</p>
                 <h3 class="step-name">{{ step.name }}</h3>
@@ -72,10 +74,10 @@
 
             <div class="step-actions">
               <button class="btn-view" @click="router.push('/producto/' + step.slug)">
-                <span class="material-symbols-outlined">visibility</span> Ver producto
+                <span class="material-symbols-outlined">visibility</span> {{ t('shop.viewProduct') }}
               </button>
               <button class="btn-add" @click="addToCart(step)">
-                <span class="material-symbols-outlined">shopping_bag</span> Agregar al carrito
+                <span class="material-symbols-outlined">shopping_bag</span> {{ t('general.addToCart') }}
               </button>
             </div>
           </div>
@@ -83,20 +85,22 @@
 
         <!-- Saved routine names (text fallback if no product objects) -->
         <div v-if="currentSteps.length === 0 && currentNameList.length" class="name-list-card">
-          <h3>Productos recomendados</h3>
+          <h3>{{ t('routine.recommendedProducts') }}</h3>
           <ul>
             <li v-for="name in currentNameList" :key="name">{{ name }}</li>
           </ul>
-          <button class="btn-primary mt-4" @click="router.push('/tienda')">Ver en tienda</button>
+          <button class="btn-primary mt-4" @click="router.push('/tienda')">{{ t('quiz.viewInShop') }}</button>
         </div>
+        </div>
+        </Transition>
       </div>
 
       <!-- Actions -->
       <div class="routine-actions container">
-        <button class="btn-secondary" @click="router.push('/quiz')">Repetir quiz</button>
-        <button class="btn-secondary" @click="router.push('/diagnostics')">Ver diagnóstico</button>
-        <button class="btn-secondary" @click="sendRoutineEmail">Enviar mi rutina por correo electrónico</button>
-        <button class="btn-primary" @click="router.push('/tienda')">Ver tienda</button>
+        <button class="btn-secondary" @click="router.push('/quiz')">{{ t('routine.repeatQuiz') }}</button>
+        <button class="btn-secondary" @click="router.push('/diagnostics')">{{ t('diagnostics.title') }}</button>
+        <button class="btn-secondary" @click="sendRoutineEmail">{{ t('routine.email') }}</button>
+        <button class="btn-primary" @click="router.push('/tienda')">{{ t('routine.viewStore') }}</button>
       </div>
     </div>
 
@@ -108,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/useCartStore'
 import { useHistoryStore } from '../stores/useHistoryStore'
@@ -119,12 +123,13 @@ import { getProductsByQuizResult } from '../data/productCatalog.js'
 import { sendRoutineByEmail } from '../services/emailService.js'
 import { useAuthStore } from '../stores/useAuthStore.js'
 import { useI18n } from '../lib/i18n.js'
+import routineBannerImg from '../assets/fondo/skincare-routine.png'
 
 const router = useRouter()
 const cart = useCartStore()
 const history = useHistoryStore()
 const auth = useAuthStore()
-const { lang } = useI18n()
+const { lang, t } = useI18n()
 
 const activeTab = ref('morning')
 const toast = ref('')
@@ -132,6 +137,7 @@ let toastTimer = null
 
 const quizResult = computed(() => history.getLatestQuizResult())
 const diagnosticResult = computed(() => history.getLatestDiagnostic())
+const authUserId = computed(() => auth.user?.value?.id || null)
 
 const hasQuiz = computed(() => !!quizResult.value)
 
@@ -142,16 +148,16 @@ const isLoadingRoutine = ref(true)
 const hasRoutine = computed(() => !!currentRoutine.value)
 
 const skinTypeLabel = computed(() => {
-  if (!currentRoutine.value) return 'Piel'
-  const map = { seca: 'Piel seca', normal: 'Piel normal', mixta: 'Piel mixta', grasa: 'Piel grasa' }
-  return map[currentRoutine.value.skinType] || currentRoutine.value.skinType || 'Piel'
+  if (!currentRoutine.value) return 'Skin'
+  const map = { seca: 'Dry skin', normal: 'Normal skin', mixta: 'Combination skin', grasa: 'Oily skin' }
+  return map[currentRoutine.value.skinType] || currentRoutine.value.skinType || 'Skin'
 })
 
 const concernLabel = computed(() => {
   if (!currentRoutine.value) return ''
   const map = {
-    luminosidad: 'Luminosidad', deshidratacion: 'Deshidratación', manchas: 'Manchas',
-    sensibilidad: 'Sensibilidad', arrugas: 'Líneas tempranas', poros: 'Poros', barrera: 'Barrera',
+    luminosidad: 'Radiance', deshidratacion: 'Dehydration', manchas: 'Dark spots',
+    sensibilidad: 'Sensitivity', arrugas: 'Early lines', poros: 'Pores', barrera: 'Skin barrier',
   }
   return map[currentRoutine.value.primaryConcern] || currentRoutine.value.primaryConcern || ''
 })
@@ -168,9 +174,9 @@ const routineDescription = computed(() => {
     || ''
 
   let trimmed = raw.trim().replace(/\s+/g, ' ')
-  if (!trimmed) return 'Tu rutina se basa en tu diagnóstico, por lo que conviene...'
+  if (!trimmed) return 'Your routine is based on your diagnosis, so it is best to...'
 
-  const marker = 'por lo que conviene'
+  const marker = 'so it is best to'
   const lower = trimmed.toLowerCase()
   const markerIndex = lower.indexOf(marker)
   if (markerIndex >= 0) {
@@ -180,7 +186,7 @@ const routineDescription = computed(() => {
   }
 
   trimmed = trimmed.replace(/[\.\?!]+$/, '')
-  const suffix = ' por lo que conviene...'
+  const suffix = ' so it is best to...'
   const maxLength = 160 - suffix.length
   if (trimmed.length <= maxLength) {
     return `${trimmed}${suffix}`
@@ -190,7 +196,7 @@ const routineDescription = computed(() => {
 
 const formattedDate = computed(() => {
   if (!currentRoutine.value?.date) return ''
-  return new Date(currentRoutine.value.date).toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(currentRoutine.value.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 })
 
 function buildRoutineFromQuizData(quiz) {
@@ -205,7 +211,7 @@ function buildRoutineFromQuizData(quiz) {
     step: i + 1,
     longDescription: p.description || p.longDescription || '',
     size: p.sizes?.[0]?.label || p.size || '',
-    category: p.category || p.type || 'Cuidado',
+    category: p.category || p.type || 'Care',
   })
   return {
     morningSteps: getProductsByQuizResult(quizPayload, 'morning').map(toStep),
@@ -217,11 +223,11 @@ function buildStepsFromNameList(names) {
   return (names || []).map((name, index) => ({
     step: index + 1,
     name,
-    category: 'Producto',
+    category: 'Product',
     size: '',
     longDescription: '',
     brand: '',
-    image: 'https://placehold.co/300x400/e5e7eb/475569?text=Producto',
+    image: 'https://placehold.co/300x400/e5e7eb/475569?text=Product',
   }))
 }
 
@@ -276,8 +282,8 @@ function getQuizFallback() {
   return quizResult.value || getLegacyQuizResult()
 }
 
-async function loadRoutineData() {
-  isLoadingRoutine.value = true
+async function loadRoutineData({ silent = false } = {}) {
+  if (!silent) isLoadingRoutine.value = true
   try {
     const savedRoutine = await routineService.getLatestRoutine()
     if (savedRoutine) {
@@ -306,15 +312,34 @@ async function loadRoutineData() {
     currentRoutine.value = getQuizFallback()
   } finally {
     isLoadingRoutine.value = false
+    if (!silent) {
+      await nextTick()
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
   }
 }
 
 watch(quizResult, (newQuiz) => {
-  if (!currentRoutine.value && newQuiz) {
+  if (newQuiz) {
     currentRoutine.value = newQuiz
+    isLoadingRoutine.value = false
+    nextTick(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }))
     console.log('[Routine] Reactive quiz result loaded after mount')
   }
 })
+
+watch(authUserId, (id, oldId) => {
+  if (id && id !== oldId) loadRoutineData()
+})
+
+watch(
+  () => [history.routines.value.length, history.quizHistory.value.length, history.diagnostics.value.length],
+  () => loadRoutineData({ silent: true })
+)
+
+function reloadRoutineWhenVisible() {
+  if (!document.hidden) loadRoutineData({ silent: true })
+}
 
 function starText(rating) {
   const r = Math.round(rating || 0)
@@ -332,13 +357,13 @@ function addToCart(product) {
   const priceRD = Math.round(convertPrice(usdPrice, 'USD', 'DOP'))
   const size = product.sizes?.[0]?.label || product.size || 'Default'
   cart.addItem(product, { size, qty: 1, priceRD })
-  showToast(`${product.name} agregado al carrito`)
+  showToast(`${product.name} added to cart`)
 }
 
 async function sendRoutineEmail() {
   const email = auth.user?.value?.email || ''
   if (!email) {
-    showToast('No encontramos un correo asociado a tu cuenta.')
+    showToast('We could not find an email associated with your account.')
     return
   }
 
@@ -368,7 +393,7 @@ async function sendRoutineEmail() {
 
   const result = await sendRoutineByEmail({
     to_email: email,
-    to_name: auth.user?.value?.name || 'Cliente',
+    to_name: auth.user?.value?.name || 'Customer',
     skin_type: skinTypeLabel.value || '',
     diagnosis: concernLabel.value || routineDescription.value || '',
     morning_routine: morning || 'N/A',
@@ -379,17 +404,30 @@ async function sendRoutineEmail() {
   }, lang.value || 'es')
 
   if (result.ok) {
-    showToast('Tu rutina fue enviada correctamente a tu correo.')
+    showToast('Your routine was sent to your email.')
     return
   }
-  showToast(result.message || 'La rutina se guardó correctamente, pero el envío por correo no está configurado.')
+  showToast(result.message || 'The routine was saved, but email delivery is not configured.')
 }
 
 // Load routine data on mount
-onMounted(loadRoutineData)
+onMounted(() => {
+  loadRoutineData()
+  window.addEventListener('focus', reloadRoutineWhenVisible)
+  document.addEventListener('visibilitychange', reloadRoutineWhenVisible)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', reloadRoutineWhenVisible)
+  document.removeEventListener('visibilitychange', reloadRoutineWhenVisible)
+})
 </script>
 
 <style scoped>
+.tab-slide-enter-active, .tab-slide-leave-active { transition: opacity 0.22s ease, transform 0.22s ease; }
+.tab-slide-enter-from { opacity: 0; transform: translateX(12px); }
+.tab-slide-leave-to { opacity: 0; transform: translateX(-12px); }
+
 .routine-page { min-height: 100vh; background: #f8fafc; padding-bottom: 80px; }
 .container { width: min(1200px, 92%); margin: 0 auto; }
 
@@ -398,7 +436,27 @@ onMounted(loadRoutineData)
 .empty-state h2 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin: 0 0 0.5rem; }
 .empty-state p { color: #64748b; margin: 0 0 1.5rem; }
 
-.routine-header { background: linear-gradient(135deg, #16a6e2, #004e92); color: white; padding: 3.5rem 0 2.5rem; }
+.routine-header {
+  position: relative;
+  overflow: hidden;
+  background-position: center 58%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #005187;
+  color: white;
+  padding: 3.5rem 0 2.5rem;
+}
+.routine-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,78,146,0.74), rgba(22,166,226,0.56));
+  z-index: 0;
+}
+.routine-header .container {
+  position: relative;
+  z-index: 1;
+}
 .routine-eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; font-weight: 700; text-transform: uppercase; opacity: 0.75; margin: 0 0 0.6rem; }
 .routine-header h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin: 0 0 0.75rem; line-height: 1.2; }
 .routine-sub { max-width: 640px; opacity: 0.9; line-height: 1.7; margin: 0 0 1.25rem; font-size: 1rem; }

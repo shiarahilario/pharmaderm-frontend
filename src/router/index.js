@@ -26,6 +26,12 @@ import OurStory from "../views/OurStory.vue";
 import Routine from "../views/Routine.vue";
 import MisPedidos from "../views/MisPedidos.vue";
 import MisCitas from "../views/MisCitas.vue";
+import FAQ from "../views/FAQ.vue";
+import Contact from "../views/Contact.vue";
+import PrivacyPolicy from "../views/PrivacyPolicy.vue";
+import Terms from "../views/Terms.vue";
+import ShippingReturns from "../views/ShippingReturns.vue";
+import Accessibility from "../views/Accessibility.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -45,6 +51,7 @@ const routes = [
     path: "/appointment-confirmation",
     name: "AppointmentConfirmation",
     component: AppointmentConfirmation,
+    meta: { public: true },
   },
   { path: "/citas/agendar", name: "AppointmentBooking", component: AppointmentBooking },
   { path: "/tienda", name: "Tienda", component: Tienda },
@@ -61,6 +68,14 @@ const routes = [
   { path: "/expert-advice", name: "ExpertAdvice", component: ExpertAdvice },
   { path: "/our-story", name: "OurStory", component: OurStory },
   { path: "/routine", name: "Routine", component: Routine },
+
+  // Informational pages
+  { path: "/faq", name: "FAQ", component: FAQ },
+  { path: "/contact", name: "Contact", component: Contact },
+  { path: "/privacy-policy", name: "PrivacyPolicy", component: PrivacyPolicy },
+  { path: "/terms", name: "Terms", component: Terms },
+  { path: "/shipping-returns", name: "ShippingReturns", component: ShippingReturns },
+  { path: "/accessibility", name: "Accessibility", component: Accessibility },
 ];
 
 const router = createRouter({
@@ -72,15 +87,32 @@ const router = createRouter({
   },
 });
 
+async function getSupabaseSessionWithTimeout(ms = 350) {
+  if (!isSupabaseConfigured || !supabase) return { session: null, timedOut: false };
+
+  try {
+    const result = await Promise.race([
+      supabase.auth.getSession(),
+      new Promise((resolve) => setTimeout(() => resolve({ data: { session: null }, timeout: true }), ms)),
+    ]);
+
+    return {
+      session: result?.data?.session || null,
+      timedOut: result?.timeout === true,
+    };
+  } catch {
+    return { session: null, timedOut: false };
+  }
+}
+
 router.beforeEach(async (to, from, next) => {
   let isAuthenticated = false;
 
   if (isSupabaseConfigured) {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      isAuthenticated = !!session?.access_token;
-    } catch {
-      isAuthenticated = false;
+    const { session, timedOut } = await getSupabaseSessionWithTimeout();
+    isAuthenticated = !!session?.access_token;
+    if (timedOut && !to.meta.public && from.path !== "/login") {
+      isAuthenticated = true;
     }
   } else {
     const s = JSON.parse(localStorage.getItem("pharmaderm_session") || "null");

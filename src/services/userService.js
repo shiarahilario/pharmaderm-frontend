@@ -5,10 +5,12 @@ export const userService = {
   // ─── Supabase Auth ────────────────────────────────────────────────
 
   async signUpUser({ email, password, firstName, lastName, phone, birthDate }) {
+    const redirectTo = (typeof window !== 'undefined' ? window.location.origin : '') + '/login'
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: redirectTo,
         data: {
           first_name: firstName,
           last_name: lastName,
@@ -141,7 +143,6 @@ export const userService = {
       .upsert(
         {
           user_id: userId,
-          is_dark: settings.isDark ?? false,
           language: settings.language ?? 'es',
           country_code: settings.country ?? 'DO',
           currency: settings.currency ?? 'DOP',
@@ -168,7 +169,6 @@ export const userService = {
 
   async updateUserSettings(userId, updates) {
     const payload = {}
-    if ('isDark' in updates) payload.is_dark = updates.isDark
     if ('language' in updates) payload.language = updates.language
     if ('country' in updates) payload.country_code = updates.country
     if ('currency' in updates) payload.currency = updates.currency
@@ -199,16 +199,16 @@ export const userService = {
       try {
         const payload = {
           user_id: userId,
-          label: address.label || 'Mi dirección',
+          label: address.label || 'My address',
           full_name: address.full_name || null,
           phone: address.phone || null,
           address_line_1: address.address_line_1 || address.address || '',
           address_line_2: address.address_line_2 || null,
-          city: address.city || null,
+          city: address.city || '',
           state: address.state || null,
           postal_code: address.postal_code || null,
           country_code: address.country_code || 'DO',
-          is_default: address.is_default !== false, // Default to true
+          is_default: address.is_default !== false,
         }
         
         // If has ID, try to update; otherwise insert
@@ -235,7 +235,7 @@ export const userService = {
         
         console.log('[UserService] Address saved to Supabase:', supabaseId)
       } catch (error) {
-        console.warn('[UserService] Supabase address save failed:', error.message)
+        console.error('[UserService] Supabase address save failed:', error?.message, error)
       }
     }
 

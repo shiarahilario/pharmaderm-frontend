@@ -2,11 +2,11 @@
   <div class="checkout-page">
     <transition name="payfade">
       <div v-if="paymentModalOpen" class="payment-modal-backdrop" @click.stop style="pointer-events: all;">
-        <div class="payment-modal" role="dialog" aria-modal="true" aria-label="Procesando pago">
+        <div class="payment-modal" role="dialog" aria-modal="true" aria-label="Processing payment">
           <div v-if="paymentStep === 'processing'" class="payment-modal-body">
             <div class="pd-spinner" aria-hidden="true"></div>
-            <h3>Procesando pago</h3>
-            <p>Estamos confirmando tu pago. Por favor espera…</p>
+            <h3>Processing payment</h3>
+            <p>We are confirming your payment. Please wait…</p>
           </div>
 
           <div v-else class="payment-modal-body">
@@ -16,8 +16,8 @@
                 <path class="pd-check-mark" fill="none" d="M14 27l7 7 17-17" />
               </svg>
             </div>
-            <h3>Pago realizado</h3>
-            <p>Gracias. Tu compra fue confirmada.</p>
+            <h3>Payment completed</h3>
+            <p>Thank you. Your purchase has been confirmed.</p>
           </div>
         </div>
       </div>
@@ -26,25 +26,29 @@
     <div v-if="orderPlaced" class="confirm-screen">
       <div class="confirm-box">
         <div class="confirm-icon"><span class="material-symbols-outlined">check_circle</span></div>
-        <h2>¡Pedido confirmado!</h2>
-        <p class="confirm-code">Código: <strong>{{ confirmationCode }}</strong></p>
+        <h2>Order confirmed!</h2>
+        <p class="confirm-code">Code: <strong>{{ confirmationCode }}</strong></p>
         <p class="confirm-msg">{{ emailStatusMsg }}</p>
 
         <div class="confirm-summary">
-          <div v-for="item in placedItems" :key="item.id" class="confirm-item">
+          <div v-for="(item, index) in placedItems" :key="`${item.id || item.slug || item.name}-${item.size || 'default'}-${index}`" class="confirm-item">
             <img :src="item.image" :alt="item.name" />
-            <div><p>{{ item.name }}</p><p class="meta">{{ item.size }} × {{ item.quantity }}</p></div>
-            <strong>{{ fmtCurrency(item.priceRD * item.quantity) }}</strong>
+            <div class="confirm-item-info">
+              <p>{{ item.name }}</p>
+              <p class="meta">Size: {{ item.size || 'N/A' }}</p>
+              <p class="meta">Quantity: {{ item.quantity || 1 }}</p>
+            </div>
+            <strong>{{ fmtCurrency(item.priceRD * (item.quantity || 1)) }}</strong>
           </div>
           <div class="confirm-total">
-            <span>Total pagado</span>
+            <span>Total paid</span>
             <strong>{{ fmtCurrency(placedTotal) }}</strong>
           </div>
         </div>
 
         <div class="confirm-actions">
-          <button class="btn-outline" @click="router.push('/inicio')">Ir al inicio</button>
-          <button class="btn-primary" @click="router.push('/tienda')">Seguir comprando</button>
+          <button class="btn-outline" @click="router.push('/inicio')">Go to home</button>
+          <button class="btn-primary" @click="router.push('/tienda')">Continue shopping</button>
         </div>
       </div>
     </div>
@@ -52,26 +56,26 @@
     <!-- Formulario -->
     <div v-else class="checkout-layout">
       <div class="checkout-left">
-        <h1 class="checkout-title">Finalizar compra</h1>
+        <h1 class="checkout-title">Checkout</h1>
 
         <!-- Contacto -->
         <section class="checkout-section">
-          <h2>Datos de contacto</h2>
+          <h2>Contact information</h2>
           <div class="form-grid">
             <div class="form-field full">
-              <label>Nombre completo</label>
-              <input v-model="form.name" type="text" placeholder="Tu nombre" />
+              <label>Full name</label>
+              <input v-model="form.name" type="text" placeholder="Your name" />
             </div>
             <div class="form-field">
-              <label>Correo electrónico</label>
-              <input v-model="form.email" type="email" placeholder="correo@ejemplo.com" />
+              <label>Email address</label>
+              <input v-model="form.email" type="email" placeholder="email@example.com" />
             </div>
             <div class="form-field">
-              <label>Teléfono </label>
+              <label>Phone</label>
               <input v-model="form.phone" type="tel" placeholder="8091234567" maxlength="10" @input="form.phone = form.phone.replace(/\D/g, '').slice(0, 10)" />
             </div>
             <div class="form-field">
-              <label>Cédula </label>
+              <label>ID Number</label>
               <input v-model="form.cedula" type="text" placeholder="00112345678" maxlength="11" @input="form.cedula = form.cedula.replace(/\D/g, '').slice(0, 11)" />
             </div>
           </div>
@@ -79,32 +83,32 @@
 
         <!-- Dirección -->
         <section class="checkout-section">
-          <h2>Dirección de entrega</h2>
+          <h2>Delivery address</h2>
           <div class="form-grid">
             <div class="form-field full">
-              <label>Dirección</label>
-              <input v-model="form.address" type="text" placeholder="Calle, número, sector" />
+              <label>Street address</label>
+              <input v-model="form.address" type="text" placeholder="Street, number, neighborhood" />
             </div>
             <div class="form-field">
-              <label>Ciudad</label>
-              <input v-model="form.city" type="text" placeholder="Santo Domingo" />
+              <label>City</label>
+              <input v-model="form.city" type="text" placeholder="City" />
             </div>
             <div class="form-field">
-              <label>País</label>
+              <label>Country</label>
               <select v-model="form.country">
-                <option value="DO">República Dominicana</option>
-                <option value="US">Estados Unidos</option>
+                <option value="DO">Dominican Republic</option>
+                <option value="US">United States</option>
                 <option value="PR">Puerto Rico</option>
-                <option value="MX">México</option>
+                <option value="MX">Mexico</option>
                 <option value="CO">Colombia</option>
               </select>
             </div>
           </div>
         </section>
 
-        <!-- Método de pago -->
+        <!-- Payment method -->
         <section class="checkout-section">
-          <h2>Método de pago</h2>
+          <h2>Payment method</h2>
           <div class="payment-methods">
             <label v-for="m in paymentMethods" :key="m.key" class="payment-card" :class="{ selected: form.paymentMethod === m.key }">
               <input type="radio" :value="m.key" v-model="form.paymentMethod" />
@@ -117,20 +121,20 @@
           <div v-if="form.paymentMethod === 'card'" class="payment-detail-box">
             <p class="payment-note">
               <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">lock</span>
-              Pago simulado — no se realizará ningún cargo real.
+              Simulated payment — no real charge will be made.
             </p>
             <div class="form-grid">
               <div class="form-field full">
-                <label>Número de tarjeta</label>
+                <label>Card number</label>
                 <input v-model="card.number" type="text" placeholder="1234 5678 9012 3456" maxlength="19" @input="formatCardNumber" />
               </div>
               <div class="form-field full">
-                <label>Nombre del titular</label>
-                <input v-model="card.holder" type="text" placeholder="Como aparece en la tarjeta" />
+                <label>Cardholder name</label>
+                <input v-model="card.holder" type="text" placeholder="As it appears on the card" />
               </div>
               <div class="form-field">
-                <label>Vencimiento</label>
-                <input v-model="card.expiry" type="text" placeholder="MM/AA" maxlength="5" @input="formatExpiry" />
+                <label>Expiry</label>
+                <input v-model="card.expiry" type="text" placeholder="MM/YY" maxlength="5" @input="formatExpiry" />
               </div>
               <div class="form-field">
                 <label>CVV</label>
@@ -141,29 +145,35 @@
 
           <!-- Transfer fields -->
           <div v-if="form.paymentMethod === 'transfer'" class="payment-detail-box">
-            <p class="transfer-note">Transfiere a una de nuestras cuentas y sube tu comprobante.</p>
+            <p class="transfer-note">Transfer to one of our accounts and upload your receipt.</p>
             <div class="bank-list">
               <div v-for="bank in banks" :key="bank.name" class="bank-card" :class="{ selected: form.selectedBank === bank.name }" @click="form.selectedBank = bank.name">
                 <div class="bank-logo">{{ bank.initials }}</div>
                 <div class="bank-info">
                   <strong>{{ bank.name }}</strong>
                   <span>{{ bank.accountType }} · {{ bank.accountNumber }}</span>
-                  <span class="bank-holder">A nombre de: {{ bank.holder }}</span>
+                  <span class="bank-holder">Account name: {{ bank.holder }}</span>
                 </div>
                 <span v-if="form.selectedBank === bank.name" class="material-symbols-outlined bank-check">check_circle</span>
               </div>
             </div>
             <div class="form-grid" style="margin-top:16px">
               <div class="form-field">
-                <label>Número de referencia</label>
-                <input v-model="form.referenceNumber" type="text" placeholder="Número de confirmación" />
+                <label>Reference number</label>
+                <input
+                  v-model="form.referenceNumber"
+                  type="text"
+                  placeholder="Confirmation number"
+                  maxlength="8"
+                  @input="form.referenceNumber = form.referenceNumber.slice(0, 8)"
+                />
               </div>
               <div class="form-field">
-                <label>Comprobante de pago</label>
+                <label>Payment receipt</label>
                 <label class="upload-receipt-btn">
                   <input type="file" accept="image/*,.pdf" hidden @change="onReceiptUpload" />
                   <span class="material-symbols-outlined">upload_file</span>
-                  {{ form.receiptName || 'Subir comprobante' }}
+                  {{ form.receiptName || 'Upload receipt' }}
                 </label>
               </div>
             </div>
@@ -173,7 +183,7 @@
           <div v-if="form.paymentMethod === 'cash'" class="payment-detail-box">
             <p class="payment-note">
               <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">info</span>
-              Paga en efectivo al momento de recibir tu pedido.
+              Pay in cash when you receive your order.
             </p>
           </div>
         </section>
@@ -181,17 +191,17 @@
         <div v-if="formError" class="form-error">{{ formError }}</div>
 
         <button class="btn-confirm" :disabled="placing" @click="placeOrder">
-          {{ placing ? 'Procesando...' : 'Confirmar compra' }}
+          {{ placing ? 'Processing...' : 'Confirm order' }}
         </button>
       </div>
 
       <!-- Sidebar -->
       <aside class="checkout-right">
-        <h2>Resumen del pedido</h2>
+        <h2>Order summary</h2>
 
         <div v-if="cartItems.length === 0" class="empty-cart">
-          <p>No hay productos en el carrito.</p>
-          <button @click="router.push('/tienda')">Ir a la tienda</button>
+          <p>No products in cart.</p>
+          <button @click="router.push('/tienda')">Go to store</button>
         </div>
 
         <div v-else>
@@ -200,7 +210,7 @@
               <img :src="item.image" :alt="item.name" />
               <div class="order-item-info">
                 <p class="order-item-name">{{ item.name }}</p>
-                <p class="order-item-meta">{{ item.size }} · Cant: {{ item.quantity }}</p>
+                <p class="order-item-meta">{{ item.size }} · Qty: {{ item.quantity }}</p>
               </div>
               <strong>{{ fmtCurrency(item.priceRD * (item.quantity || 1)) }}</strong>
             </div>
@@ -212,11 +222,11 @@
               <span>{{ fmtCurrency(subtotal) }}</span>
             </div>
             <div class="total-row">
-              <span>Envío</span>
-              <span>{{ subtotal >= 3000 ? 'Gratis' : fmtCurrency(250) }}</span>
+              <span>Shipping</span>
+              <span>{{ subtotal >= 3000 ? 'Free' : fmtCurrency(250) }}</span>
             </div>
             <div class="total-row">
-              <span>ITBIS (18%)</span>
+              <span>Tax (18%)</span>
               <span>{{ fmtCurrency(itbis) }}</span>
             </div>
             <div class="total-row total-row--big">
@@ -237,10 +247,13 @@ import { useCartStore } from '../stores/useCartStore'
 import { useAuthStore } from '../stores/useAuthStore'
 import { useSettingsStore } from '../stores/useSettingsStore'
 import { useHistoryStore } from '../stores/useHistoryStore'
-import { sendOrderConfirmationEmail } from '../services/emailService.js'
+import { estimateOrderDelivery, sendOrderConfirmationEmail } from '../services/emailService.js'
 import orderService from '../services/orderService.js'
+import userService from '../services/userService.js'
 import { useI18n } from '../lib/i18n.js'
 import { formatPrice, convertPrice } from '../utils/currency.js'
+import { getShippingCost } from '../utils/delivery.js'
+import { delay, withTimeout } from '../utils/async.js'
 
 const router = useRouter()
 const cart = useCartStore()
@@ -265,15 +278,15 @@ const form = ref({
 const card = reactive({ number: '', holder: '', expiry: '', cvv: '' })
 
 const paymentMethods = [
-  { key: 'card', label: 'Tarjeta de crédito/débito', icon: 'credit_card' },
-  { key: 'transfer', label: 'Transferencia bancaria', icon: 'account_balance' },
-  { key: 'cash', label: 'Efectivo (contraentrega)', icon: 'payments' },
+  { key: 'card', label: 'Credit/debit card', icon: 'credit_card' },
+  { key: 'transfer', label: 'Bank transfer', icon: 'account_balance' },
+  { key: 'cash', label: 'Cash (on delivery)', icon: 'payments' },
 ]
 
 const banks = [
-  { name: 'Banreservas', initials: 'BR', accountType: 'Cta. Corriente', accountNumber: '2100-1234-5678', holder: 'PharmaDerm SRL' },
-  { name: 'BHD León', initials: 'BH', accountType: 'Cta. Corriente', accountNumber: '2765-9876-5432', holder: 'PharmaDerm SRL' },
-  { name: 'Banco Popular', initials: 'BP', accountType: 'Cta. Corriente', accountNumber: '5432-1111-2222', holder: 'PharmaDerm SRL' },
+  { name: 'Banreservas', initials: 'BR', accountType: 'Checking account', accountNumber: '2100-1234-5678', holder: 'PharmaDerm SRL' },
+  { name: 'BHD León', initials: 'BH', accountType: 'Checking account', accountNumber: '2765-9876-5432', holder: 'PharmaDerm SRL' },
+  { name: 'Banco Popular', initials: 'BP', accountType: 'Checking account', accountNumber: '5432-1111-2222', holder: 'PharmaDerm SRL' },
   { name: 'Asociación Cibao', initials: 'AC', accountType: 'Cta. de Ahorros', accountNumber: '0201-8765-4321', holder: 'PharmaDerm SRL' },
 ]
 
@@ -285,10 +298,10 @@ const orderPlaced = ref(false)
 const confirmationCode = ref('')
 const placedItems = ref([])
 const placedTotal = ref(0)
-const emailStatusMsg = ref('Gracias por tu compra. Recibirás un correo de confirmación pronto.')
+const emailStatusMsg = ref('Thank you for your purchase. You will receive a confirmation email soon.')
 
 const subtotal = computed(() => cartSubtotal.value)
-const shipping = computed(() => subtotal.value >= 3000 ? 0 : 250)
+const shipping = computed(() => getShippingCost(subtotal.value, form.value.city))
 const itbis = computed(() => Math.round(subtotal.value * 0.18))
 const total = computed(() => subtotal.value + shipping.value + itbis.value)
 
@@ -323,26 +336,26 @@ function resolvePaymentDetails() {
   if (method === 'card') {
     const digits = String(card.number || '').replace(/\D/g, '')
     const last4 = digits.slice(-4) || '****'
-    return `Tarjeta: **** **** **** ${last4}`
+    return `Card: **** **** **** ${last4}`
   }
 
   if (method === 'transfer') {
     const bank = (form.value.selectedBank || '').trim()
     const ref = (form.value.referenceNumber || '').trim()
     if (bank && ref) {
-      return `Transferencia bancaria: pendiente de validación. Banco: ${bank}. Referencia: ${ref}`
+      return `Bank transfer: pending validation. Bank: ${bank}. Reference: ${ref}`
     }
     if (ref) {
-      return `Transferencia bancaria: pendiente de validación. Referencia: ${ref}`
+      return `Bank transfer: pending validation. Reference: ${ref}`
     }
-    return 'Transferencia bancaria: pendiente de validación.'
+    return 'Bank transfer: pending validation.'
   }
 
   if (method === 'cash') {
-    return 'Pago contra entrega: pagarás en efectivo al recibir tu pedido.'
+    return 'Cash on delivery: you will pay when you receive your order.'
   }
 
-  return 'Método de pago registrado correctamente.'
+  return 'Payment method registered successfully.'
 }
 
 const MIN_EXPIRY_MONTH = 5  // mayo
@@ -350,8 +363,8 @@ const MIN_EXPIRY_YEAR  = 2026
 
 function validateCard() {
   const digits = card.number.replace(/\s/g, '')
-  if (digits.length !== 16) return 'El número de tarjeta debe tener 16 dígitos.'
-  if (!card.holder.trim()) return 'Ingresa el nombre del titular de la tarjeta.'
+  if (digits.length !== 16) return 'Card number must have 16 digits.'
+  if (!card.holder.trim()) return 'Enter the cardholder name.'
 
   const [mm, yy] = (card.expiry || '').split('/')
   const month = parseInt(mm, 10)
@@ -364,35 +377,36 @@ function validateCard() {
     year < MIN_EXPIRY_YEAR ||
     (year === MIN_EXPIRY_YEAR && month < MIN_EXPIRY_MONTH)
   ) {
-    return 'Fecha de vencimiento inválida. Debe ser 05/26 o posterior (formato MM/AA).'
+    return 'Invalid expiry date. Must be 05/26 or later (MM/YY format).'
   }
 
   const cvvDigits = card.cvv.replace(/\D/g, '')
-  if (cvvDigits.length !== 3) return 'El CVV debe tener exactamente 3 dígitos.'
+  if (cvvDigits.length !== 3) return 'CVV must be exactly 3 digits.'
   return ''
 }
 
 function validateTransfer() {
-  if (!form.value.selectedBank) return 'Selecciona el banco al que realizaste la transferencia.'
-  if (!form.value.referenceNumber.trim()) return 'Ingresa el número de referencia de la transferencia.'
-  if (!form.value.receiptBase64) return 'Sube el comprobante de pago.'
+  if (!form.value.selectedBank) return 'Select the bank you transferred to.'
+  form.value.referenceNumber = String(form.value.referenceNumber || '').trim().slice(0, 8)
+  if (!form.value.referenceNumber.trim()) return 'Enter the transfer reference number.'
+  if (!form.value.receiptBase64) return 'Upload the payment receipt.'
   return ''
 }
 
 function validateContact() {
   const phone = (form.value.phone || '').replace(/\D/g, '')
-  if (phone.length !== 10) return 'El teléfono debe tener exactamente 10 dígitos (Ej: 8091234567).'
+  if (phone.length !== 10) return 'Phone must be exactly 10 digits (e.g. 8091234567).'
   const cedula = (form.value.cedula || '').replace(/\D/g, '')
-  if (cedula.length !== 11) return 'La cédula debe tener exactamente 11 dígitos (Ej: 00112345678).'
+  if (cedula.length !== 11) return 'ID number must be exactly 11 digits (e.g. 00112345678).'
   return ''
 }
 
 function validate() {
-  if (!form.value.name.trim()) return 'Ingresa tu nombre completo.'
-  if (!form.value.email.trim() || !form.value.email.includes('@')) return 'Ingresa un correo electrónico válido.'
-  if (!form.value.address.trim()) return 'Ingresa tu dirección de entrega.'
-  if (!form.value.city.trim()) return 'Ingresa tu ciudad.'
-  if (cartItems.value.length === 0) return 'Tu carrito está vacío.'
+  if (!form.value.name.trim()) return 'Enter your full name.'
+  if (!form.value.email.trim() || !form.value.email.includes('@')) return 'Enter a valid email address.'
+  if (!form.value.address.trim()) return 'Enter your delivery address.'
+  if (!form.value.city.trim()) return 'Enter your city.'
+  if (cartItems.value.length === 0) return 'Your cart is empty.'
 
   const contactErr = validateContact()
   if (contactErr) return contactErr
@@ -409,7 +423,8 @@ async function placeOrder() {
   placing.value = true
   paymentModalOpen.value = true
   paymentStep.value = 'processing'
-  await new Promise((r) => setTimeout(r, 1800))
+  try {
+  await delay(2800)
 
   const code = 'PD-' + Date.now().toString(36).toUpperCase()
   confirmationCode.value = code
@@ -457,15 +472,10 @@ async function placeOrder() {
   // Save to localStorage
   await history.saveOrder(orderData)
 
-  // Save to Supabase if user is authenticated
-  try {
-    const userId = user.value?.id
-    if (userId) {
-      await orderService.saveOrderToSupabase(orderData, userId)
-    }
-  } catch (error) {
-    console.warn('[Checkout] Supabase save failed:', error)
-    // Continue anyway - localStorage save is sufficient
+  const userId = user.value?.id
+  if (userId) {
+    withTimeout(orderService.saveOrderToSupabase(orderData, userId), 4000, 'Save order to Supabase')
+      .catch((error) => console.warn('[Checkout] Supabase save failed:', error))
   }
 
   clearCart()
@@ -473,36 +483,52 @@ async function placeOrder() {
   const productsSummary = (orderData.items || [])
     .map(i => `${i.name} — ${i.size || 'N/A'} × ${i.quantity || 1} — ${fmtCurrency((i.priceRD || 0) * (i.quantity || 1))}`)
     .join('\n')
+  const estimatedDelivery = estimateOrderDelivery(orderData)
 
-  const emailResult = await sendOrderConfirmationEmail({
+  withTimeout(sendOrderConfirmationEmail({
     to_email: orderData.customer_email,
     to_name: orderData.customer_name,
     order_id: orderData.id,
     order_number: orderData.order_number,
-    order_total: `${orderData.currency} ${orderData.total}`,
+    order_total: fmtCurrency(orderData.total),
     order_status: orderData.status,
     payment_method: orderData.payment_method,
     payment_details: resolvePaymentDetails(),
     delivery_method: orderData.delivery_method,
+    estimated_delivery: estimatedDelivery,
     products: productsSummary,
     shipping_address: [orderData.address, orderData.city, orderData.country_code].filter(Boolean).join(', '),
     support_email: 'soporte@pharmadermrd.com',
     reply_to: 'soporte@pharmadermrd.com',
-  }, lang.value)
-  if (emailResult.ok) {
-    emailStatusMsg.value = 'Pedido confirmado. Enviamos la confirmación a tu correo.'
-  } else if (emailResult.simulated) {
-    emailStatusMsg.value = emailResult.message || 'El pedido se guardó correctamente, pero el correo de confirmación no está configurado.'
-  } else {
-    emailStatusMsg.value = emailResult.message || 'El pedido se guardó correctamente, pero no pudimos enviar el correo de confirmación.'
-  }
+  }, lang.value), 4000, 'Order confirmation email')
+    .then((emailResult) => {
+      if (emailResult.ok) {
+        emailStatusMsg.value = 'Order confirmed. We sent the confirmation to your email.'
+      } else if (emailResult.simulated) {
+        emailStatusMsg.value = emailResult.message || 'Order saved successfully, but the confirmation email is not configured.'
+      } else {
+        emailStatusMsg.value = emailResult.message || 'Order saved successfully, but we could not send the confirmation email.'
+      }
+    })
+    .catch((error) => {
+      console.warn('[Checkout] Order email failed:', error)
+      emailStatusMsg.value = 'Order saved successfully, but we could not send the confirmation email.'
+    })
 
   paymentStep.value = 'success'
-  await new Promise((r) => setTimeout(r, 1200))
+  await delay(900)
   paymentModalOpen.value = false
 
   placing.value = false
   orderPlaced.value = true
+  await nextTick()
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  } catch (error) {
+    console.warn('[Checkout] Order flow failed:', error)
+    formError.value = error?.message || 'We could not complete the order right now. Please try again.'
+    paymentModalOpen.value = false
+    placing.value = false
+  }
 }
 
 onMounted(() => {
@@ -513,6 +539,14 @@ onMounted(() => {
     form.value.phone = user.value.phone || ''
     form.value.address = user.value.address || ''
   }
+  try {
+    const saved = userService.getAddresses()
+    if (saved && saved.length > 0) {
+      const addr = saved[0]
+      if (!form.value.address) form.value.address = addr.address_line_1 || addr.address || ''
+      if (!form.value.city && addr.city) form.value.city = addr.city
+    }
+  } catch { /* ignore */ }
 })
 </script>
 
@@ -639,15 +673,16 @@ onMounted(() => {
 .btn-confirm { width: 100%; height: 52px; background: #009fe3; color: white; border: none; cursor: pointer; font-size: 15px; font-weight: 800; letter-spacing: .04em; }
 .btn-confirm:disabled { opacity: .65; cursor: not-allowed; }
 
-.checkout-right { background: #f8fafc; border: 1px solid #e5e7eb; padding: 24px; position: sticky; top: 120px; }
+.checkout-right { background: #f8fafc; border: 1px solid #e5e7eb; padding: 24px; position: sticky; top: 120px; min-width: 0; }
 .checkout-right h2 { font-size: 16px; font-weight: 800; letter-spacing: .04em; margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
 
 .order-items { display: grid; gap: 14px; margin-bottom: 20px; }
-.order-item { display: flex; align-items: center; gap: 12px; }
+.order-item { display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0; overflow: hidden; }
 .order-item img { width: 52px; height: 52px; object-fit: contain; background: white; border: 1px solid #e5e7eb; flex-shrink: 0; }
-.order-item-info { flex: 1; min-width: 0; }
-.order-item-name { font-size: 13px; font-weight: 600; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.order-item-info { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.order-item-name { display: block; max-width: 100%; font-size: 13px; font-weight: 600; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .order-item-meta { font-size: 12px; color: #6b7280; margin: 0; }
+.order-item > strong { flex: 0 0 auto; max-width: 96px; text-align: right; font-size: 13px; }
 
 .order-totals { border-top: 1px solid #e5e7eb; padding-top: 16px; }
 .total-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; color: #374151; }
@@ -666,9 +701,10 @@ onMounted(() => {
 .confirm-summary { text-align: left; border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 28px; }
 .confirm-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #f3f4f6; }
 .confirm-item img { width: 42px; height: 42px; object-fit: contain; background: #f8fafc; }
-.confirm-item div { flex: 1; }
+.confirm-item-info { flex: 1; min-width: 0; }
 .confirm-item p { margin: 0; font-size: 13px; font-weight: 600; }
 .confirm-item .meta { font-size: 12px; color: #6b7280; font-weight: 400; }
+.confirm-item strong { flex-shrink: 0; }
 .confirm-total { display: flex; justify-content: space-between; padding: 14px 16px; font-size: 16px; font-weight: 800; background: #f8fafc; }
 .confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .btn-outline { height: 48px; border: 1px solid #d1d5db; background: white; cursor: pointer; font-weight: 700; font-size: 14px; }

@@ -1,30 +1,30 @@
 <template>
   <nav class="bottom-nav">
-    <RouterLink to="/inicio" class="nav-item" :class="{ active: isActive('/inicio') }" aria-label="Home">
+    <RouterLink to="/inicio" class="nav-item" :class="{ active: isActive('/inicio') }" :aria-label="t('bottomNav.home')">
       <span class="material-symbols-outlined">home</span>
-      <p>Home</p>
+      <p>{{ t('bottomNav.home') }}</p>
     </RouterLink>
 
-    <RouterLink to="/tienda" class="nav-item" :class="{ active: isActive('/tienda') || isActive('/producto') }" aria-label="Shop">
+    <RouterLink to="/tienda" class="nav-item" :class="{ active: isActive('/tienda') || isActive('/producto') }" :aria-label="t('bottomNav.shop')">
       <span class="material-symbols-outlined">grid_view</span>
-      <p>Shop</p>
+      <p>{{ t('bottomNav.shop') }}</p>
     </RouterLink>
 
-    <RouterLink to="/diagnostics" class="nav-center" :class="{ active: isActive('/diagnostics') }" aria-label="Diagnostics">
+    <RouterLink to="/diagnostics" class="nav-center" :class="{ active: isActive('/diagnostics') }" :aria-label="t('bottomNav.diagnostics')">
       <div class="fab">
         <span class="material-symbols-outlined">stethoscope</span>
       </div>
-      <p>Diagnostics</p>
+      <p>{{ t('bottomNav.diagnostics') }}</p>
     </RouterLink>
 
-    <RouterLink to="/routine" class="nav-item" :class="{ active: isActive('/routine') }" aria-label="Routine">
+    <RouterLink to="/routine" class="nav-item" :class="{ active: isActive('/routine') }" :aria-label="t('bottomNav.routine')">
       <span class="material-symbols-outlined">spa</span>
-      <p>Routine</p>
+      <p>{{ t('bottomNav.routine') }}</p>
     </RouterLink>
 
-    <RouterLink to="/perfil" class="nav-item" :class="{ active: isActive('/perfil') }" aria-label="Profile">
+    <RouterLink to="/perfil" class="nav-item" :class="{ active: isActive('/perfil') }" :aria-label="t('bottomNav.profile')">
       <span class="material-symbols-outlined">person</span>
-      <p>Profile</p>
+      <p>{{ t('bottomNav.profile') }}</p>
     </RouterLink>
   </nav>
 </template>
@@ -32,8 +32,10 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { useRoute } from 'vue-router'
+import { useI18n } from '../lib/i18n.js'
 
 const route = useRoute()
+const { t } = useI18n()
 
 function isActive(path) {
   return route.path === path || route.path.startsWith(path + '/')
@@ -105,24 +107,4 @@ function isActive(path) {
   background: #0066cc;
 }
 
-/* Dark mode support */
-:global(.dark) .bottom-nav {
-  background: rgba(10,18,32,0.96);
-  border-top-color: #1c2b44;
-}
-
-:global(.dark) .nav-item,
-:global(.dark) .nav-center {
-  color: #6f8099;
-}
-
-:global(.dark) .nav-item.active,
-:global(.dark) .nav-center.active {
-  color: #66d6ff;
-}
-
-:global(.dark) .fab {
-  background: #1f4b86;
-  border-color: rgba(11,18,32,0.96);
-}
 </style>

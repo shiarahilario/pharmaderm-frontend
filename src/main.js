@@ -7,7 +7,7 @@ import "./style.css";
 
 const app = createApp(App);
 
-// Initialize settings early so dark mode / language apply globally on first paint.
+// Initialize settings early so language/currency preferences apply globally on first paint.
 useSettingsStore();
 
 const revealObserver = new IntersectionObserver(

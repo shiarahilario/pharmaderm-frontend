@@ -36,10 +36,9 @@ async function _loadProfile(userId) {
 
 function _applySettings(s) {
   if (!s) return
-  if (s.is_dark) document.documentElement.classList.add('dark')
-  else document.documentElement.classList.remove('dark')
+  document.documentElement.classList.remove('dark')
+  document.documentElement.classList.add('light')
   storageService.set('settings', {
-    isDark: s.is_dark ?? false,
     language: s.language ?? 'es',
     country: s.country_code ?? 'DO',
     currency: s.currency ?? 'DOP',
@@ -74,8 +73,8 @@ export function useAuthStore() {
 
   const displayName = computed(() => {
     const u = user.value
-    if (!u) return 'Usuario'
-    return u.first_name || u.firstName || u.name || 'Usuario'
+    if (!u) return 'User'
+    return u.first_name || u.firstName || u.name || 'User'
   })
 
   const currentUser = computed(() => user.value)
@@ -150,7 +149,7 @@ export function useAuthStore() {
           })
 
           const data = await res.json().catch(() => ({}))
-          if (!res.ok) throw new Error(data?.error || 'No se pudo registrar')
+          if (!res.ok) throw new Error(data?.error || 'Could not create the account')
 
           return { success: true, needsEmailConfirmation: false }
         }
@@ -200,10 +199,10 @@ export function useAuthStore() {
           })
 
           const data = await res.json().catch(() => ({}))
-          if (!res.ok) throw new Error(data?.error || 'No se pudo iniciar sesión')
+          if (!res.ok) throw new Error(data?.error || 'Could not sign in')
 
           const u = data?.usuario || null
-          if (!u?.email) throw new Error('Respuesta inválida del servidor')
+          if (!u?.email) throw new Error('Invalid server response')
 
           // Clean legacy data before loading new user
           storageService.cleanupLegacyPrivateStorage()
@@ -213,7 +212,7 @@ export function useAuthStore() {
             email: u.email,
             firstName: u.nombre || '',
             lastName: u.apellido || '',
-            name: `${u.nombre || ''} ${u.apellido || ''}`.trim() || 'Usuario',
+            name: `${u.nombre || ''} ${u.apellido || ''}`.trim() || 'User',
             phone: u.telefono || null,
           }
 
@@ -239,12 +238,12 @@ export function useAuthStore() {
         }
 
         const savedUser = JSON.parse(localStorage.getItem('pharmaderm_user') || 'null')
-        if (!savedUser) throw new Error('No hay ninguna cuenta registrada. Crea una cuenta primero.')
+        if (!savedUser) throw new Error('No registered account was found. Create an account first.')
         if (
           savedUser.email?.toLowerCase() !== email.toLowerCase() ||
           savedUser.password !== password
         ) {
-          throw new Error('Correo o contraseña incorrectos.')
+          throw new Error('Incorrect email or password.')
         }
         // Clean legacy data before loading new user
         storageService.cleanupLegacyPrivateStorage()
@@ -319,9 +318,7 @@ export function useAuthStore() {
       _applySettings(updated)
     } else {
       storageService.set('settings', { ...storageService.get('settings', {}), ...data })
-      _applySettings(data.is_dark !== undefined
-        ? { is_dark: data.is_dark, language: data.language, country_code: data.country, currency: data.currency }
-        : { is_dark: data.isDark,  language: data.language, country_code: data.country, currency: data.currency })
+      _applySettings({ language: data.language, country_code: data.country, currency: data.currency })
     }
     return settings.value
   }

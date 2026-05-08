@@ -3,14 +3,15 @@
     <!-- Gate: no quiz result -->
     <div v-if="!hasQuiz" class="quiz-gate">
       <span class="material-symbols-outlined gate-icon">biotech</span>
-      <h2>Completa el quiz primero</h2>
-      <p>El diagnóstico se construye sobre tu perfil de piel generado en el quiz.<br>Haz el quiz para continuar.</p>
-      <button class="primary-btn" @click="$router.push('/quiz')">Hacer quiz de piel</button>
+      <h2>{{ t('diagnostics.completeQuizFirst') }}</h2>
+      <p>{{ t('diagnostics.noQuiz') }}<br>{{ t('diagnostics.takeQuizContinue') }}</p>
+      <button class="primary-btn" @click="$router.push('/quiz')">{{ t('diagnostics.doQuiz') }}</button>
     </div>
 
     <template v-else>
 
-    <section class="diagnostics-hero">
+    <section class="diagnostics-hero" :style="{ backgroundImage: `url(${diagnosticoBannerImg})` }">
+      <div class="diagnostics-hero-bg-overlay"></div>
       <div class="container diagnostics-hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">SKIN DIAGNOSTICS</p>
@@ -22,10 +23,10 @@
 
           <div class="hero-actions">
             <button class="primary-btn" @click="scrollToSection('detailsSection')">
-              Continue diagnosis
+              {{ t('diagnostics.continueDiagnosis') }}
             </button>
             <button class="ghost-btn" @click="goToAppointmentBooking">
-              Agendar cita
+              {{ t('diagnostics.bookAppt') }}
             </button>
           </div>
         </div>
@@ -40,19 +41,19 @@
 
           <div class="summary-list">
             <div class="summary-item">
-              <span class="label">Skin type</span>
+            <span class="label">{{ t('diagnostics.skinType') }}</span>
               <strong>{{ formattedSkinType }}</strong>
             </div>
             <div class="summary-item">
-              <span class="label">Sensitivity</span>
+            <span class="label">{{ t('diagnostics.sensitivity') }}</span>
               <strong>{{ formattedSensitivity }}</strong>
             </div>
             <div class="summary-item">
-              <span class="label">Priority concern</span>
+            <span class="label">{{ t('diagnostics.priorityConcern') }}</span>
               <strong>{{ mainConcern }}</strong>
             </div>
             <div class="summary-item">
-              <span class="label">Suggested consultation</span>
+            <span class="label">{{ t('diagnostics.suggestedConsultation') }}</span>
               <strong>{{ suggestedAppointmentType }}</strong>
             </div>
           </div>
@@ -68,7 +69,7 @@
       <div class="container">
         <div class="section-heading center">
           <p class="eyebrow section-eyebrow">YOUR PROGRESS</p>
-          <h2>From quiz to dermatologist support</h2>
+          <h2>{{ t('diagnostics.progressTitle') }}</h2>
           <p>Your experience is organized step by step so it feels guided and premium.</p>
         </div>
 
@@ -87,14 +88,14 @@
 
           <div class="timeline-step">
             <div class="timeline-icon" style="cursor:pointer" @click="goToAppointmentBooking">3</div>
-            <h4>Agendar cita</h4>
-            <p>Elige un especialista y reserva tu consulta.</p>
+            <h4>{{ t('diagnostics.bookAppt') }}</h4>
+            <p>{{ t('diagnostics.chooseSpecialist') }}</p>
           </div>
 
           <div class="timeline-step">
             <div class="timeline-icon" style="cursor:pointer" @click="$router.push('/citas')">4</div>
-            <h4>Ver mis citas</h4>
-            <p>Consulta el historial de tus citas agendadas.</p>
+            <h4>{{ t('footer.myAppointments') }}</h4>
+            <p>Review the history of your booked appointments.</p>
           </div>
         </div>
       </div>
@@ -104,7 +105,7 @@
       <div class="container">
         <div class="section-heading center">
           <p class="eyebrow section-eyebrow">QUIZ OVERVIEW</p>
-          <h2>Your initial skin profile</h2>
+          <h2>{{ t('diagnostics.initialProfile') }}</h2>
           <p>These values were brought in from your quiz and are now the base for diagnostics.</p>
         </div>
 
@@ -120,7 +121,7 @@
           </div>
 
           <div class="summary-card">
-            <h4>Main Concern</h4>
+            <h4>{{ t('diagnostics.mainConcern') }}</h4>
             <p>{{ mainConcern }}</p>
           </div>
 
@@ -212,9 +213,10 @@
               <button
                 v-for="symptom in symptomsOptions"
                 :key="symptom"
+                type="button"
                 class="chip"
                 :class="{ active: form.symptoms.includes(symptom) }"
-                @click.prevent="toggleArrayItem(form.symptoms, symptom)"
+                @click="toggleSymptom(symptom)"
               >
                 {{ symptom }}
               </button>
@@ -225,9 +227,10 @@
               <button
                 v-for="area in areaOptions"
                 :key="area"
+                type="button"
                 class="chip"
                 :class="{ active: form.areas.includes(area) }"
-                @click.prevent="toggleArrayItem(form.areas, area)"
+                @click="toggleArea(area)"
               >
                 {{ area }}
               </button>
@@ -238,9 +241,10 @@
               <button
                 v-for="priority in priorityOptions"
                 :key="priority"
+                type="button"
                 class="chip"
                 :class="{ active: form.priorities.includes(priority) }"
-                @click.prevent="toggleArrayItem(form.priorities, priority)"
+                @click="togglePriority(priority)"
               >
                 {{ priority }}
               </button>
@@ -379,13 +383,13 @@
 
     <section class="section-white">
       <div class="container" style="text-align:center;padding:3rem 1rem;">
-        <p class="eyebrow section-eyebrow">SIGUIENTE PASO</p>
-        <h2 style="margin-bottom:0.75rem">¿Listo para agendar tu consulta?</h2>
+        <p class="eyebrow section-eyebrow">NEXT STEP</p>
+        <h2 style="margin-bottom:0.75rem">Ready to book your consultation?</h2>
         <p style="color:#64748b;margin-bottom:1.5rem">
-          Guarda tu diagnóstico y luego elige un especialista para tu cita.
+          Save your diagnostic and then choose a specialist for your appointment.
         </p>
         <button class="primary-btn" @click="goToAppointmentBooking">
-          Agendar cita con especialista
+          {{ t('diagnostics.bookWithSpecialist') }}
         </button>
       </div>
     </section>
@@ -407,13 +411,13 @@
       <div class="container final-cta-inner">
         <div>
           <p class="eyebrow light">PHARMADERM CARE</p>
-          <h2>Cuidado diseñado alrededor de tu perfil de piel</h2>
+          <h2>Care designed around your skin profile</h2>
           <p>
-            Construye tu caso, conecta con especialistas y refina tu experiencia de skincare.
+            Build your case, connect with specialists and refine your skincare experience.
           </p>
         </div>
 
-        <button class="light-btn" @click="$router.push('/routine')">Ver mi rutina</button>
+        <button class="light-btn" @click="$router.push('/routine')">{{ t('diagnostics.viewRoutine') }}</button>
       </div>
     </section>
 
@@ -432,13 +436,21 @@ import { useHistoryStore } from '../stores/useHistoryStore.js';
 import { useAuthStore } from '../stores/useAuthStore.js';
 import { getProductsByQuizResult } from '../data/productCatalog.js';
 import routineService from '../services/routineService.js';
+import { useI18n } from '../lib/i18n.js';
+import diagnosticoBannerImg from '../assets/fondo/diagnostico.jpg';
+import { withTimeout } from '../utils/async.js';
 
 const DIAGNOSIS_PHOTO_BUCKET = 'diagnosis-photos';
 
 export default {
   name: "DiagnosticsView",
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
+      diagnosticoBannerImg,
       imagePreviews: [],
       tempPhotos: [],
       casePhoto: "",
@@ -551,10 +563,17 @@ export default {
         : this.quizSummary.summaryMetrics || [];
     },
 
-    mainConcern() {
+    mainConcernCode() {
+      if (this.quizSummary.primaryConcern) return this.quizSummary.primaryConcern;
       if (this.quizSummary.concerns && this.quizSummary.concerns.length) return this.quizSummary.concerns[0];
+      return "";
+    },
+
+    mainConcern() {
+      const code = this.mainConcernCode;
+      if (code) return this.formatConcern(code);
       if (this.form.priorities.length) return this.form.priorities[0];
-      return this.quizSummary.primaryConcern || "Not specified";
+      return "Not specified";
     },
 
     detailsCompleted() {
@@ -576,8 +595,8 @@ export default {
     },
 
     caseStatus() {
-      if (this.diagnosticSaved) return "Diagnóstico guardado";
-      if (this.detailsCompleted) return "En revisión";
+      if (this.diagnosticSaved) return "Diagnostic saved";
+      if (this.detailsCompleted) return "Under review";
       if (this.quizCompleted) return "Quiz importado";
       return "Nuevo caso";
     },
@@ -594,7 +613,7 @@ export default {
     generatedInsight() {
       const concern = this.mainConcern;
       const urgent = this.form.urgency === "High";
-      const primaryKey = this.quizSummary.primaryConcern;
+      const primaryKey = this.mainConcernCode;
 
       if (urgent) {
         return {
@@ -650,7 +669,7 @@ export default {
     },
 
     recommendedRoutine() {
-      const primary = this.quizSummary.primaryConcern;
+      const primary = this.mainConcernCode;
 
       if (primary === "deshidratacion" || primary === "sensibilidad") {
         return {
@@ -744,10 +763,49 @@ export default {
   },
 
   methods: {
-    toggleArrayItem(arr, value) {
-      const index = arr.indexOf(value);
-      if (index === -1) arr.push(value);
-      else arr.splice(index, 1);
+    formatConcern(value) {
+      const key = String(value || '').toLowerCase().trim();
+      const map = {
+        luminosidad: 'Radiance',
+        deshidratacion: 'Hydration',
+        hidratacion: 'Hydration',
+        manchas: 'Dark spots',
+        sensibilidad: 'Sensitivity',
+        barrera: 'Skin barrier',
+        arrugas: 'Early lines',
+        poros: 'Visible pores',
+        textura: 'Texture',
+        acne: 'Acne',
+        rojez: 'Redness',
+      };
+      return map[key] || value || 'Not specified';
+    },
+
+    toggleSymptom(value) {
+      const idx = this.form.symptoms.indexOf(value)
+      if (idx === -1) {
+        this.form.symptoms = [...this.form.symptoms, value]
+      } else {
+        this.form.symptoms = this.form.symptoms.filter((_, i) => i !== idx)
+      }
+    },
+
+    toggleArea(value) {
+      const idx = this.form.areas.indexOf(value)
+      if (idx === -1) {
+        this.form.areas = [...this.form.areas, value]
+      } else {
+        this.form.areas = this.form.areas.filter((_, i) => i !== idx)
+      }
+    },
+
+    togglePriority(value) {
+      const idx = this.form.priorities.indexOf(value)
+      if (idx === -1) {
+        this.form.priorities = [...this.form.priorities, value]
+      } else {
+        this.form.priorities = this.form.priorities.filter((_, i) => i !== idx)
+      }
     },
 
     async handleImages(event) {
@@ -850,8 +908,9 @@ export default {
     goToAppointmentBooking() {
       const query = {}
       if (this.generatedInsight?.title) query.diagnosis = this.generatedInsight.title
-      // Pass the quiz concern code (e.g. 'poros', 'manchas') — used for recommendation scoring
-      const concernCode = this.quizSummary?.primaryConcern || this.form?.priorities?.[0]
+      if (this.mainConcern) query.reason = this.mainConcern
+      // Pass the quiz concern code for recommendation scoring.
+      const concernCode = this.mainConcernCode || this.form?.priorities?.[0]
       if (concernCode) query.concern = concernCode
       if (this.quizSummary?.skinType) query.skinType = this.quizSummary.skinType
       if (this.form?.urgency) query.urgency = this.form.urgency
@@ -859,18 +918,20 @@ export default {
       // Pass the saved diagnosis ID so AppointmentBooking can link the appointment
       try {
         if (isSupabaseConfigured) {
-          supabase.auth.getUser().then(({ data: { user } }) => {
+          withTimeout(supabase.auth.getUser(), 5000, 'Load user before booking').then(({ data: { user } }) => {
             if (user) {
-              supabase.from('diagnosis_cases').select('id').eq('user_id', user.id)
+              withTimeout(supabase.from('diagnosis_cases').select('id').eq('user_id', user.id)
                 .order('created_at', { ascending: false }).limit(1).maybeSingle()
+                , 8000, 'Load latest diagnostic before booking')
                 .then(({ data }) => {
                   if (data?.id) query.diagnosisId = data.id
                   this.$router.push({ path: '/citas/agendar', query })
                 })
+                .catch(() => this.$router.push({ path: '/citas/agendar', query }))
             } else {
               this.$router.push({ path: '/citas/agendar', query })
             }
-          })
+          }).catch(() => this.$router.push({ path: '/citas/agendar', query }))
         } else {
           this.$router.push({ path: '/citas/agendar', query })
         }
@@ -897,12 +958,12 @@ export default {
         // FASE 9 — save diagnostic case (separate from booking)
         const payload = {
           id: Date.now(),
-          title: "Diagnóstico dermatológico guardado",
+          title: "Dermatology diagnostic saved",
           summary: this.generatedInsight.text,
           quizSummary: this.quizSummary,
           form: { ...this.form },
           insight: this.generatedInsight,
-          status: "Guardado",
+          status: "Saved",
           savedAt: new Date().toISOString(),
         };
 
@@ -914,19 +975,19 @@ export default {
         // Try Supabase if available
         try {
           if (isSupabaseConfigured) {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user } } = await withTimeout(supabase.auth.getUser(), 5000, 'Load diagnostic user');
             if (user) {
               // Check if diagnosis case already exists for this user
-              const { data: existingCase, error: checkError } = await supabase
+              const { data: existingCase, error: checkError } = await withTimeout(supabase
                 .from('diagnosis_cases')
                 .select('id')
                 .eq('user_id', user.id)
-                .maybeSingle();
+                .maybeSingle(), 8000, 'Check diagnostic case');
 
               let diagnosisId;
               if (existingCase && !checkError) {
                 // Update existing case
-                const { data: updateResult, error: updateError } = await supabase
+                const { data: updateResult, error: updateError } = await withTimeout(supabase
                   .from('diagnosis_cases')
                   .update({
                     description: this.form.description || null,
@@ -943,16 +1004,15 @@ export default {
                   })
                   .eq('user_id', user.id)
                   .select('id')
-                  .single();
+                  .single(), 8000, 'Update diagnostic case');
                 if (updateError) {
                   console.warn('[Diagnostics] Supabase diagnosis update failed:', updateError.message || updateError);
-                  this.isSavingDiagnostic = false;
-                  return;
+                } else {
+                  diagnosisId = updateResult.id;
                 }
-                diagnosisId = updateResult.id;
               } else {
                 // Insert new case
-                const { data: insertResult, error: insertError } = await supabase
+                const { data: insertResult, error: insertError } = await withTimeout(supabase
                   .from('diagnosis_cases')
                   .insert({
                     user_id: user.id,
@@ -968,13 +1028,12 @@ export default {
                     status: 'saved',
                   })
                   .select('id')
-                  .single();
+                  .single(), 8000, 'Save diagnostic case');
                 if (insertError) {
                   console.warn('[Diagnostics] Supabase diagnosis insert failed:', insertError.message || insertError);
-                  this.isSavingDiagnostic = false;
-                  return;
+                } else {
+                  diagnosisId = insertResult.id;
                 }
-                diagnosisId = insertResult.id;
               }
 
               // Save photos if any (they are already uploaded, just save records)
@@ -991,10 +1050,12 @@ export default {
         } catch { /* Supabase save is best-effort */ }
 
         this.diagnosticSaved = true;
-        this.showToast("Diagnóstico guardado correctamente.");
+        this.showToast("Diagnostic saved successfully.");
 
         // Generate personalized routine from diagnosis
         await this.generateRoutineFromDiagnosis();
+        await this.$nextTick();
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       } finally {
         this.isSavingDiagnostic = false;
       }
@@ -1012,7 +1073,7 @@ export default {
               uploaded_at: new Date().toISOString()
             })
         );
-        await Promise.all(insertPromises);
+        await withTimeout(Promise.all(insertPromises), 8000, 'Save diagnostic temp photos');
         // Clear temp photos after saving
         this.tempPhotos = [];
       } catch (error) {
@@ -1032,7 +1093,7 @@ export default {
               uploaded_at: new Date().toISOString()
             })
         );
-        await Promise.all(insertPromises);
+        await withTimeout(Promise.all(insertPromises), 8000, 'Save diagnostic photos');
       } catch (error) {
         console.warn('[Diagnostics] Save photos to diagnosis failed:', error);
       }
@@ -1050,25 +1111,25 @@ export default {
         try {
           // A) Esquema denormalizado (quiz_sessions con completed_at, skin_type, concerns...)
           try {
-            const { data, error } = await supabase
+            const { data, error } = await withTimeout(supabase
               .from('quiz_sessions')
               .select('*')
               .eq('user_id', userId)
               .order('completed_at', { ascending: false })
               .limit(1)
-              .maybeSingle();
+              .maybeSingle(), 8000, 'Load quiz summary');
 
             if (!error && data?.completed_at) {
               let selfieUrl = null;
               try {
-                const { data: imageData, error: imageError } = await supabase
+                const { data: imageData, error: imageError } = await withTimeout(supabase
                   .from('quiz_images')
                   .select('public_url, storage_path')
                   .eq('quiz_session_id', data.id)
                   .eq('is_selfie', true)
                   .order('uploaded_at', { ascending: false })
                   .limit(1)
-                  .maybeSingle();
+                  .maybeSingle(), 8000, 'Load quiz image');
                 if (!imageError && imageData) {
                   selfieUrl = imageData.public_url || imageData.storage_path || null;
                 }
@@ -1094,53 +1155,53 @@ export default {
 
           // B) Esquema `database/schema.sql` (quiz_sessions + skin_analyses)
           if (!savedQuiz) {
-            const { data: sData, error: sErr } = await supabase
+            const { data: sData, error: sErr } = await withTimeout(supabase
               .from('quiz_sessions')
               .select('*')
               .eq('user_id', userId)
               .order('created_at', { ascending: false })
               .limit(1)
-              .maybeSingle();
+              .maybeSingle(), 8000, 'Load quiz session');
 
             if (!sErr && sData?.id) {
-              const { data: aData } = await supabase
+              const { data: aData } = await withTimeout(supabase
                 .from('skin_analyses')
                 .select('*')
                 .eq('quiz_session_id', sData.id)
                 .order('created_at', { ascending: false })
                 .limit(1)
-                .maybeSingle();
+                .maybeSingle(), 8000, 'Load skin analysis');
 
               let skinTypeCode = '';
               try {
                 if (sData.skin_type_id) {
-                  const { data: stData } = await supabase
+                  const { data: stData } = await withTimeout(supabase
                     .from('skin_types')
                     .select('code')
                     .eq('id', sData.skin_type_id)
-                    .maybeSingle();
+                    .maybeSingle(), 8000, 'Load skin type');
                   skinTypeCode = stData?.code || '';
                 }
               } catch { /* ignore */ }
 
               let selfieUrl = null;
               try {
-                const { data: imageData, error: imageError } = await supabase
+                const { data: imageData, error: imageError } = await withTimeout(supabase
                   .from('quiz_images')
                   .select('public_url, storage_path')
                   .eq('quiz_session_id', sData.id)
                   .eq('is_selfie', true)
                   .order('uploaded_at', { ascending: false })
                   .limit(1)
-                  .maybeSingle();
+                  .maybeSingle(), 8000, 'Load quiz image');
                 if (!imageError && imageData) {
                   selfieUrl = imageData.public_url || imageData.storage_path || null;
                 }
               } catch { /* ignore */ }
 
               const sensitivityMap = {
-                resilient: 'Ninguna sensibilidad',
-                mild: 'Baja sensibilidad',
+                resilient: 'No sensitivity',
+                mild: 'Low sensitivity',
                 reactive: 'Sensibilidad media',
                 very_reactive: 'Sensibilidad alta',
               };
@@ -1174,7 +1235,7 @@ export default {
             }
           }
         } catch (e) {
-          console.warn('[Diagnostics] Supabase quiz check falló:', e?.message);
+          console.warn('[Diagnostics] Supabase quiz check failed:', e?.message);
           source = 'supabase:error→fallback';
         }
       }
@@ -1222,13 +1283,13 @@ export default {
 
       if (isSupabaseConfigured && userId) {
         try {
-          const { data, error } = await supabase
+          const { data, error } = await withTimeout(supabase
             .from('diagnosis_cases')
             .select('*')
             .eq('user_id', userId)
             .order('created_at', { ascending: false })
             .limit(1)
-            .maybeSingle();
+            .maybeSingle(), 8000, 'Load saved diagnostic');
 
           if (!error && data) {
             console.log('[Diagnostics] Loaded diagnosis case from DB:', data);
@@ -1247,11 +1308,11 @@ export default {
             };
 
             // Load associated photos
-            const { data: photos, error: photosError } = await supabase
+            const { data: photos, error: photosError } = await withTimeout(supabase
               .from('diagnosis_photos')
               .select('url')
               .eq('diagnosis_id', data.id)
-              .order('uploaded_at', { ascending: true });
+              .order('uploaded_at', { ascending: true }), 8000, 'Load diagnostic photos');
 
             if (!photosError && photos) {
               parsed.imagePreviews = photos.map(photo => photo.url);
@@ -1262,7 +1323,7 @@ export default {
             source = 'supabase:empty';
           }
         } catch (e) {
-          console.warn('[Diagnostics] Supabase diagnosis check falló:', e?.message);
+          console.warn('[Diagnostics] Supabase diagnosis check failed:', e?.message);
           parsed = this._historyStore?.getLatestDiagnostic() || null;
           source = 'supabase:error→fallback';
         }
@@ -1280,7 +1341,10 @@ export default {
       try {
         if (parsed.form) {
           console.log('[Diagnostics] Applying form data:', parsed.form);
-          this.form = { ...this.form, ...parsed.form };
+          Object.assign(this.form, parsed.form);
+          if (Array.isArray(parsed.form.symptoms)) this.form.symptoms = [...parsed.form.symptoms]
+          if (Array.isArray(parsed.form.areas)) this.form.areas = [...parsed.form.areas]
+          if (Array.isArray(parsed.form.priorities)) this.form.priorities = [...parsed.form.priorities]
         }
         if (parsed.imagePreviews) {
           console.log('[Diagnostics] Applying image previews:', parsed.imagePreviews.length, 'images');
@@ -1318,7 +1382,7 @@ export default {
 
       // Save the generated routine
       const routineData = {
-        name: `Rutina basada en diagnóstico - ${this.mainConcern || 'Piel personalizada'}`,
+        name: `Routine based on diagnostic - ${this.mainConcern || 'Personalized skin'}`,
         primaryConcern: this.mainConcern,
         skinType: this.quizSummary.skinType,
         morningSteps: builtRoutine.morning,
@@ -1330,10 +1394,10 @@ export default {
       try {
         await this._historyStore?.saveRoutine(routineData);
         console.log('[Diagnostics] Routine generated and saved from diagnosis');
-        this.showToast('¡Rutina personalizada generada desde tu diagnóstico!');
+        this.showToast('Personalized routine generated from your diagnostic!');
       } catch (error) {
         console.warn('[Diagnostics] Failed to save routine from diagnosis:', error);
-        this.showToast('Error al generar la rutina. Inténtalo de nuevo.');
+        this.showToast('Error generating the routine. Please try again.');
       }
     }
   }
@@ -1360,7 +1424,7 @@ export default {
   --banner: #5dbcd2;
   --price: #004e92;
   --primary: #004e92;
-  --primary-dark: #183a6b;
+  --primary-deep: #183a6b;
   --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
   --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.06);
   min-height: 100vh;
@@ -1464,6 +1528,21 @@ export default {
 .diagnostics-hero {
   padding: 3.5rem 0 2.5rem;
   background: linear-gradient(135deg, var(--brand), var(--link));
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.diagnostics-hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,78,146,0.82), rgba(93,188,210,0.7));
+  z-index: 0;
+}
+
+.diagnostics-hero .container {
+  position: relative;
+  z-index: 1;
 }
 
 .diagnostics-hero-grid {
@@ -1987,7 +2066,7 @@ input:focus {
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, var(--brand), var(--primary-dark));
+  background: linear-gradient(135deg, var(--brand), var(--primary-deep));
   color: #fff;
   box-shadow: 0 14px 28px rgba(19, 59, 99, 0.18);
 }

@@ -40,7 +40,7 @@ export const storageService = {
       localStorage.setItem(PREFIX + this._key(key), JSON.stringify(value))
       return true
     } catch (e) {
-      console.warn('[storageService] No se pudo guardar:', key, e)
+      console.warn('[storageService] Could not save:', key, e)
       return false
     }
   },
